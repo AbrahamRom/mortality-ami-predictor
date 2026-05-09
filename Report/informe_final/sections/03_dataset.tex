@@ -1,0 +1,387 @@
+% ============================================================================
+% SECCIÓN 03: DESCRIPCIÓN DEL DATASET
+% ============================================================================
+
+\section{Descripción del Conjunto de Datos}
+\label{sec:dataset}
+
+% NOTA: Esta sección integra la caracterización del archivo dudas_variables/reporte.tex
+
+\subsection{Fuente de Datos}
+
+\begin{table}[H]
+\centering
+\caption{Información general del conjunto de datos}
+\label{tab:info_dataset}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Característica} & \textbf{Descripción} \\
+\midrule
+Nombre del registro & Registro Cubano de Infarto Agudo de Miocardio (RECUIMA) \\
+Institución & Sistema Nacional de Salud de Cuba \\
+País/Región & Cuba \\
+Período de recolección & 2020 -- 2025 \\
+Población objetivo & Pacientes con diagnóstico de IAM \\
+Criterios de inclusión & Diagnóstico confirmado de IAM según criterios universales \\
+Criterios de exclusión & Datos incompletos en variables críticas \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Tamaño Muestral y Estructura}
+
+\begin{table}[H]
+\centering
+\caption{Resumen del tamaño muestral}
+\label{tab:tamano_muestral}
+\begin{tabular}{@{}lr@{}}
+\toprule
+\textbf{Métrica} & \textbf{Valor} \\
+\midrule
+Número total de pacientes & 3.112 \\
+Variables totales (originales) & 185 \\
+Conjunto de entrenamiento & 2.489 \\
+Conjunto de test & 623 \\
+Eventos de interés (mortalidad) & 55 en test (8,8\%) \\
+Supervivientes & 568 en test (91,2\%) \\
+Tasa de eventos (test) & 8,8\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Categorización de Variables}
+
+El conjunto de datos contiene 185 variables organizadas en las siguientes categorías funcionales:
+
+\subsubsection{Variables Demográficas y Administrativas}
+
+\begin{table}[H]
+\centering
+\caption{Variables demográficas y administrativas}
+\label{tab:vars_demograficas}
+\begin{tabular}{@{}llp{6cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} \\
+\midrule
+EDAD & Numérica & Edad del paciente en años \\
+SEXO & Categórica & Sexo biológico (Masculino/Femenino) \\
+FECHA\_INGRESO & Fecha & Fecha de admisión hospitalaria \\
+FECHA\_ALTA & Fecha & Fecha de alta o fallecimiento \\
+ESTANCIA & Numérica & Días de estancia hospitalaria \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Antecedentes Patológicos}
+
+{\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{@{}p{2.8cm}p{1.3cm}p{4cm}p{2.2cm}@{}}
+\caption{Variables de antecedentes patológicos personales}
+\label{tab:vars_antecedentes} \\
+\toprule
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} & \textbf{Valores} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{c}{\tablename\ \thetable{} -- Continuación} \\
+\toprule
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} & \textbf{Valores} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+APP\_HTA & Binaria & Hipertensión arterial & Sí/No \\
+APP\_DM & Binaria & Diabetes mellitus & Sí/No \\
+APP\_DISLIPIDEMIA & Binaria & Dislipidemia & Sí/No \\
+APP\_TABAQUISMO & Categ. & Estado de tabaquismo & Activo/Ex/Nunca \\
+APP\_OBESIDAD & Binaria & Obesidad (IMC $\geq$ 30) & Sí/No \\
+APP\_IAM\_PREVIO & Binaria & IAM previo & Sí/No \\
+APP\_ICP\_PREVIO & Binaria & Angioplastia previa & Sí/No \\
+APP\_CABG\_PREVIO & Binaria & Cirugía coronaria previa & Sí/No \\
+APP\_ERC & Binaria & Enfermedad renal crónica & Sí/No \\
+APP\_FA & Binaria & Fibrilación auricular & Sí/No \\
+APP\_ICTUS & Binaria & Ictus/ACV previo & Sí/No \\
+APP\_EAP & Binaria & Enf. arterial periférica & Sí/No \\
+\end{longtable}
+}
+
+\subsubsection{Presentación Clínica}
+
+\begin{table}[H]
+\centering
+\caption{Variables de presentación clínica al ingreso}
+\label{tab:vars_clinicas}
+{\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{2.8cm}p{1.6cm}p{3.8cm}p{1.5cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} & \textbf{Unidad} \\
+\midrule
+PAS & Numérica & Presión arterial sistólica & mmHg \\
+PAD & Numérica & Presión arterial diastólica & mmHg \\
+FC & Numérica & Frecuencia cardíaca & lpm \\
+FR & Numérica & Frecuencia respiratoria & rpm \\
+SAT\_O2 & Numérica & Saturación de oxígeno & \% \\
+KILLIP & Categórica & Clasificación Killip-Kimball & I--IV \\
+DOLOR\_TIPICO & Binaria & Dolor torácico típico & Sí/No \\
+TIEMPO\_SINTOMAS & Numérica & Tiempo desde síntomas & horas \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsubsection{Variables Electrocardiográficas}
+
+\begin{table}[H]
+\centering
+\caption{Variables electrocardiográficas}
+\label{tab:vars_ecg}
+{\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{2.5cm}p{1.5cm}p{5cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} \\
+\midrule
+ECG\_RITMO & Categórica & Ritmo cardíaco (sinusal, FA, etc.) \\
+ECG\_ELEV\_ST & Binaria & Presencia de elevación del ST \\
+ECG\_N\_DERIV\_ST & Numérica & Núm. derivaciones con elevación ST \\
+ECG\_LOCAL & Categórica & Localización IAM (anterior, inferior) \\
+ECG\_BRIHH & Binaria & Bloqueo de rama izquierda \\
+ECG\_QTc & Numérica & Intervalo QT corregido (ms) \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsubsection{Biomarcadores de Laboratorio}
+
+{\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{longtable}{@{}p{2.2cm}p{0.9cm}p{3.5cm}p{2cm}p{1.2cm}@{}}
+\caption{Biomarcadores y pruebas de laboratorio}
+\label{tab:vars_laboratorio} \\
+\toprule
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} & \textbf{Unidad} & \textbf{Ref.} \\
+\midrule
+\endfirsthead
+\multicolumn{5}{c}{\tablename\ \thetable{} -- Continuación} \\
+\toprule
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} & \textbf{Unidad} & \textbf{Ref.} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+TROPONINA\_I & Num. & Troponina I cardíaca & ng/mL & $<$0.04 \\
+TROPONINA\_T & Num. & Troponina T cardíaca & ng/mL & $<$0.01 \\
+CK\_MB & Num. & Creatina quinasa MB & U/L & $<$25 \\
+BNP & Num. & Péptido natriurético B & pg/mL & $<$100 \\
+NT\_PROBNP & Num. & NT-proBNP & pg/mL & $<$300 \\
+CREATININA & Num. & Creatinina sérica & mg/dL & 0.7--1.3 \\
+TFG\_E & Num. & TFG estimada & mL/min/1.73m² & $>$60 \\
+GLUCOSA & Num. & Glucemia & mg/dL & 70--100 \\
+HBA1C & Num. & Hemoglobina glicosilada & \% & $<$5.7 \\
+HEMOGLOBINA & Num. & Hemoglobina & g/dL & 12--16 \\
+LEUCOCITOS & Num. & Recuento leucocitos & $\times 10^9$/L & 4--11 \\
+PLAQUETAS & Num. & Recuento plaquetas & $\times 10^9$/L & 150--400 \\
+COLESTEROL & Num. & Colesterol total & mg/dL & $<$200 \\
+LDL & Num. & Colesterol LDL & mg/dL & $<$100 \\
+HDL & Num. & Colesterol HDL & mg/dL & $>$40 \\
+TRIGLICERIDOS & Num. & Triglicéridos & mg/dL & $<$150 \\
+PCR & Num. & Proteína C reactiva & mg/L & $<$3 \\
+\end{longtable}
+}
+
+\subsubsection{Tratamientos y Procedimientos}
+
+\begin{table}[H]
+\centering
+\caption{Variables de tratamiento y procedimientos}
+\label{tab:vars_tratamiento}
+{\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{3.2cm}p{1.3cm}p{4.5cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} \\
+\midrule
+TTO\_FIBRINOLISIS & Binaria & Fibrinólisis administrada \\
+TTO\_ICP\_PRIMARIA & Binaria & ICP primaria \\
+TIEMPO\_PUERTA\_BALON & Numérica & Tiempo puerta-balón (min) \\
+TTO\_ASPIRINA & Binaria & Ácido acetilsalicílico \\
+TTO\_CLOPIDOGREL & Binaria & Clopidogrel \\
+TTO\_TICAGRELOR & Binaria & Ticagrelor \\
+TTO\_HEPARINA & Binaria & Heparina \\
+TTO\_BETABLOQ & Binaria & Betabloqueantes \\
+TTO\_IECA\_ARA2 & Binaria & IECA o ARA2 \\
+TTO\_ESTATINA & Binaria & Estatinas \\
+TTO\_VENTILACION & Binaria & Ventilación mecánica \\
+TTO\_VASOACTIVOS & Binaria & Fármacos vasoactivos \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsubsection{Variables de Imagen}
+
+\begin{table}[H]
+\centering
+\caption{Variables de estudios de imagen}
+\label{tab:vars_imagen}
+{\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{2.5cm}p{1.3cm}p{4cm}p{1.3cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} & \textbf{Unidad} \\
+\midrule
+ECO\_FEVI & Numérica & Fracción eyección VI & \% \\
+ECO\_ALT\_SEGM & Binaria & Alteraciones contractilidad & Sí/No \\
+ECO\_VALVULOP & Binaria & Valvulopatía asociada & Sí/No \\
+CORO\_N\_VASOS & Numérica & Núm. vasos enfermos & 0--3 \\
+CORO\_TCI & Binaria & Enfermedad TCI & Sí/No \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsubsection{Complicaciones Intrahospitalarias}
+
+\begin{table}[H]
+\centering
+\caption{Variables de complicaciones durante la hospitalización}
+\label{tab:vars_complicaciones}
+{\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{2.8cm}p{1.2cm}p{5cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} \\
+\midrule
+COMP\_ARRITMIA\_V & Binaria & Arritmia ventricular maligna (TV/FV) \\
+COMP\_BAV & Binaria & Bloqueo auriculoventricular \\
+COMP\_ICC & Binaria & Insuficiencia cardíaca congestiva \\
+COMP\_SHOCK & Binaria & Shock cardiogénico \\
+COMP\_REINFARTO & Binaria & Reinfarto intrahospitalario \\
+COMP\_SANGRADO & Binaria & Sangrado mayor (criterios BARC) \\
+COMP\_IRA & Binaria & Injuria renal aguda \\
+COMP\_ICTUS & Binaria & Ictus intrahospitalario \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsubsection{Variables Outcome}
+
+\begin{table}[H]
+\centering
+\caption{Variables de desenlace (outcome)}
+\label{tab:vars_outcome}
+{\scriptsize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{2.8cm}p{1.2cm}p{5cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} \\
+\midrule
+MORTALIDAD\_HOSP & Binaria & \textbf{Variable objetivo}: Mortalidad intrahospitalaria \\
+CAUSA\_MUERTE & Categ. & Causa de muerte (cardiogénica, arrítmica) \\
+DESTINO\_ALTA & Categ. & Destino al alta (domicilio, otro hospital) \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsection{Consideraciones sobre Calidad de Datos}
+
+\subsubsection{Datos Faltantes}
+
+El análisis de calidad del conjunto de datos original (n = 3.112 pacientes, 195 variables) reveló un patrón heterogéneo de datos faltantes. Se identificaron tres categorías principales según el porcentaje de missingness:
+
+\paragraph{Variables con missingness extremo ($>$90\%):} Estas variables fueron excluidas del análisis por su escasa representatividad.
+
+\begin{table}[H]
+\centering
+\caption{Variables con $>$90\% de datos faltantes (excluidas)}
+\label{tab:missing_extremo}
+{\footnotesize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{3.5cm}p{1.6cm}p{4cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{\% Falt.} & \textbf{Motivo} \\
+\midrule
+coronariografias\_centro & 100,0\% & No registrado \\
+coronariografias\_medico & 100,0\% & No registrado \\
+fecha\_defuncion & 99,6\% & Solo en fallecidos (MNAR) \\
+protección\_embólica & 99,4\% & Procedimiento infrecuente \\
+rehabilitación & 99,4\% & Dato post-alta \\
+volumen\_contraste & 99,4\% & Solo en coronariografías \\
+estenosis/arteria/abordaje & 92,8\% & Solo en intervencionismo \\
+annos\_sin\_fumar & 92,2\% & Solo exfumadores (MAR) \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\paragraph{Variables con missingness moderado-alto (20--90\%):} Requirieron evaluación individual para decidir estrategia de imputación o exclusión.
+
+\begin{table}[H]
+\centering
+\caption{Variables con 20--90\% de datos faltantes}
+\label{tab:missing_moderado}
+{\footnotesize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{3cm}p{1.5cm}p{1.5cm}p{3.2cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{\% Falt.} & \textbf{Patrón} & \textbf{Estrategia} \\
+\midrule
+tiempo\_llegada & 84,9\% & MNAR & Excluida \\
+insulina & 83,3\% & MAR & Excluida \\
+fs (func. sistólica) & 81,1\% & MAR & Excluida \\
+ingresos\_anteriores & 78,1\% & MAR & Excluida \\
+tiempo\_isquemia & 64,1\% & MNAR & Excluida \\
+tapse & 62,9\% & MAR & Excluida \\
+ckmb & 54,8\% & MAR & Imput. múltiple \\
+ck & 53,6\% & MAR & Imput. múltiple \\
+tipo\_tabaquismo & 47,9\% & MAR & Imput. por moda \\
+tiempo\_puerta\_aguja & 46,6\% & MNAR & Imput. condicional \\
+betabloqueadores & 22,8\% & MAR & Imput. múltiple \\
+leucocitos & 21,3\% & MCAR & Imput. mediana \\
+infradesnivel\_ST & 20,0\% & MCAR & Imput. moda \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\paragraph{Variables con missingness bajo ($<$20\%):} Se aplicó imputación estándar según el tipo de variable.
+
+\begin{table}[H]
+\centering
+\caption{Variables clínicas relevantes con $<$20\% de datos faltantes}
+\label{tab:missing_bajo}
+{\footnotesize\setlength{\tabcolsep}{2pt}
+\begin{tabular}{@{}p{3cm}p{1.5cm}p{1.5cm}p{3cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{\% Falt.} & \textbf{Patrón} & \textbf{Estrategia} \\
+\midrule
+triglicéridos & 19,2\% & MCAR & Imput. mediana \\
+supradesnivel\_ST & 14,4\% & MCAR & Imput. moda \\
+fracción\_eyección & 13,9\% & MAR & Imput. múltiple \\
+hemoglobina & 12,5\% & MCAR & Imput. mediana \\
+estadia\_ucie & 12,3\% & MCAR & Imput. mediana \\
+colesterol & 12,1\% & MCAR & Imput. mediana \\
+glicemia & 4,6\% & MCAR & Imput. mediana \\
+creatinina & 4,5\% & MCAR & Imput. mediana \\
+escala\_grace & 4,5\% & MAR & Recálculo \\
+filtrado\_glomerular & 4,5\% & MAR & Derivada \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+El análisis del mecanismo de missingness mediante pruebas de Little y correlaciones entre patrones de ausencia sugirió predominio de datos \textit{Missing at Random} (MAR) para la mayoría de variables clínicas, con excepciones notables como \texttt{fecha\_defuncion} y \texttt{tiempo\_isquemia} que presentaron patrón \textit{Missing Not at Random} (MNAR).
+
+\subsubsection{Valores Atípicos Identificados}
+
+Se aplicó detección de outliers mediante el método del rango intercuartílico (IQR) extendido (1.5 $\times$ IQR) para variables numéricas continuas. Los valores atípicos identificados fueron evaluados clínicamente antes de su tratamiento:
+
+\begin{itemize}
+    \item \textbf{Creatinina}: Valores $>$10 mg/dL (n=23) verificados como casos de insuficiencia renal severa -- conservados.
+    \item \textbf{Glucemia}: Valores $>$500 mg/dL (n=8) correspondientes a crisis hiperglucémicas -- conservados.
+    \item \textbf{Troponinas}: Valores extremadamente elevados consistentes con infarto extenso -- conservados.
+    \item \textbf{Frecuencia cardíaca}: Valores $<$40 o $>$180 lpm (n=45) revisados individualmente.
+    \item \textbf{Presión arterial}: Valores sistólicos $>$220 mmHg (n=12) confirmados como crisis hipertensivas.
+\end{itemize}
+
+La estrategia general fue conservar outliers biológicamente plausibles y clínicamente relevantes, aplicando winsorización al percentil 1--99 únicamente en casos de errores evidentes de registro.
+
+\subsection{Resumen Descriptivo Preliminar}
+
+El resumen descriptivo completo de las variables se presenta en la sección de Análisis Exploratorio de Datos (Sección~\ref{sec:eda}), donde se incluyen estadísticos descriptivos estratificados por outcome y análisis bivariados con pruebas de significación estadística.

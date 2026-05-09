@@ -1,0 +1,132 @@
+% ============================================================================
+% SECCIÓN 11: CONCLUSIONES
+% ============================================================================
+
+\section{Conclusiones}
+\label{sec:conclusiones}
+
+\subsection{Conclusiones Principales}
+
+Este estudio demuestra que:
+
+\begin{enumerate}
+    \item \textbf{Viabilidad}: Es factible desarrollar modelos de aprendizaje automático para predecir la mortalidad intrahospitalaria en pacientes con \gls{iam} utilizando variables clínicas y de laboratorio disponibles rutinariamente en el contexto cubano.
+    
+    \item \textbf{Rendimiento superior}: Se desarrollaron dos modelos XGBoost con diferentes enfoques:
+    \begin{itemize}
+        \item \textbf{Modelo reducido (10 variables)}: AUROC = 0,901 (IC 95\%: 0,855--0,937), diseñado para comparación directa con la escala GRACE.
+        \item \textbf{Modelo extendido (57 variables)}: AUROC = 0,938 (IC 95\%: 0,884--0,977), nuestra propuesta principal con rendimiento óptimo.
+    \end{itemize}
+    Ambos modelos superaron significativamente al score GRACE tradicional (AUROC = 0,820).
+    
+    \item \textbf{Calibración adecuada}: Los modelos muestran buena calibración (Brier Score = 0,036 para el modelo extendido y 0,096 para el reducido), permitiendo utilizar las probabilidades predichas para la toma de decisiones clínicas.
+    
+    \item \textbf{Interpretabilidad}: Las técnicas de explicabilidad (SHAP) identificaron que las variables más influyentes son fracción de eyección, edad, filtrado glomerular, frecuencia cardíaca y presión arterial diastólica, consistentes con el conocimiento fisiopatológico establecido.
+    
+    \item \textbf{Utilidad clínica}: El análisis de curva de decisión demuestra beneficio neto del modelo en el rango de umbrales de probabilidad clínicamente relevantes, especialmente en la identificación de pacientes de bajo riesgo (VPN = 0,969).
+    
+    \item \textbf{Robustez sin fuga de datos}: La validación del modelo excluyendo variables con potencial fuga de datos (\texttt{comp\_*}, \texttt{aminas}, \texttt{reperfusion\_*}, \texttt{tiempo\_puerta\_aguja}, \texttt{CK tardío}) confirmó que el rendimiento predictivo (AUROC = 0,896) no depende de información sesgada. Las variables más importantes en este modelo validado son todas clínicamente legítimas y disponibles al ingreso del paciente.
+\end{enumerate}
+
+\subsection{Respuesta a los Objetivos}
+
+\subsubsection{Objetivo General}
+
+\textbf{Objetivo}: Desarrollar y validar un modelo de aprendizaje automático para la predicción de mortalidad intrahospitalaria en pacientes con infarto agudo de miocardio.
+
+\textbf{Conclusión}: Se cumplió el objetivo general. Se desarrollaron dos modelos XGBoost: uno reducido con AUROC de 0,901 y uno extendido con AUROC de 0,938, validados mediante Bootstrap (1000 iteraciones) y Jackknife, que superan significativamente a los modelos tradicionales de estratificación de riesgo como GRACE.
+
+\subsubsection{Objetivos Específicos}
+
+\begin{enumerate}
+    \item \textbf{Caracterizar el dataset}:
+    Se analizó un dataset de 3.112 pacientes con 185 variables originales procedentes del registro RECUIMA, identificando una tasa de mortalidad del 8,8\%. Se realizó un proceso sistemático de limpieza y preprocesamiento que resultó en la selección de 57 variables para el modelo extendido y 10 variables para el modelo reducido comparable con GRACE.
+    
+    \item \textbf{Realizar análisis exploratorio}:
+    El EDA reveló diferencias significativas entre fallecidos y supervivientes en variables clave como edad, fracción de eyección, filtrado glomerular, frecuencia cardíaca y estado hemodinámico, orientando la selección de predictores y confirmando la relevancia clínica de las variables incluidas.
+    
+    \item \textbf{Desarrollar y optimizar modelos}:
+    Se evaluaron múltiples algoritmos (KNN, Regresión Logística, Árbol de Decisión, Random Forest, XGBoost, XGBoost Balanced, LightGBM), siendo XGBoost el de mejor rendimiento tras optimización de hiperparámetros mediante validación cruzada estratificada de 5 pliegues.
+    
+    \item \textbf{Comparar con escalas tradicionales}:
+    Los modelos de ML superaron significativamente al score GRACE (p $<$0,001), con el modelo extendido logrando +11,8 puntos de AUROC y el reducido +8,1 puntos, demostrando el valor añadido de los algoritmos de aprendizaje automático sobre las escalas tradicionales de estratificación de riesgo.
+    
+    \item \textbf{Analizar explicabilidad}:
+    Las técnicas SHAP revelaron que las variables más predictivas son fracción de eyección (|SHAP|=0,072), edad (0,051), filtrado glomerular (0,048), frecuencia cardíaca (0,043) y presión arterial diastólica (0,043), con relaciones no lineales e interacciones que los modelos lineales no capturan.
+    
+    \item \textbf{Desarrollar herramienta de aplicación}:
+    Se implementó un dashboard interactivo en Streamlit que permite realizar predicciones individuales con explicaciones SHAP integradas, facilitando su potencial uso clínico como herramienta de apoyo a la decisión.
+\end{enumerate}
+
+\subsection{Contribuciones del Estudio}
+
+Las principales contribuciones de este trabajo son:
+
+\begin{enumerate}
+    \item \textbf{Científica}: Demostración de la superioridad de modelos de aprendizaje automático sobre escalas tradicionales como GRACE para la predicción de mortalidad intrahospitalaria en pacientes con IAM en una población latinoamericana, con mejoras significativas tanto en discriminación (AUROC +8,1 a +11,8 puntos) como en calibración.
+    
+    \item \textbf{Metodológica}: Aplicación rigurosa de las guías TRIPOD+AI para el desarrollo y reporte de modelos predictivos clínicos, incluyendo validación mediante técnicas robustas (Bootstrap, Jackknife), análisis de calibración, utilidad clínica (DCA) y explicabilidad (SHAP).
+    
+    \item \textbf{Validación de integridad}: Identificación y exclusión de variables con potencial fuga de datos, demostrando que el modelo mantiene su rendimiento predictivo (AUROC = 0,896) utilizando únicamente predictores clínicamente válidos y disponibles al ingreso del paciente.
+    
+    \item \textbf{Práctica}: Desarrollo de una herramienta de predicción interpretable implementada como dashboard interactivo, lista para validación clínica prospectiva y potencial integración en la práctica asistencial.
+    
+    \item \textbf{Educativa}: Documentación completa del proceso de desarrollo de modelos de ML en salud, incluyendo código fuente y pipelines reproducibles, útil para futuros proyectos similares en el contexto cubano y latinoamericano.
+\end{enumerate}
+
+\subsection{Mensaje Clave}
+
+\begin{keypoint}
+\textbf{Tres hallazgos principales:}
+
+\begin{enumerate}
+    \item \textbf{Superioridad sobre escalas tradicionales:} Los modelos XGBoost superaron significativamente al score GRACE, con el modelo extendido (57 variables) alcanzando AUROC = 0,938 y el modelo reducido (10 variables) logrando AUROC = 0,901, frente a 0,820 de GRACE.
+    
+    \item \textbf{Alto valor predictivo negativo:} El modelo reducido alcanzó un VPN de 0,969, permitiendo identificar de manera confiable a pacientes de bajo riesgo que podrían beneficiarse de manejo menos intensivo.
+    
+    \item \textbf{Validación de integridad (sin fuga de datos):} Se demostró que el rendimiento predictivo del modelo (AUROC = 0,896) \textbf{no depende de variables con potencial sesgo}. Al excluir variables que podrían introducir fuga de datos (\texttt{comp\_*}, \texttt{aminas}, \texttt{reperfusion\_*}, \texttt{tiempo\_puerta\_aguja}, \texttt{CK tardío}), el modelo mantuvo su capacidad discriminativa. Las variables más importantes según SHAP en este modelo validado ---edad, fracción de eyección, glicemia, índice Killip, presión arterial diastólica--- son todas clínicamente legítimas y disponibles al momento del ingreso del paciente, garantizando la aplicabilidad real del modelo en la práctica clínica.
+\end{enumerate}
+\end{keypoint}
+
+\begin{keypoint}
+\textbf{Implicación práctica:}
+
+La validación sin fuga de datos confirma que el modelo puede implementarse de forma segura en entornos clínicos reales, ya que sus predicciones se basan exclusivamente en información disponible al momento de la toma de decisiones, sin depender de variables que solo se conocen retrospectivamente o en pacientes con evolución desfavorable.
+\end{keypoint}
+
+\subsection{Recomendaciones}
+
+\subsubsection{Para Investigadores}
+
+\begin{enumerate}
+    \item Realizar validación externa del modelo en cohortes independientes.
+    \item Explorar la extensión del modelo a otros outcomes (arritmias, reingresos).
+    \item Investigar la incorporación de datos multimodales (imágenes, señales).
+    \item Desarrollar modelos de predicción dinámica durante la hospitalización.
+\end{enumerate}
+
+\subsubsection{Para Clínicos}
+
+\begin{enumerate}
+    \item Considerar el modelo como complemento, no sustituto, del juicio clínico.
+    \item Utilizar las explicaciones SHAP para identificar factores de riesgo modificables.
+    \item Validar localmente el modelo antes de su implementación rutinaria.
+    \item Participar en estudios de evaluación de impacto clínico.
+\end{enumerate}
+
+\subsubsection{Para Gestores de Salud}
+
+\begin{enumerate}
+    \item Evaluar la integración de herramientas de ML en sistemas de información hospitalarios.
+    \item Considerar la inversión en infraestructura de datos para habilitar el uso de IA clínica.
+    \item Establecer procesos de gobernanza para la implementación de algoritmos predictivos.
+    \item Facilitar la colaboración multicéntrica para validación y mejora de modelos.
+\end{enumerate}
+
+\subsection{Reflexión Final}
+
+Este estudio representa un paso significativo hacia la integración de la inteligencia artificial en la cardiología de urgencias en el contexto cubano. Los resultados demuestran que es posible desarrollar modelos predictivos de alto rendimiento utilizando datos clínicos rutinarios del registro RECUIMA, superando las limitaciones de las escalas internacionales desarrolladas en poblaciones diferentes.
+
+Aunque los resultados son prometedores, el camino hacia la implementación clínica requiere validación rigurosa en cohortes independientes, colaboración multidisciplinaria entre informáticos, estadísticos y clínicos, y un compromiso continuo con la transparencia y la ética en el desarrollo de algoritmos de salud.
+
+La predicción de riesgo no es un fin en sí mismo, sino una herramienta para mejorar la atención al paciente. El verdadero valor de estos modelos se materializará cuando contribuyan a salvar vidas mediante una mejor identificación de pacientes vulnerables, una asignación más eficiente de recursos sanitarios, y una comunicación más efectiva del pronóstico entre el equipo de salud, los pacientes y sus familias.

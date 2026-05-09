@@ -1,0 +1,188 @@
+% ============================================================================
+% SECCIÓN 02: ESTADO DEL ARTE
+% ============================================================================
+
+\section{Estado del Arte}
+\label{sec:estado_del_arte}
+
+% NOTA: Esta sección integra y expande el contenido del archivo 
+% estado_del_arte_ml_infarcto.tex proporcionado
+
+\subsection{Modelos Clásicos de Predicción de Mortalidad en IAM}
+
+Las escalas de riesgo clásicas constituyen la base sobre la que se ha desarrollado la predicción pronóstica en el \gls{iam}. Entre las más utilizadas destacan:
+
+\subsubsection{Escala GRACE}
+
+El \textit{Global Registry of Acute Coronary Events} \citep{fox2006grace} representa el estándar de referencia actual para la estratificación de riesgo en síndromes coronarios agudos. La escala GRACE incorpora las siguientes variables:
+
+\begin{table}[H]
+\centering
+\caption{Variables incluidas en la escala GRACE}
+\label{tab:grace_variables}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Variable} & \textbf{Tipo} & \textbf{Rango de puntos} \\
+\midrule
+Edad & Continua & 0--100 \\
+Frecuencia cardíaca & Continua & 0--46 \\
+Presión arterial sistólica & Continua & 0--58 \\
+Creatinina sérica & Continua & 0--28 \\
+Clase Killip & Categórica & 0--59 \\
+Parada cardiorrespiratoria al ingreso & Binaria & 0--39 \\
+Desviación del segmento ST & Binaria & 0--28 \\
+Elevación de biomarcadores & Binaria & 0--14 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Escala TIMI}
+
+La escala \textit{Thrombolysis In Myocardial Infarction} \citep{antman2000timi} ofrece una alternativa más sencilla, derivada de ensayos clínicos controlados:
+
+\begin{table}[H]
+\centering
+\caption{Variables incluidas en la escala TIMI para IAM con elevación del ST}
+\label{tab:timi_variables}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Variable} & \textbf{Puntos} \\
+\midrule
+Edad $\geq$ 75 años & 3 \\
+Edad 65--74 años & 2 \\
+Diabetes, hipertensión o angina & 1 \\
+PAS $<$ 100 mmHg & 3 \\
+FC $>$ 100 lpm & 2 \\
+Killip II--IV & 2 \\
+Peso $<$ 67 kg & 1 \\
+Elevación ST anterior o BRIHH & 1 \\
+Tiempo hasta reperfusión $>$ 4 horas & 1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Otras Escalas Contemporáneas}
+
+\begin{itemize}
+    \item \textbf{ACTION Registry-GWTG}: Incorpora datos contemporáneos incluyendo biomarcadores y tratamientos de reperfusión, mejorando la discriminación en poblaciones modernas \citep{morrow2013action}.
+    
+    \item \textbf{ProACS}: Desarrollada específicamente para poblaciones europeas, con énfasis en la presentación clínica inicial \citep{pinto2015proacs}.
+\end{itemize}
+
+\subsection{Limitaciones de los Modelos Tradicionales}
+
+Los modelos basados en regresión logística presentan limitaciones inherentes:
+
+\begin{enumerate}
+    \item \textbf{Asunciones de linealidad}: Relaciones lineales entre variables independientes y el logit del resultado.
+    
+    \item \textbf{Interacciones predefinidas}: Requieren especificación explícita de términos de interacción.
+    
+    \item \textbf{Distribuciones asimétricas}: Dificultad para manejar variables con distribuciones no gaussianas.
+    
+    \item \textbf{Colinealidad}: Sensibilidad a correlaciones entre predictores.
+    
+    \item \textbf{Falta de actualización}: Modelos estáticos que no se adaptan a cambios en la práctica clínica.
+\end{enumerate}
+
+\subsection{Aprendizaje Automático en Predicción Cardiovascular}
+
+\subsubsection{Evolución Histórica}
+
+El uso de técnicas de \gls{ml} en cardiología ha experimentado un crecimiento exponencial en la última década, impulsado por:
+
+\begin{itemize}
+    \item Disponibilidad de grandes bases de datos clínicos (EHR, registros).
+    \item Avances en capacidad computacional.
+    \item Desarrollo de algoritmos más sofisticados.
+    \item Técnicas de explicabilidad que facilitan la interpretación.
+\end{itemize}
+
+\subsubsection{Estudios Relevantes}
+
+\begin{keypoint}
+\textbf{Principales hallazgos en la literatura:}
+\begin{itemize}
+    \item Los modelos de gradient boosting (XGBoost, LightGBM) consistentemente superan a la regresión logística en predicción de mortalidad por IAM.
+    \item El AUROC de modelos de ML típicamente oscila entre 0.85--0.93, comparado con 0.75--0.82 para escalas tradicionales.
+    \item Variables como edad, presión arterial, función renal y biomarcadores cardíacos emergen consistentemente como los predictores más importantes.
+\end{itemize}
+\end{keypoint}
+
+\paragraph{Zhu et al. (2024)}
+Estudio multicéntrico con más de 20,000 pacientes con IAM. El modelo XGBoost alcanzó un AUROC de 0.93, significativamente superior a GRACE (0.81) y TIMI (0.78). Los predictores más importantes fueron: edad, presión arterial sistólica, fracción de eyección, NT-proBNP y creatinina \citep{zhu2024ml}.
+
+\paragraph{Oliveira et al. (2023)}
+Comparación sistemática de algoritmos (regresión logística penalizada, random forest, XGBoost, redes neuronales) en 5,000 pacientes. Los modelos basados en árboles mostraron mejor rendimiento global (AUROC = 0.89) y mejor calibración \citep{oliveira2023ml}.
+
+\paragraph{Wang et al. (2022)}
+Integración de biomarcadores inflamatorios (proteína C reactiva, leucocitos) y función renal (filtrado glomerular estimado) en modelos de ML. La combinación de variables clínicas y analíticas mejoró significativamente la predicción \citep{wang2022ami}.
+
+\subsubsection{Comparación de Algoritmos}
+
+\begin{table}[H]
+\centering
+\caption{Comparación de algoritmos de ML en predicción de mortalidad por IAM (revisión de literatura)}
+\label{tab:comparacion_algoritmos_literatura}
+\begin{tabular}{@{}lcccl@{}}
+\toprule
+\textbf{Algoritmo} & \textbf{AUROC} & \textbf{Sensibilidad} & \textbf{Especificidad} & \textbf{Ventajas} \\
+\midrule
+Regresión Logística & 0.75--0.82 & 0.65--0.75 & 0.70--0.80 & Interpretable, baseline \\
+Random Forest & 0.82--0.88 & 0.70--0.82 & 0.75--0.85 & Robusto, no lineal \\
+XGBoost & 0.85--0.93 & 0.75--0.88 & 0.80--0.90 & Alto rendimiento \\
+Redes Neuronales & 0.80--0.90 & 0.70--0.85 & 0.75--0.88 & Patrones complejos \\
+Ensambles & 0.87--0.94 & 0.78--0.90 & 0.82--0.92 & Combina fortalezas \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Predicción de Arritmias Ventriculares}
+
+Las arritmias ventriculares (taquicardia y fibrilación ventricular) constituyen una causa principal de muerte súbita intrahospitalaria en pacientes con IAM. Los enfoques de ML se han centrado en:
+
+\begin{itemize}
+    \item \textbf{Análisis de señales ECG}: Redes neuronales convolucionales (CNN) para detección de patrones arritmogénicos.
+    \item \textbf{Variables clínicas tabulares}: Random Forest y XGBoost usando variables como intervalo QTc, bloqueo de rama, número de derivaciones afectadas.
+    \item \textbf{Modelos híbridos}: Combinación de datos estructurados y señales electrocardiográficas.
+\end{itemize}
+
+\subsection{Desafíos y Vacíos en la Literatura}
+
+\begin{enumerate}
+    \item \textbf{Validación externa limitada}: Mayoría de estudios validan en la misma cohorte de desarrollo.
+    
+    \item \textbf{Desbalance de clases}: Mortalidad intrahospitalaria típicamente $<$10\%, generando sesgos hacia la clase mayoritaria.
+    
+    \item \textbf{Interpretabilidad}: Modelos de caja negra dificultan la adopción clínica; técnicas SHAP y LIME mitigan este problema.
+    
+    \item \textbf{Calibración}: Modelos con buena discriminación pero mala calibración pueden inducir decisiones erróneas.
+    
+    \item \textbf{Heterogeneidad poblacional}: Modelos desarrollados en un contexto pueden no generalizar a otras poblaciones.
+    
+    \item \textbf{Datos faltantes}: Estrategias de imputación pueden introducir sesgos.
+\end{enumerate}
+
+\subsection{Oportunidades de Investigación}
+
+\begin{itemize}
+    \item Desarrollo de modelos específicos para poblaciones latinoamericanas y caribeñas.
+    \item Integración multimodal de datos clínicos, analíticos, electrocardiográficos e imagenológicos.
+    \item Actualización dinámica del riesgo durante la hospitalización.
+    \item Evaluación de impacto clínico mediante ensayos de implementación.
+    \item Modelos federados que preserven la privacidad de datos.
+\end{itemize}
+
+\subsection{Marco Teórico del Presente Estudio}
+
+El presente trabajo se fundamenta en:
+
+\begin{enumerate}
+    \item \textbf{Teoría de aprendizaje estadístico}: Principios de generalización, sesgo-varianza, regularización.
+    
+    \item \textbf{Medicina basada en evidencia}: Evaluación rigurosa de rendimiento predictivo.
+    
+    \item \textbf{Explicabilidad de IA} (\textit{Explainable AI}): Técnicas SHAP para interpretación de modelos complejos.
+    
+    \item \textbf{Guías TRIPOD+AI}: Estándares para reporte transparente de modelos de predicción.
+\end{enumerate}

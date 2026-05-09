@@ -1,0 +1,43 @@
+# Dockerfile para Jupyter Notebook con soporte AutoML
+FROM python:3.11-slim
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    # AutoML configuration
+    AUTOML_BACKEND=flaml
+
+# Argumento para instalar auto-sklearn
+ARG INSTALL_AUTOSKLEARN=false
+
+WORKDIR /app
+
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    git \
+    libgomp1 \
+    libopenblas-dev \
+    swig \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar archivos de requisitos
+COPY requirements.txt .
+
+# Instalar dependencias incluyendo Jupyter y AutoML
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt && \
+    pip install jupyterlab jupyter notebook ipywidgets && \
+    pip install "flaml[automl]"
+
+# Instalar auto-sklearn opcionalmente
+RUN if [ "$INSTALL_AUTOSKLEARN" = "true" ]; then \
+        pip install pyrfr ConfigSpace smac auto-sklearn; \
+    fi
+
+# Exponer puerto para Jupyter
+EXPOSE 8888
+
+# Comando por defecto
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]

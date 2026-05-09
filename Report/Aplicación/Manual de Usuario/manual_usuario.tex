@@ -1,0 +1,1284 @@
+\documentclass[11pt,a4paper]{article}
+
+% ============================================================================
+% PAQUETES
+% ============================================================================
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fontawesome5}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usetikzlibrary{shadows,positioning}
+\usepackage{mdframed}
+\usepackage{pifont}
+\usepackage{colortbl}
+\usepackage{tabularx}
+\usepackage{soul}
+\usepackage{microtype}
+\usepackage{subcaption}
+
+% ============================================================================
+% COLORES MODERNOS
+% ============================================================================
+\definecolor{primaryblue}{RGB}{41, 98, 255}
+\definecolor{secondaryblue}{RGB}{66, 133, 244}
+\definecolor{accentgreen}{RGB}{52, 168, 83}
+\definecolor{warningyellow}{RGB}{251, 188, 4}
+\definecolor{errorred}{RGB}{234, 67, 53}
+\definecolor{darkgray}{RGB}{60, 64, 67}
+\definecolor{lightgray}{RGB}{248, 249, 250}
+\definecolor{mediumgray}{RGB}{128, 134, 139}
+\definecolor{clinicalblue}{RGB}{25, 118, 210}
+\definecolor{datagreen}{RGB}{56, 142, 60}
+\definecolor{mlpurple}{RGB}{103, 58, 183}
+\definecolor{devgray}{RGB}{97, 97, 97}
+\definecolor{cardwhite}{RGB}{255, 255, 255}
+
+% ============================================================================
+% CONFIGURACIÓN DE PÁGINA
+% ============================================================================
+\geometry{
+    left=2.5cm,
+    right=2.5cm,
+    top=3cm,
+    bottom=3cm
+}
+\setlength{\parskip}{0.6em}
+\setlength{\parindent}{0pt}
+\setlength{\headheight}{15pt}
+\onehalfspacing
+
+% ============================================================================
+% CONFIGURACIÓN DE HYPERREF
+% ============================================================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    filecolor=magenta,
+    urlcolor=secondaryblue,
+    pdftitle={Manual de Usuario - Mortality AMI Predictor},
+    pdfauthor={Equipo de Desarrollo},
+    bookmarks=true,
+    bookmarksopen=true,
+}
+
+% ============================================================================
+% ENCABEZADOS Y PIE DE PÁGINA
+% ============================================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{mediumgray}{\leftmark}}
+\fancyhead[R]{\small\textcolor{primaryblue}{Mortality AMI Predictor}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{primaryblue}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0pt}
+
+% ============================================================================
+% ESTILOS DE SECCIONES
+% ============================================================================
+\titleformat{\section}
+    {\Large\bfseries\color{primaryblue}}
+    {\thesection}{1em}{}[\titlerule]
+\titleformat{\subsection}
+    {\large\bfseries\color{darkgray}}
+    {\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+    {\normalsize\bfseries\color{mediumgray}}
+    {\thesubsubsection}{1em}{}
+
+% ============================================================================
+% CAJAS PERSONALIZADAS
+% ============================================================================
+\tcbuselibrary{skins,breakable}
+
+% Caja de información
+\newtcolorbox{infobox}[1][]{
+    enhanced,
+    breakable,
+    colback=primaryblue!5,
+    colframe=primaryblue,
+    left=12pt,
+    right=12pt,
+    top=8pt,
+    bottom=8pt,
+    arc=4pt,
+    boxrule=1pt,
+    fonttitle=\bfseries,
+    title={\faInfoCircle\hspace{0.5em}#1},
+    coltitle=white,
+    colbacktitle=primaryblue,
+    attach boxed title to top left={yshift=-2mm, xshift=5mm},
+    boxed title style={arc=3pt, boxrule=0pt}
+}
+
+% Caja de advertencia
+\newtcolorbox{warningbox}[1][]{
+    enhanced,
+    breakable,
+    colback=warningyellow!10,
+    colframe=warningyellow!80!black,
+    left=12pt,
+    right=12pt,
+    top=8pt,
+    bottom=8pt,
+    arc=4pt,
+    boxrule=1pt,
+    fonttitle=\bfseries,
+    title={\faExclamationTriangle\hspace{0.5em}#1},
+    coltitle=black,
+    colbacktitle=warningyellow!50,
+    attach boxed title to top left={yshift=-2mm, xshift=5mm},
+    boxed title style={arc=3pt, boxrule=0pt}
+}
+
+% Caja de éxito/tip
+\newtcolorbox{successbox}[1][]{
+    enhanced,
+    breakable,
+    colback=accentgreen!5,
+    colframe=accentgreen,
+    left=12pt,
+    right=12pt,
+    top=8pt,
+    bottom=8pt,
+    arc=4pt,
+    boxrule=1pt,
+    fonttitle=\bfseries,
+    title={\faCheckCircle\hspace{0.5em}#1},
+    coltitle=white,
+    colbacktitle=accentgreen,
+    attach boxed title to top left={yshift=-2mm, xshift=5mm},
+    boxed title style={arc=3pt, boxrule=0pt}
+}
+
+% Caja de perfil de usuario
+\newtcolorbox{userprofilebox}[2][]{
+    enhanced,
+    breakable,
+    colback=#2!5,
+    colframe=#2,
+    left=15pt,
+    right=15pt,
+    top=12pt,
+    bottom=12pt,
+    arc=6pt,
+    boxrule=2pt,
+    fonttitle=\Large\bfseries,
+    title={#1},
+    coltitle=white,
+    colbacktitle=#2,
+    attach boxed title to top center={yshift=-3mm},
+    boxed title style={arc=4pt, boxrule=0pt}
+}
+
+% Caja de paso
+\newtcolorbox{stepbox}[1][]{
+    enhanced,
+    colback=lightgray,
+    colframe=mediumgray,
+    left=10pt,
+    right=10pt,
+    top=6pt,
+    bottom=6pt,
+    arc=3pt,
+    boxrule=0.5pt,
+    before upper={\textbf{\textcolor{primaryblue}{#1}}\hspace{0.5em}}
+}
+
+% ============================================================================
+% COMANDOS PERSONALIZADOS
+% ============================================================================
+\newcommand{\menuitem}[1]{\textbf{\textcolor{primaryblue}{#1}}}
+\newcommand{\boton}[1]{\fcolorbox{mediumgray}{lightgray}{\small\texttt{#1}}}
+\newcommand{\tecla}[1]{\fcolorbox{darkgray}{lightgray}{\small\texttt{#1}}}
+\newcommand{\icono}[1]{\textcolor{primaryblue}{#1}}
+\newcommand{\pagina}[1]{\textbf{\textcolor{secondaryblue}{#1}}}
+\newcommand{\cmark}{\textcolor{accentgreen}{\ding{51}}}
+\newcommand{\xmark}{\textcolor{errorred}{\ding{55}}}
+
+% ============================================================================
+% DOCUMENTO
+% ============================================================================
+\begin{document}
+
+% ============================================================================
+% PORTADA
+% ============================================================================
+\begin{titlepage}
+    \begin{tikzpicture}[remember picture,overlay]
+        % Fondo degradado
+        \fill[primaryblue!90] (current page.south west) rectangle (current page.north east);
+        
+        % Patrón decorativo
+        \foreach \i in {0,0.5,...,15} {
+            \draw[white,opacity=0.05,line width=2pt] 
+                ([xshift=\i cm]current page.south west) -- 
+                ([xshift=\i cm, yshift=3cm]current page.north west);
+        }
+        
+        % Franja lateral
+        \fill[secondaryblue] ([xshift=-0.5cm]current page.north west) rectangle ([xshift=1cm]current page.south west);
+        
+        % Caja central
+        \node[
+            fill=white,
+            rounded corners=15pt,
+            inner sep=30pt,
+            drop shadow={shadow xshift=3pt, shadow yshift=-3pt, opacity=0.3}
+        ] at (current page.center) {
+            \begin{minipage}{0.75\textwidth}
+                \centering
+                
+                % Icono principal
+                {\fontsize{60}{72}\selectfont\textcolor{primaryblue}{\faHeartbeat}}
+                
+                \vspace{1cm}
+                
+                % Título principal
+                {\fontsize{28}{34}\selectfont\bfseries\textcolor{darkgray}{Manual de Usuario}}
+                
+                \vspace{0.5cm}
+                
+                {\fontsize{22}{26}\selectfont\textcolor{primaryblue}{Mortality AMI Predictor}}
+                
+                \vspace{0.3cm}
+                
+                {\large\textcolor{mediumgray}{Sistema de Predicción de Mortalidad\\
+                en Infarto Agudo de Miocardio}}
+                
+                \vspace{1.5cm}
+                
+                % Badges de usuarios
+                \begin{tabular}{ccc}
+                    \fcolorbox{clinicalblue}{clinicalblue!10}{
+                        \begin{minipage}{3cm}
+                            \centering
+                            \textcolor{clinicalblue}{\faUserMd}\\
+                            \small\textcolor{clinicalblue}{Personal Clínico}
+                        \end{minipage}
+                    } &
+                    \fcolorbox{datagreen}{datagreen!10}{
+                        \begin{minipage}{3cm}
+                            \centering
+                            \textcolor{datagreen}{\faChartBar}\\
+                            \small\textcolor{datagreen}{Científicos de Datos}
+                        \end{minipage}
+                    } &
+                    \fcolorbox{mlpurple}{mlpurple!10}{
+                        \begin{minipage}{3cm}
+                            \centering
+                            \textcolor{mlpurple}{\faCode}\\
+                            \small\textcolor{mlpurple}{Desarrolladores}
+                        \end{minipage}
+                    }
+                \end{tabular}
+                
+                \vspace{1.5cm}
+                
+                {\small\textcolor{mediumgray}{Versión 2.0 | Diciembre 2025}}
+            \end{minipage}
+        };
+    \end{tikzpicture}
+\end{titlepage}
+
+% ============================================================================
+% PÁGINA DE INFORMACIÓN DEL PROYECTO
+% ============================================================================
+\begin{titlepage}
+    \centering
+    
+    % Logos institucionales
+    \vspace*{1cm}
+    \begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.25\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{logos/logo_uh.png}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.25\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{logos/logo_matcom.jpeg}
+    \end{subfigure}
+    \end{figure}
+    
+    \vspace{1cm}
+        
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.25\textwidth]{logos/logo_ami_predictor.png}
+    \end{figure}
+    
+    {\large\textbf{Versión 1.0}\\[0.5cm]}
+
+    \vfill
+    
+    {\large
+    \textbf{Integrantes del Equipo:}\\[0.3cm]
+    }
+    {\normalsize
+    \begin{itemize}[leftmargin=*]
+        \item Richard Alejandro Matos Arderí
+        \item Abel Ponce González
+        \item Abraham Romero Imbert
+        \item Michell Viu Ramirez
+        \item Eveliz Espinaco Milián
+        \item Eduardo Brito Labrada
+        \item Ernesto Abreu Peraza
+    \end{itemize}
+    }
+
+    
+    \vfill
+
+    {\large
+    \textbf{Institución:}\\[0.3cm]
+    Facultad de Matemática y Computación\\
+    Universidad de La Habana\\[0.5cm]
+    Registro Cubano de Infarto Agudo del Miocardio
+    }
+    
+    \vfill
+    
+    {\large \today}
+\end{titlepage}
+
+% ============================================================================
+% ÍNDICE
+% ============================================================================
+\tableofcontents
+\clearpage
+
+% ============================================================================
+% INTRODUCCIÓN
+% ============================================================================
+\section{Introducción}
+
+\subsection{Bienvenido a Mortality AMI Predictor}
+
+\textbf{Mortality AMI Predictor} es una aplicación integral para la predicción de mortalidad intrahospitalaria en pacientes con Infarto Agudo de Miocardio (IAM). El sistema combina técnicas avanzadas de Machine Learning con una interfaz intuitiva diseñada para diferentes perfiles de usuario.
+
+\begin{infobox}[Propósito del Sistema]
+El objetivo principal es proporcionar herramientas que ayuden a:
+\begin{itemize}[leftmargin=*]
+    \item Predecir el riesgo de mortalidad intrahospitalaria
+    \item Calcular scores clínicos validados (GRACE, TIMI)
+    \item Analizar factores de riesgo mediante explicabilidad
+    \item Optimizar intervenciones mediante análisis ``what-if''
+\end{itemize}
+\end{infobox}
+
+\begin{warningbox}[Uso Responsable]
+Esta herramienta es para \textbf{fines de investigación y educación}. Las decisiones clínicas deben ser tomadas siempre por profesionales de salud cualificados utilizando su juicio clínico.
+\end{warningbox}
+
+\subsection{Perfiles de Usuario}
+
+El sistema está diseñado para tres tipos principales de usuarios, cada uno con diferentes necesidades y niveles de experiencia técnica:
+
+\vspace{1em}
+
+\begin{userprofilebox}[\faUserMd\hspace{0.5em}Personal Clínico]{clinicalblue}
+\textbf{Médicos, enfermeros y personal sanitario} que necesitan:
+\begin{itemize}[leftmargin=*]
+    \item Calcular scores de riesgo clínico rápidamente
+    \item Obtener predicciones de mortalidad para pacientes
+    \item Entender qué factores influyen en el pronóstico
+\end{itemize}
+\textbf{Secciones recomendadas:} Predicciones, Scores Clínicos, Explicabilidad básica
+\end{userprofilebox}
+
+\vspace{1em}
+
+\begin{userprofilebox}[\faChartBar\hspace{0.5em}Científicos de Datos / Investigadores]{datagreen}
+\textbf{Analistas y estadísticos} que requieren:
+\begin{itemize}[leftmargin=*]
+    \item Análisis exploratorio de datos clínicos
+    \item Entrenamiento y comparación de modelos
+    \item Evaluación rigurosa con métricas estándar
+    \item Análisis de explicabilidad avanzado (SHAP)
+\end{itemize}
+\textbf{Secciones recomendadas:} Limpieza de Datos, EDA, Entrenamiento, Evaluación, AutoML
+\end{userprofilebox}
+
+\vspace{1em}
+
+\begin{userprofilebox}[\faCode\hspace{0.5em}Desarrolladores / Programadores]{mlpurple}
+\textbf{Ingenieros de ML y desarrolladores} que buscan:
+\begin{itemize}[leftmargin=*]
+    \item Crear modelos personalizados
+    \item Integrar con sistemas externos
+    \item Extender funcionalidades
+    \item Desplegar en producción con Docker
+\end{itemize}
+\textbf{Secciones recomendadas:} Modelos Personalizados, API, Despliegue Docker
+\end{userprofilebox}
+
+% ============================================================================
+% INICIO RÁPIDO
+% ============================================================================
+\section{Inicio Rápido}
+
+\subsection{Requisitos del Sistema}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\rowcolor{primaryblue!10}
+\textbf{Componente} & \textbf{Requisito} \\
+\hline
+Sistema Operativo & Windows 10/11, macOS 10.15+, Linux (Ubuntu 20.04+) \\
+\hline
+Python & 3.9 o superior \\
+\hline
+RAM & Mínimo 8 GB (16 GB recomendado para AutoML) \\
+\hline
+Espacio en disco & 2 GB para instalación + espacio para datasets \\
+\hline
+Navegador & Chrome, Firefox, Edge o Safari (versiones recientes) \\
+\hline
+\end{tabularx}
+\caption{Requisitos mínimos del sistema}
+\end{table}
+
+\subsection{Instalación}
+
+\begin{stepbox}[Paso 1:]
+Clonar el repositorio o descargar los archivos del proyecto:
+\begin{verbatim}
+git clone https://github.com/tu-usuario/mortality-ami-predictor.git
+cd mortality-ami-predictor/Tools
+\end{verbatim}
+\end{stepbox}
+
+\begin{stepbox}[Paso 2:]
+Crear un entorno virtual e instalar dependencias:
+\begin{verbatim}
+python -m venv venv
+venv\Scripts\activate      # Windows
+source venv/bin/activate   # Linux/macOS
+pip install -r requirements.txt
+\end{verbatim}
+\end{stepbox}
+
+\begin{stepbox}[Paso 3:]
+Iniciar la aplicación:
+\begin{verbatim}
+streamlit run dashboard/Dashboard.py
+\end{verbatim}
+\end{stepbox}
+
+\begin{successbox}[Listo]
+La aplicación se abrirá automáticamente en tu navegador en \texttt{http://localhost:8501}
+\end{successbox}
+
+\subsection{Primera Vista del Dashboard}
+
+Al iniciar la aplicación, verás la página principal con:
+
+\begin{itemize}[leftmargin=*]
+    \item \icono{\faHeartbeat} \textbf{Logo y título} del sistema
+    \item \icono{\faBars} \textbf{Barra lateral} con navegación a todas las páginas
+    \item \icono{\faChartLine} \textbf{Estadísticas rápidas} del dataset (si está configurado)
+    \item \icono{\faInfoCircle} \textbf{Información} sobre las funcionalidades disponibles
+\end{itemize}
+
+% ============================================================================
+% GUÍA PARA PERSONAL CLÍNICO
+% ============================================================================
+\section{Guía para Personal Clínico}
+\label{sec:clinico}
+
+\begin{center}
+\fcolorbox{clinicalblue}{clinicalblue!10}{
+\begin{minipage}{0.9\textwidth}
+\centering
+\vspace{0.5em}
+{\Large\textcolor{clinicalblue}{\faUserMd}\hspace{0.5em}\textbf{Sección para Personal Clínico}}\\[0.3em]
+{\small Esta sección está diseñada para médicos y personal sanitario.\\
+No requiere conocimientos de programación ni estadística avanzada.}
+\vspace{0.5em}
+\end{minipage}
+}
+\end{center}
+
+\subsection{Calculadora de Scores Clínicos}
+
+La página \pagina{\faClipboardList\hspace{0.3em}Clinical Scores} permite calcular los scores de riesgo más utilizados en cardiología.
+
+\subsubsection{Score GRACE}
+
+El \textbf{GRACE Score} (Global Registry of Acute Coronary Events) estima la mortalidad intrahospitalaria y a 6 meses en pacientes con síndrome coronario agudo.
+
+\textbf{Para calcular el score GRACE:}
+
+\begin{enumerate}[leftmargin=*]
+    \item Navega a \menuitem{06 \faClipboardList\hspace{0.2em}Clinical Scores}
+    \item Selecciona ``GRACE Score'' en el menú desplegable
+    \item Introduce los datos del paciente:
+    
+    \begin{table}[H]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabularx}{\textwidth}{|l|l|X|}
+    \hline
+    \rowcolor{clinicalblue!10}
+    \textbf{Variable} & \textbf{Unidad} & \textbf{Descripción} \\
+    \hline
+    Edad & años & Edad del paciente \\
+    \hline
+    Frecuencia cardíaca & lpm & Latidos por minuto al ingreso \\
+    \hline
+    Presión arterial sistólica & mmHg & PA sistólica al ingreso \\
+    \hline
+    Creatinina & mg/dL & Nivel sérico de creatinina \\
+    \hline
+    Clase Killip & I-IV & Clasificación de insuficiencia cardíaca \\
+    \hline
+    Desviación ST & Sí/No & Elevación o depresión del ST en ECG \\
+    \hline
+    Enzimas cardíacas & Sí/No & Troponina o CK-MB elevadas \\
+    \hline
+    Parada cardíaca & Sí/No & PCR al ingreso \\
+    \hline
+    \end{tabularx}
+    \end{table}
+    
+    \item Haz clic en \boton{Calcular GRACE Score}
+    \item Revisa el resultado con la categoría de riesgo
+\end{enumerate}
+
+\begin{infobox}[Interpretación del GRACE Score]
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Bajo riesgo:} $<$ 109 puntos (mortalidad $<$ 1\%)
+    \item \textbf{Riesgo intermedio:} 109-140 puntos (mortalidad 1-3\%)
+    \item \textbf{Alto riesgo:} $>$ 140 puntos (mortalidad $>$ 3\%)
+\end{itemize}
+\end{infobox}
+
+\subsubsection{Score TIMI}
+
+El \textbf{TIMI Score} evalúa el riesgo en pacientes con IAM con elevación del ST.
+
+\textbf{Variables del TIMI:}
+\begin{itemize}[leftmargin=*]
+    \item Edad $\geq$ 65 años
+    \item Diabetes mellitus
+    \item Hipertensión arterial
+    \item Infarto previo
+    \item Otros factores cardiovasculares
+\end{itemize}
+
+\subsection{Realizar Predicciones}
+
+La página \pagina{\faMagic\hspace{0.3em}Predictions} permite obtener predicciones de mortalidad para pacientes individuales.
+
+\subsubsection{Predicción Individual}
+
+\begin{enumerate}[leftmargin=*]
+    \item Navega a \menuitem{03 \faMagic\hspace{0.2em}Predictions}
+    \item Selecciona un modelo entrenado en la barra lateral
+    \item Introduce los valores de las variables clínicas del paciente
+    \item El sistema mostrará:
+    \begin{itemize}
+        \item \textbf{Probabilidad de mortalidad} (0-100\%)
+        \item \textbf{Clasificación de riesgo} (bajo/medio/alto)
+        \item \textbf{Factores más influyentes} en la predicción
+    \end{itemize}
+\end{enumerate}
+
+\begin{warningbox}[Interpretación Clínica]
+Las predicciones del modelo son \textbf{probabilísticas} y deben interpretarse en el contexto clínico completo del paciente. Considere siempre:
+\begin{itemize}[leftmargin=*]
+    \item Comorbilidades no incluidas en el modelo
+    \item Factores socioeconómicos
+    \item Preferencias del paciente
+    \item Recursos disponibles
+\end{itemize}
+\end{warningbox}
+
+\subsection{Entender las Predicciones (Explicabilidad Básica)}
+
+La página \pagina{\faSearch\hspace{0.3em}Explainability} ayuda a entender \textbf{por qué} el modelo hace una predicción.
+
+\subsubsection{Gráfico de Importancia de Variables}
+
+Este gráfico muestra qué variables tienen mayor influencia en la predicción:
+
+\begin{itemize}[leftmargin=*]
+    \item \textcolor{errorred}{\textbf{Barras rojas}}: Variables que \textbf{aumentan} el riesgo
+    \item \textcolor{accentgreen}{\textbf{Barras verdes}}: Variables que \textbf{disminuyen} el riesgo
+    \item \textbf{Longitud de la barra}: Magnitud del impacto
+\end{itemize}
+
+\subsubsection{Ejemplo de Interpretación}
+
+\begin{center}
+\fcolorbox{lightgray}{cardwhite}{
+\begin{minipage}{0.85\textwidth}
+\vspace{0.5em}
+\textbf{Paciente ejemplo:}
+\begin{itemize}[leftmargin=*]
+    \item Probabilidad de mortalidad: \textbf{35\%}
+    \item Factor principal de riesgo: \textcolor{errorred}{Edad avanzada (+12\%)}
+    \item Factor protector principal: \textcolor{accentgreen}{PA sistólica normal (-8\%)}
+\end{itemize}
+\textbf{Interpretación:} La edad del paciente es el factor que más contribuye al riesgo, mientras que una presión arterial sistólica dentro de rangos normales actúa como factor protector.
+\vspace{0.5em}
+\end{minipage}
+}
+\end{center}
+
+% ============================================================================
+% GUÍA PARA CIENTÍFICOS DE DATOS
+% ============================================================================
+\section{Guía para Científicos de Datos}
+\label{sec:datascience}
+
+\begin{center}
+\fcolorbox{datagreen}{datagreen!10}{
+\begin{minipage}{0.9\textwidth}
+\centering
+\vspace{0.5em}
+{\Large\textcolor{datagreen}{\faChartBar}\hspace{0.5em}\textbf{Sección para Científicos de Datos}}\\[0.3em]
+{\small Esta sección asume conocimientos de estadística, ML y análisis de datos.}
+\vspace{0.5em}
+\end{minipage}
+}
+\end{center}
+
+\subsection{Carga y Limpieza de Datos}
+
+La página \pagina{\faBroom\hspace{0.3em}Data Cleaning and EDA} es el punto de entrada para cualquier análisis.
+
+\subsubsection{Carga de Datos}
+
+El sistema soporta múltiples formatos y fuentes:
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|l|X|l|}
+\hline
+\rowcolor{datagreen!10}
+\textbf{Método} & \textbf{Descripción} & \textbf{Formatos} \\
+\hline
+Ruta del archivo & Especificar path absoluto o relativo & CSV, Excel \\
+\hline
+Subir archivo & Drag \& drop o selección de archivo & CSV, XLSX, XLS \\
+\hline
+Dataset limpio & Cargar datasets previamente procesados & CSV \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{Pipeline de Limpieza}
+
+El módulo \texttt{DataCleaner} proporciona un pipeline configurable:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Imputación de valores faltantes}
+    \begin{itemize}
+        \item Numéricos: media, mediana, KNN
+        \item Categóricos: moda, valor constante
+    \end{itemize}
+    
+    \item \textbf{Detección y tratamiento de outliers}
+    \begin{itemize}
+        \item Métodos: IQR, Z-score
+        \item Tratamiento: cap (winsorización), remove, impute
+    \end{itemize}
+    
+    \item \textbf{Codificación de variables categóricas}
+    \begin{itemize}
+        \item Label encoding
+        \item One-hot encoding
+        \item Target encoding
+    \end{itemize}
+    
+    \item \textbf{Escalado de características}
+    \begin{itemize}
+        \item StandardScaler (z-score)
+        \item MinMaxScaler
+        \item RobustScaler
+    \end{itemize}
+\end{enumerate}
+
+\begin{successbox}[Tip: Configuración Recomendada]
+Para datos clínicos con outliers y valores faltantes:
+\begin{itemize}[leftmargin=*]
+    \item Imputación numérica: \textbf{mediana} (robusta a outliers)
+    \item Outliers: \textbf{IQR + cap} (preserva datos)
+    \item Escalado: \textbf{RobustScaler} (insensible a outliers)
+\end{itemize}
+\end{successbox}
+
+\subsection{Análisis Exploratorio de Datos (EDA)}
+
+\subsubsection{Análisis Univariado}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Variables numéricas:} Histogramas, boxplots, estadísticos descriptivos ($\mu$, $\sigma$, mediana, IQR)
+    \item \textbf{Variables categóricas:} Gráficos de barras, frecuencias absolutas y relativas
+\end{itemize}
+
+\subsubsection{Análisis Bivariado}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Numérico-Numérico:} Matriz de correlación (Pearson, Spearman), scatter plots
+    \item \textbf{Numérico-Categórico:} Boxplots por grupo, pruebas t/Mann-Whitney
+    \item \textbf{Categórico-Categórico:} Tablas de contingencia, Chi-cuadrado, Cramér's V
+\end{itemize}
+
+\subsubsection{Análisis Multivariado}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{PCA:} Reducción de dimensionalidad lineal
+    \item \textbf{ICA:} Análisis de componentes independientes
+    \item \textbf{Clustering:} Detección de subgrupos
+\end{itemize}
+
+\subsection{Entrenamiento de Modelos}
+
+La página \pagina{\faRobot\hspace{0.3em}Model Training} permite entrenar múltiples algoritmos.
+
+\subsubsection{Algoritmos Disponibles}
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\rowcolor{datagreen!10}
+\textbf{Categoría} & \textbf{Algoritmo} & \textbf{Características} \\
+\hline
+\multirow{3}{*}{Lineales} & Logistic Regression & Interpretable, baseline \\
+\cline{2-3}
+ & SGD Classifier & Escalable a big data \\
+\cline{2-3}
+ & SVC (lineal) & Margen máximo \\
+\hline
+\multirow{2}{*}{Árboles} & Decision Tree & Interpretable, propenso a overfit \\
+\cline{2-3}
+ & Random Forest & Ensemble, robusto \\
+\hline
+\multirow{3}{*}{Gradient Boosting} & XGBoost & Alto rendimiento, rápido \\
+\cline{2-3}
+ & LightGBM & Eficiente en memoria \\
+\cline{2-3}
+ & CatBoost & Maneja categóricas nativamente \\
+\hline
+Instancia & KNN & No paramétrico \\
+\hline
+Redes & MLP & Captura no-linealidades \\
+\hline
+\end{tabularx}
+\caption{Algoritmos de clasificación disponibles}
+\end{table}
+
+\subsubsection{Validación Cruzada Rigurosa}
+
+El sistema implementa un pipeline de experimentación academicamente riguroso:
+
+\textbf{FASE 1 - Train + Validation:}
+\begin{itemize}[leftmargin=*]
+    \item Repeated Stratified K-Fold ($\geq$ 30 runs)
+    \item Estimación de $\mu$ (media) y $\sigma$ (desviación estándar)
+    \item Curvas de aprendizaje
+\end{itemize}
+
+\textbf{FASE 2 - Test:}
+\begin{itemize}[leftmargin=*]
+    \item Bootstrap resampling
+    \item Jackknife (leave-one-out)
+    \item Intervalos de confianza
+\end{itemize}
+
+\textbf{FASE 3 - Comparación Estadística:}
+\begin{itemize}[leftmargin=*]
+    \item Test de normalidad (Shapiro-Wilk)
+    \item Paired t-test o Mann-Whitney U
+    \item Corrección de comparaciones múltiples
+\end{itemize}
+
+\subsection{Evaluación de Modelos}
+
+La página \pagina{\faChartLine\hspace{0.3em}Model Evaluation} proporciona métricas exhaustivas.
+
+\subsubsection{Métricas de Clasificación}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|l|X|l|}
+\hline
+\rowcolor{datagreen!10}
+\textbf{Métrica} & \textbf{Descripción} & \textbf{Rango} \\
+\hline
+AUROC & Área bajo curva ROC & [0, 1] \\
+\hline
+AUPRC & Área bajo curva Precision-Recall & [0, 1] \\
+\hline
+Accuracy & Proporción de aciertos & [0, 1] \\
+\hline
+Precision & VP / (VP + FP) & [0, 1] \\
+\hline
+Recall (Sensibilidad) & VP / (VP + FN) & [0, 1] \\
+\hline
+Specificity & VN / (VN + FP) & [0, 1] \\
+\hline
+F1-Score & Media armónica Precision-Recall & [0, 1] \\
+\hline
+Brier Score & Error cuadrático medio de probabilidades & [0, 1] (menor = mejor) \\
+\hline
+\end{tabularx}
+\caption{Métricas de evaluación disponibles}
+\end{table}
+
+\subsubsection{Curvas de Calibración}
+
+Las curvas de calibración evalúan si las probabilidades predichas corresponden con las frecuencias observadas:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Modelo bien calibrado:} Curva cercana a la diagonal
+    \item \textbf{Sobreconfianza:} Curva por debajo de la diagonal
+    \item \textbf{Subconfianza:} Curva por encima de la diagonal
+\end{itemize}
+
+\subsubsection{Decision Curve Analysis (DCA)}
+
+El DCA evalúa la utilidad clínica comparando con estrategias extremas:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Treat All:} Tratar a todos los pacientes
+    \item \textbf{Treat None:} No tratar a nadie
+    \item \textbf{Modelo:} El beneficio neto del modelo
+\end{itemize}
+
+\subsection{Explicabilidad Avanzada (SHAP)}
+
+La página \pagina{\faSearch\hspace{0.3em}Explainability} implementa análisis SHAP completo.
+
+\subsubsection{Visualizaciones SHAP}
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Beeswarm Plot:} Distribución de valores SHAP por feature
+    \item \textbf{Bar Plot:} Importancia media absoluta
+    \item \textbf{Waterfall Plot:} Contribución de cada feature para una predicción
+    \item \textbf{Force Plot:} Visualización interactiva de predicciones individuales
+\end{enumerate}
+
+\subsubsection{Interpretación de SHAP}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{SHAP value positivo:} Aumenta la probabilidad de la clase positiva
+    \item \textbf{SHAP value negativo:} Disminuye la probabilidad
+    \item \textbf{Magnitud:} Indica la fuerza del efecto
+\end{itemize}
+
+\subsection{AutoML}
+
+La página \pagina{\faRobot\hspace{0.3em}AutoML} automatiza la búsqueda de modelos.
+
+\subsubsection{Backends Disponibles}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\rowcolor{datagreen!10}
+\textbf{Backend} & \textbf{Plataforma} & \textbf{Características} \\
+\hline
+FLAML & Cross-platform & Rápido, ligero, 12+ estimadores \\
+\hline
+Auto-sklearn & Linux/WSL & Meta-learning, ensemble automático \\
+\hline
+AutoKeras (NAS) & Cross-platform & Neural Architecture Search \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{Presets de Búsqueda}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Quick} (5 min): Exploración rápida para prototipado
+    \item \textbf{Balanced} (1 hora): Balance entre tiempo y rendimiento
+    \item \textbf{High Performance} (4 horas): Búsqueda exhaustiva
+\end{itemize}
+
+\subsection{Optimización Inversa}
+
+La página \pagina{\faBullseye\hspace{0.3em}Inverse Optimization} permite análisis ``what-if''.
+
+\subsubsection{Concepto}
+
+La optimización inversa responde preguntas como:
+
+\begin{center}
+\textit{``¿Qué valores de presión arterial y medicación minimizarían\\
+el riesgo de mortalidad para este paciente?''}
+\end{center}
+
+\subsubsection{Configuración}
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Variables fijas:} Características no modificables (edad, sexo)
+    \item \textbf{Variables modificables:} Parámetros que pueden optimizarse (PA, medicación)
+    \item \textbf{Restricciones:} Límites clínicamente plausibles
+    \item \textbf{Objetivo:} Probabilidad target de mortalidad
+\end{enumerate}
+
+% ============================================================================
+% GUÍA PARA DESARROLLADORES
+% ============================================================================
+\section{Guía para Desarrolladores}
+\label{sec:desarrolladores}
+
+\begin{center}
+\fcolorbox{mlpurple}{mlpurple!10}{
+\begin{minipage}{0.9\textwidth}
+\centering
+\vspace{0.5em}
+{\Large\textcolor{mlpurple}{\faCode}\hspace{0.5em}\textbf{Sección para Desarrolladores}}\\[0.3em]
+{\small Esta sección requiere conocimientos de Python y desarrollo de software.}
+\vspace{0.5em}
+\end{minipage}
+}
+\end{center}
+
+\subsection{Modelos Personalizados}
+
+La página \pagina{\faWrench\hspace{0.3em}Custom Models} permite crear arquitecturas propias.
+
+\subsubsection{Arquitectura Base}
+
+Todos los modelos personalizados deben heredar de las clases base:
+
+\begin{verbatim}
+from src.models.custom_base import BaseCustomClassifier
+
+class MiModelo(BaseCustomClassifier):
+    def __init__(self, param1=10, name="MiModelo"):
+        super().__init__(name=name)
+        self.param1 = param1
+    
+    def fit(self, X, y):
+        self._validate_input(X, training=True)
+        # ... lógica de entrenamiento ...
+        self.is_fitted_ = True
+        return self
+    
+    def predict(self, X):
+        self._validate_input(X)
+        # ... lógica de predicción ...
+        return predictions
+    
+    def predict_proba(self, X):
+        # ... probabilidades ...
+        return probabilities
+\end{verbatim}
+
+\subsubsection{Métodos Requeridos}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|l|l|X|}
+\hline
+\rowcolor{mlpurple!10}
+\textbf{Método} & \textbf{Tipo} & \textbf{Descripción} \\
+\hline
+\texttt{\_\_init\_\_()} & Obligatorio & Constructor con hiperparámetros \\
+\hline
+\texttt{fit(X, y)} & Obligatorio & Entrenar el modelo \\
+\hline
+\texttt{predict(X)} & Obligatorio & Predicciones de clase \\
+\hline
+\texttt{predict\_proba(X)} & Clasificadores & Probabilidades por clase \\
+\hline
+\texttt{get\_params()} & Recomendado & Obtener hiperparámetros \\
+\hline
+\texttt{set\_params()} & Recomendado & Establecer hiperparámetros \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{Flujo de Trabajo}
+
+\begin{enumerate}[leftmargin=*]
+    \item Crear el código Python del modelo
+    \item Guardarlo en \texttt{src/models/custom/}
+    \item Ir a \menuitem{02 \faRobot\hspace{0.2em}Model Training}
+    \item Activar ``Include Custom Models'' en la barra lateral
+    \item Seleccionar el modelo y entrenar
+\end{enumerate}
+
+\subsection{Despliegue con Docker}
+
+\subsubsection{Construcción de la Imagen}
+
+\begin{verbatim}
+cd Tools/docker
+docker build -t mortality-ami-predictor ..
+\end{verbatim}
+
+\subsubsection{Ejecución del Contenedor}
+
+\begin{verbatim}
+docker run -p 8501:8501 \
+    -v $(pwd)/DATA:/app/DATA:ro \
+    -v $(pwd)/models:/app/models \
+    mortality-ami-predictor
+\end{verbatim}
+
+\subsubsection{Docker Compose}
+
+Para entorno de desarrollo completo:
+
+\begin{verbatim}
+docker-compose --profile dev up -d
+\end{verbatim}
+
+Esto levanta:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{app} (puerto 8501): Dashboard Streamlit
+    \item \textbf{jupyter} (puerto 8888): Jupyter Lab para desarrollo
+    \item \textbf{mlflow} (puerto 5000): Tracking de experimentos
+\end{itemize}
+
+\subsection{Estructura del Código}
+
+\begin{verbatim}
+Tools/
++-- dashboard/
+|   +-- Dashboard.py          # Entrada principal
+|   +-- app/                   # Utilidades y estado
+|   +-- pages/                 # Páginas del dashboard
++-- src/
+|   +-- data_load/             # Carga de datos
+|   +-- cleaning/              # Limpieza
+|   +-- eda/                   # Análisis exploratorio
+|   +-- features/              # Ingeniería de features
+|   +-- models/                # Definiciones de modelos
+|   +-- training/              # Pipeline de entrenamiento
+|   +-- evaluation/            # Métricas y evaluación
+|   +-- explainability/        # SHAP y explicabilidad
+|   +-- automl/                # AutoML integrations
+|   +-- scoring/               # Scores clínicos
++-- tests/                     # Tests automatizados
++-- docker/                    # Configuración Docker
+\end{verbatim}
+
+\subsection{API Programática}
+
+Para integración con sistemas externos:
+
+\begin{verbatim}
+# Carga de datos
+from src.data_load import load_dataset, train_test_split
+
+# Limpieza
+from src.cleaning import DataCleaner, CleaningConfig
+
+# Entrenamiento
+from src.training import run_rigorous_experiment_pipeline
+
+# Predicción
+from src.models import make_classifiers
+model = make_classifiers()['xgboost']
+model.fit(X_train, y_train)
+predictions = model.predict_proba(X_test)
+
+# Explicabilidad
+from src.explainability import compute_shap_values
+shap_values = compute_shap_values(model, X_test)
+\end{verbatim}
+
+% ============================================================================
+% REFERENCIA DE PÁGINAS
+% ============================================================================
+\section{Referencia de Páginas del Dashboard}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\small
+\begin{tabularx}{\textwidth}{|c|l|X|ccc|}
+\hline
+\rowcolor{primaryblue!10}
+\textbf{\#} & \textbf{Página} & \textbf{Funcionalidad} & \rotatebox{90}{\textcolor{clinicalblue}{\faUserMd}} & \rotatebox{90}{\textcolor{datagreen}{\faChartBar}} & \rotatebox{90}{\textcolor{mlpurple}{\faCode}} \\
+\hline
+00 & Data Cleaning \& EDA & Limpieza de datos y análisis exploratorio & & \cmark & \cmark \\
+\hline
+01 & Data Overview & Resumen y estadísticas del dataset & & \cmark & \\
+\hline
+02 & Model Training & Entrenamiento con validación cruzada & & \cmark & \cmark \\
+\hline
+03 & Predictions & Predicciones individuales y por lotes & \cmark & \cmark & \\
+\hline
+04 & Model Evaluation & Métricas, ROC, calibración, DCA & & \cmark & \\
+\hline
+05 & Explainability & SHAP, permutación, PDP & \cmark & \cmark & \\
+\hline
+06 & Clinical Scores & GRACE y TIMI & \cmark & & \\
+\hline
+07 & Custom Models & Creación de modelos personalizados & & & \cmark \\
+\hline
+08 & Inverse Optimization & Optimización de features & & \cmark & \cmark \\
+\hline
+09 & AutoML & Entrenamiento automático & & \cmark & \\
+\hline
+\end{tabularx}
+\caption{Páginas del dashboard y perfiles de usuario recomendados}
+\end{table}
+
+\textbf{Leyenda:} 
+\textcolor{clinicalblue}{\faUserMd} Personal Clínico | 
+\textcolor{datagreen}{\faChartBar} Científicos de Datos | 
+\textcolor{mlpurple}{\faCode} Desarrolladores
+
+% ============================================================================
+% SOLUCIÓN DE PROBLEMAS
+% ============================================================================
+\section{Solución de Problemas}
+
+\subsection{Problemas Comunes}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\small
+\begin{tabularx}{\textwidth}{|X|X|}
+\hline
+\rowcolor{errorred!10}
+\textbf{Problema} & \textbf{Solución} \\
+\hline
+``No hay datos cargados'' & Ir a la página 00 y cargar un dataset primero \\
+\hline
+``No trained models found'' & Entrenar modelos en la página 02 antes de usar predicciones \\
+\hline
+Error de codificación al cargar CSV & El sistema intenta múltiples encodings automáticamente. Si falla, convertir a UTF-8 \\
+\hline
+SHAP tarda mucho & Reducir el número de muestras en la barra lateral \\
+\hline
+AutoML no disponible & Instalar FLAML: \texttt{pip install flaml[automl]} \\
+\hline
+Auto-sklearn no funciona & Solo disponible en Linux. Usar FLAML en Windows/macOS \\
+\hline
+Memoria insuficiente & Reducir tamaño del dataset o usar submuestreo \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection{Mensajes de Error Frecuentes}
+
+\begin{warningbox}[Target column not found]
+\textbf{Causa:} El nombre de la columna objetivo no coincide con la configuración.\\
+\textbf{Solución:} Verificar que el dataset contiene una columna llamada \texttt{mortality\_inhospital} o configurar la variable de entorno \texttt{TARGET\_COLUMN}.
+\end{warningbox}
+
+\begin{warningbox}[Module not found: shap]
+\textbf{Causa:} La librería SHAP no está instalada.\\
+\textbf{Solución:} Ejecutar \texttt{pip install shap} en el entorno virtual.
+\end{warningbox}
+
+% ============================================================================
+% GLOSARIO
+% ============================================================================
+\section{Glosario}
+
+\begin{description}[leftmargin=2cm, style=nextline]
+    \item[AUROC] Área Bajo la Curva ROC (Receiver Operating Characteristic). Mide la capacidad discriminativa del modelo.
+    
+    \item[AUPRC] Área Bajo la Curva Precision-Recall. Útil para datasets desbalanceados.
+    
+    \item[AutoML] Machine Learning Automatizado. Búsqueda automática de algoritmos e hiperparámetros.
+    
+    \item[Calibración] Grado en que las probabilidades predichas coinciden con las frecuencias observadas.
+    
+    \item[DCA] Decision Curve Analysis. Evalúa la utilidad clínica de un modelo.
+    
+    \item[Feature] Variable o característica utilizada como entrada del modelo.
+    
+    \item[FLAML] Fast and Lightweight AutoML. Framework de AutoML de Microsoft.
+    
+    \item[GRACE] Global Registry of Acute Coronary Events. Score clínico para SCA.
+    
+    \item[IAM] Infarto Agudo de Miocardio.
+    
+    \item[ICA] Independent Component Analysis. Técnica de reducción de dimensionalidad.
+    
+    \item[Killip] Clasificación de insuficiencia cardíaca en IAM (I-IV).
+    
+    \item[NAS] Neural Architecture Search. Búsqueda automática de arquitecturas de redes neuronales.
+    
+    \item[PCA] Principal Component Analysis. Reducción de dimensionalidad lineal.
+    
+    \item[SHAP] SHapley Additive exPlanations. Método de explicabilidad basado en teoría de juegos.
+    
+    \item[TIMI] Thrombolysis In Myocardial Infarction. Score de riesgo cardiovascular.
+\end{description}
+
+% ============================================================================
+% CONTACTO Y SOPORTE
+% ============================================================================
+\section{Contacto y Soporte}
+
+\begin{center}
+\fcolorbox{primaryblue}{primaryblue!5}{
+\begin{minipage}{0.85\textwidth}
+\centering
+\vspace{1em}
+{\Large\textcolor{primaryblue}{\faQuestionCircle}\hspace{0.5em}\textbf{¿Necesitas ayuda?}}
+
+\vspace{1em}
+
+\begin{tabular}{cl}
+\textcolor{primaryblue}{\faGithub} & \url{https://github.com/Pol4720/mortality-ami-predictor} \\[0.5em]
+\textcolor{primaryblue}{\faBook} & Documentación técnica en \texttt{Tools/docs/} \\[0.5em]
+\textcolor{primaryblue}{\faBug} & Reportar issues en GitHub \\[0.5em]
+\textcolor{primaryblue}{\faPhone} & +53 58258556 \\
+\end{tabular}
+
+\vspace{1em}
+\end{minipage}
+}
+\end{center}
+
+\vspace{2em}
+
+\begin{center}
+\textcolor{mediumgray}{\rule{0.5\textwidth}{0.5pt}}
+
+\vspace{1em}
+
+{\small\textcolor{mediumgray}{
+\textbf{Mortality AMI Predictor} v2.0\\
+Desarrollado con \textcolor{errorred}{\faHeart} para la investigación médica\\
+Diciembre 2025
+}}
+\end{center}
+
+\end{document}

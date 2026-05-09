@@ -1,0 +1,404 @@
+% ============================================================================
+% SECCIÓN 06: PREPROCESAMIENTO DE DATOS
+% ============================================================================
+
+\section{Preprocesamiento de Datos}
+\label{sec:preprocesamiento}
+
+Esta sección detalla los procedimientos aplicados para preparar los datos crudos para el modelado predictivo.
+
+\subsection{Flujo de Preprocesamiento}
+
+\begin{figure}[H]
+\centering
+\begin{placeholderblock}
+\textbf{[INSERTAR DIAGRAMA DE FLUJO DE PREPROCESAMIENTO]}
+
+Diagrama mostrando:
+\begin{enumerate}
+    \item Datos crudos (N inicial)
+    \item Exclusiones y filtrado
+    \item Imputación de faltantes
+    \item Tratamiento de outliers
+    \item Codificación de variables
+    \item Normalización/Transformación
+    \item Datos procesados (N final)
+\end{enumerate}
+\end{placeholderblock}
+\caption{Pipeline de preprocesamiento de datos}
+\label{fig:pipeline_preprocesamiento}
+\end{figure}
+
+\subsection{Exclusión de Observaciones y Variables}
+
+\subsubsection{Exclusiones Realizadas}
+
+\begin{table}[H]
+\centering
+\caption{Resumen de exclusiones de observaciones}
+\label{tab:exclusiones_observaciones}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Motivo de exclusión} & \textbf{N excluidos} & \textbf{N restante} \\
+\midrule
+Registros iniciales & -- & \placeholder{N total} \\
+Duplicados & \placeholder{n} & \placeholder{N} \\
+Diagnóstico no confirmado de IAM & \placeholder{n} & \placeholder{N} \\
+Datos de outcome faltantes & \placeholder{n} & \placeholder{N} \\
+$>$\placeholder{X}\% variables faltantes & \placeholder{n} & \placeholder{N} \\
+\midrule
+\textbf{Muestra final de análisis} & -- & \placeholder{N final} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Variables Excluidas}
+
+\begin{table}[H]
+\centering
+\caption{Variables excluidas del análisis}
+\label{tab:variables_excluidas}
+\begin{tabular}{@{}llp{6cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{\% Faltantes} & \textbf{Motivo de exclusión} \\
+\midrule
+\placeholder{Variable\_1} & \placeholder{XX\%} & Exceso de datos faltantes \\
+\placeholder{Variable\_2} & \placeholder{XX\%} & Exceso de datos faltantes \\
+\placeholder{Variable\_3} & -- & Información post-outcome (data leakage) \\
+\placeholder{Variable\_4} & -- & Identificador único (no predictivo) \\
+\placeholder{Variable\_5} & -- & Redundante con Variable\_X \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Imputación de Datos Faltantes}
+
+\subsubsection{Análisis del Patrón de Missingness}
+
+\begin{figure}[H]
+\centering
+\begin{placeholderblock}
+\textbf{[INSERTAR ANÁLISIS DE PATRÓN DE MISSINGNESS]}
+
+Mostrar:
+\begin{itemize}
+    \item Test de Little (MCAR)
+    \item Correlación de indicadores de missingness
+    \item Conclusión sobre mecanismo predominante (MCAR/MAR/MNAR)
+\end{itemize}
+\end{placeholderblock}
+\caption{Análisis del mecanismo de datos faltantes}
+\label{fig:mecanismo_missingness}
+\end{figure}
+
+\subsubsection{Estrategias de Imputación Aplicadas}
+
+\begin{table}[H]
+\centering
+\caption{Métodos de imputación por tipo de variable}
+\label{tab:metodos_imputacion}
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Tipo} & \textbf{Método} & \textbf{Parámetros} & \textbf{Variables} \\
+\midrule
+Numéricas continuas & \placeholder{KNN Imputer} & \placeholder{k=5} & \placeholder{Lista} \\
+Numéricas con sesgo & \placeholder{Mediana} & -- & \placeholder{Lista} \\
+Categóricas & \placeholder{Moda} & -- & \placeholder{Lista} \\
+Categóricas especiales & \placeholder{``Desconocido''} & -- & \placeholder{Lista} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{placeholderblock}
+\textbf{[OPCIONAL: VALIDACIÓN DE IMPUTACIÓN]}
+
+Incluir si se realizó:
+\begin{itemize}
+    \item Comparación de distribuciones pre/post imputación
+    \item Análisis de sensibilidad con diferentes métodos
+    \item Métricas de calidad de imputación
+\end{itemize}
+\end{placeholderblock}
+
+\subsection{Tratamiento de Valores Atípicos}
+
+\subsubsection{Detección de Outliers}
+
+\begin{table}[H]
+\centering
+\caption{Outliers detectados por variable}
+\label{tab:outliers_detectados}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Variable} & \textbf{Método} & \textbf{N outliers} & \textbf{Límite inf.} & \textbf{Límite sup.} \\
+\midrule
+\placeholder{Edad} & \placeholder{IQR} & \placeholder{n} & \placeholder{X} & \placeholder{X} \\
+\placeholder{PAS} & \placeholder{IQR} & \placeholder{n} & \placeholder{X} & \placeholder{X} \\
+\placeholder{Creatinina} & \placeholder{IQR} & \placeholder{n} & \placeholder{X} & \placeholder{X} \\
+\placeholder{Troponina} & \placeholder{Z-score} & \placeholder{n} & \placeholder{X} & \placeholder{X} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Tratamiento Aplicado}
+
+\begin{itemize}
+    \item \textbf{Estrategia general}: \placeholder{Winsorización/Capping/Exclusión/Transformación}
+    \item \textbf{Percentiles de corte}: \placeholder{1\%--99\% / 5\%--95\%}
+    \item \textbf{Justificación clínica}: \placeholder{Describir si se consultó con expertos clínicos}
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\begin{placeholderblock}
+\textbf{[INSERTAR COMPARACIÓN ANTES/DESPUÉS]}
+
+Panel de boxplots mostrando distribución de variables con outliers antes y después del tratamiento.
+\end{placeholderblock}
+\caption{Distribución de variables antes y después del tratamiento de outliers}
+\label{fig:antes_despues_outliers}
+\end{figure}
+
+\subsection{Codificación de Variables Categóricas}
+
+\subsubsection{Variables Binarias}
+
+\begin{table}[H]
+\centering
+\caption{Codificación de variables binarias}
+\label{tab:codificacion_binarias}
+\begin{tabular}{@{}llll@{}}
+\toprule
+\textbf{Variable} & \textbf{Categoría 0} & \textbf{Categoría 1} & \textbf{N en cat. 1} \\
+\midrule
+SEXO & Femenino & Masculino & \placeholder{n (\%)} \\
+APP\_HTA & No & Sí & \placeholder{n (\%)} \\
+APP\_DM & No & Sí & \placeholder{n (\%)} \\
+\placeholder{...} & & & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Variables Nominales (One-Hot Encoding)}
+
+\begin{table}[H]
+\centering
+\caption{Variables con One-Hot Encoding}
+\label{tab:one_hot}
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{2.5cm}p{3.5cm}p{4.5cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{Categorías} & \textbf{Dummy} \\
+\midrule
+\placeholder{ECG\_LOCAL} & \placeholder{Ant, Inf, Lat} & \placeholder{LOC\_ant, LOC\_inf, LOC\_lat} \\
+\placeholder{ECG\_RITMO} & \placeholder{Sin, FA, Fl} & \placeholder{RITMO\_sin, RITMO\_fa} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsubsection{Variables Ordinales}
+
+\begin{table}[H]
+\centering
+\caption{Codificación de variables ordinales}
+\label{tab:codificacion_ordinales}
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{2.5cm}p{4.5cm}p{3cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{Categorías (orden)} & \textbf{Valores} \\
+\midrule
+KILLIP & I $<$ II $<$ III $<$ IV & 1, 2, 3, 4 \\
+\placeholder{TABAQ.} & \placeholder{Nunca $<$ Ex $<$ Activo} & \placeholder{0, 1, 2} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsection{Transformaciones de Variables Numéricas}
+
+\subsubsection{Variables con Transformación Logarítmica}
+
+\begin{table}[H]
+\centering
+\caption{Variables transformadas logarítmicamente}
+\label{tab:transformacion_log}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Variable} & \textbf{Skewness original} & \textbf{Skewness post-log} & \textbf{Justificación} \\
+\midrule
+\placeholder{TROPONINA} & \placeholder{X.XX} & \placeholder{X.XX} & Alta asimetría positiva \\
+\placeholder{NT\_PROBNP} & \placeholder{X.XX} & \placeholder{X.XX} & Distribución log-normal \\
+\placeholder{CREATININA} & \placeholder{X.XX} & \placeholder{X.XX} & Cola derecha extendida \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Normalización/Estandarización}
+
+\begin{table}[H]
+\centering
+\caption{Métodos de escalado aplicados}
+\label{tab:escalado}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Método} & \textbf{Fórmula} & \textbf{Variables aplicadas} \\
+\midrule
+StandardScaler & $z = \frac{x - \mu}{\sigma}$ & \placeholder{Variables para modelos lineales/NN} \\
+MinMaxScaler & $x' = \frac{x - x_{min}}{x_{max} - x_{min}}$ & \placeholder{Variables para NN (opcional)} \\
+RobustScaler & $z = \frac{x - Q_2}{Q_3 - Q_1}$ & \placeholder{Variables con outliers residuales} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{keypoint}
+\textbf{Nota importante:} Los parámetros de escalado (media, desviación estándar, etc.) se calcularon \textbf{únicamente} en el conjunto de entrenamiento y se aplicaron a los conjuntos de validación y test para evitar fuga de información.
+\end{keypoint}
+
+\subsection{Ingeniería de Características}
+
+\subsubsection{Variables Derivadas Creadas}
+
+\begin{table}[H]
+\centering
+\caption{Nuevas variables creadas}
+\label{tab:nuevas_variables}
+\begin{tabular}{@{}llp{5cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{Fórmula/Definición} & \textbf{Justificación} \\
+\midrule
+\placeholder{IMC} & $\frac{\text{peso (kg)}}{\text{altura (m)}^2}$ & Indicador de obesidad \\
+\placeholder{PAM} & $\frac{\text{PAS} + 2 \times \text{PAD}}{3}$ & Presión arterial media \\
+\placeholder{PP} & $\text{PAS} - \text{PAD}$ & Presión de pulso (rigidez arterial) \\
+\placeholder{SHOCK\_INDEX} & $\frac{\text{FC}}{\text{PAS}}$ & Índice de shock \\
+\placeholder{ANEMIA} & Hb $<$ 12 (M) / $<$ 13 (H) & Indicador binario de anemia \\
+\placeholder{ERC\_STAGE} & Según TFG: G1--G5 & Estadio de enfermedad renal \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Interacciones y Términos No Lineales}
+
+\begin{placeholderblock}
+\textbf{[COMPLETAR SI SE CREARON INTERACCIONES]}
+
+Describir:
+\begin{itemize}
+    \item Interacciones basadas en conocimiento clínico
+    \item Términos polinómicos (si aplica)
+    \item Justificación de cada interacción
+\end{itemize}
+\end{placeholderblock}
+
+\subsection{Selección de Características}
+
+\subsubsection{Filtrado Univariado}
+
+\begin{table}[H]
+\centering
+\caption{Resultados de pruebas de asociación univariada}
+\label{tab:filtrado_univariado}
+\begin{tabular}{@{}lllc@{}}
+\toprule
+\textbf{Variable} & \textbf{Test} & \textbf{Estadístico} & \textbf{p-valor} \\
+\midrule
+\placeholder{EDAD} & t-test & \placeholder{t = X.XX} & \placeholder{$<$0.001} \\
+\placeholder{KILLIP} & $\chi^2$ & \placeholder{$\chi^2$ = X.XX} & \placeholder{$<$0.001} \\
+\placeholder{CREATININA} & Mann-Whitney & \placeholder{U = XXXX} & \placeholder{$<$0.001} \\
+\multicolumn{4}{c}{\textit{... (mostrar variables más significativas)}} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Importancia de Características (Feature Importance)}
+
+\begin{figure}[H]
+\centering
+\begin{placeholderblock}
+\textbf{[INSERTAR GRÁFICO DE FEATURE IMPORTANCE]}
+
+Gráfico de barras horizontales mostrando importancia de las top 20--30 variables según:
+\begin{itemize}
+    \item Random Forest (importancia por impureza o permutación)
+    \item XGBoost (gain, cover, o frequency)
+\end{itemize}
+\end{placeholderblock}
+\caption{Importancia de características según modelos de ensemble}
+\label{fig:feature_importance_preproceso}
+\end{figure}
+
+\subsubsection{Conjunto Final de Variables}
+
+\begin{table}[H]
+\centering
+\caption{Resumen de variables incluidas en el modelo final}
+\label{tab:variables_finales}
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Categoría} & \textbf{N variables} \\
+\midrule
+Demográficas & \placeholder{X} \\
+Antecedentes & \placeholder{X} \\
+Presentación clínica & \placeholder{X} \\
+Electrocardiograma & \placeholder{X} \\
+Biomarcadores & \placeholder{X} \\
+Tratamientos & \placeholder{X} \\
+Variables derivadas & \placeholder{X} \\
+\midrule
+\textbf{Total variables finales} & \placeholder{XX} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{División de Datos}
+
+\begin{figure}[H]
+\centering
+\begin{placeholderblock}
+\textbf{[INSERTAR DIAGRAMA DE PARTICIÓN]}
+
+Diagrama mostrando la división de datos:
+\begin{itemize}
+    \item N total $\rightarrow$ Train (70\%) + Validation (15\%) + Test (15\%)
+    \item Indicar estratificación por variable objetivo
+    \item Mostrar distribución de clases en cada partición
+\end{itemize}
+\end{placeholderblock}
+\caption{Esquema de partición de datos}
+\label{fig:particion_datos}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Distribución de datos en cada partición}
+\label{tab:distribucion_particiones}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Conjunto} & \textbf{N total} & \textbf{Eventos (n)} & \textbf{No eventos (n)} & \textbf{Tasa eventos} \\
+\midrule
+Entrenamiento & \placeholder{N} & \placeholder{n} & \placeholder{n} & \placeholder{X.X\%} \\
+Validación & \placeholder{N} & \placeholder{n} & \placeholder{n} & \placeholder{X.X\%} \\
+Test & \placeholder{N} & \placeholder{n} & \placeholder{n} & \placeholder{X.X\%} \\
+\midrule
+Total & \placeholder{N} & \placeholder{n} & \placeholder{n} & \placeholder{X.X\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Resumen del Preprocesamiento}
+
+\begin{keypoint}
+\textbf{Resumen de transformaciones aplicadas:}
+
+\begin{enumerate}
+    \item \textbf{Observaciones}: De \placeholder{N inicial} a \placeholder{N final} tras exclusiones.
+    \item \textbf{Variables}: De \placeholder{185 originales} a \placeholder{XX finales}.
+    \item \textbf{Imputación}: \placeholder{X} variables imputadas mediante \placeholder{método(s)}.
+    \item \textbf{Outliers}: \placeholder{X} variables con outliers tratados.
+    \item \textbf{Transformaciones}: \placeholder{X} variables transformadas logarítmicamente.
+    \item \textbf{Codificación}: \placeholder{X} variables dummy creadas.
+    \item \textbf{Variables nuevas}: \placeholder{X} variables derivadas añadidas.
+\end{enumerate}
+\end{keypoint}

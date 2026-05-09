@@ -1,0 +1,309 @@
+% ============================================================================
+% SECCIÓN 07: MODELADO PREDICTIVO
+% ============================================================================
+
+\section{Modelado Predictivo}
+\label{sec:modelado}
+
+Esta sección describe el proceso de desarrollo, entrenamiento y optimización de los modelos de aprendizaje automático para la predicción de mortalidad intrahospitalaria.
+
+\subsection{Estrategia General de Modelado}
+
+\begin{enumerate}
+    \item Entrenamiento de modelos baseline (regresión logística).
+    \item Evaluación de múltiples algoritmos de ML.
+    \item Optimización de hiperparámetros mediante búsqueda sistemática.
+    \item Selección del mejor modelo según métricas predefinidas.
+    \item Calibración de probabilidades.
+    \item Validación final en conjunto de test.
+\end{enumerate}
+
+\subsection{Modelos Baseline}
+
+\subsubsection{Regresión Logística}
+
+Como modelo baseline, se entrenó una regresión logística con regularización:
+
+\begin{table}[H]
+\centering
+\caption{Configuración del modelo de regresión logística}
+\label{tab:config_lr}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Parámetro} & \textbf{Valor} \\
+\midrule
+Regularización & L2 (Ridge) y L1 (Lasso) \\
+Parámetro C & 1.0 (por defecto), optimizado vía CV \\
+Solver & lbfgs (L2) / saga (L1) \\
+Class weight & balanced \\
+Max iter & 1000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Algoritmos de Aprendizaje Automático Evaluados}
+
+\subsubsection{Random Forest}
+
+\begin{table}[H]
+\centering
+\caption{Espacio de búsqueda de hiperparámetros -- Random Forest}
+\label{tab:hp_rf}
+{\footnotesize
+\begin{tabular}{@{}p{3cm}p{4.5cm}p{2.5cm}@{}}
+\toprule
+\textbf{Hiperpar.} & \textbf{Rango explorado} & \textbf{Óptimo} \\
+\midrule
+n\_estimators & [100, 200, 500, 1000] & 500 \\
+max\_depth & [None, 5, 10, 15, 20] & 15 \\
+min\_samples\_split & [2, 5, 10, 20] & 5 \\
+min\_samples\_leaf & [1, 2, 4, 8] & 2 \\
+max\_features & [sqrt, log2, 0.3, 0.5] & sqrt \\
+class\_weight & [balanced, balanced\_subsample] & balanced \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsubsection{XGBoost}
+
+\begin{table}[H]
+\centering
+\caption{Espacio de búsqueda de hiperparámetros -- XGBoost}
+\label{tab:hp_xgb}
+{\footnotesize
+\begin{tabular}{@{}p{3cm}p{4.5cm}p{2.5cm}@{}}
+\toprule
+\textbf{Hiperpar.} & \textbf{Rango explorado} & \textbf{Óptimo} \\
+\midrule
+n\_estimators & [100, 200, 500, 1000] & 500 \\
+max\_depth & [3, 4, 5, 6, 7, 8] & 5 \\
+learning\_rate & [0.01, 0.05, 0.1, 0.2] & 0.05 \\
+subsample & [0.6, 0.7, 0.8, 0.9, 1.0] & 0.8 \\
+colsample\_bytree & [0.6, 0.7, 0.8, 0.9, 1.0] & 0.8 \\
+min\_child\_weight & [1, 3, 5, 7] & 3 \\
+gamma & [0, 0.1, 0.2, 0.3] & 0.1 \\
+reg\_alpha (L1) & [0, 0.01, 0.1, 1] & 0.01 \\
+reg\_lambda (L2) & [0, 0.01, 0.1, 1] & 0.1 \\
+scale\_pos\_weight & [1, ratio\_clases] & 10.4 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsubsection{LightGBM}
+
+\begin{table}[H]
+\centering
+\caption{Espacio de búsqueda de hiperparámetros -- LightGBM}
+\label{tab:hp_lgbm}
+{\footnotesize
+\begin{tabular}{@{}p{3cm}p{4.5cm}p{2.5cm}@{}}
+\toprule
+\textbf{Hiperpar.} & \textbf{Rango explorado} & \textbf{Óptimo} \\
+\midrule
+n\_estimators & [100, 200, 500, 1000] & 500 \\
+max\_depth & [-1, 5, 10, 15, 20] & 10 \\
+learning\_rate & [0.01, 0.05, 0.1, 0.2] & 0.05 \\
+num\_leaves & [31, 50, 100, 150] & 50 \\
+min\_child\_samples & [20, 50, 100] & 50 \\
+subsample & [0.6, 0.8, 1.0] & 0.8 \\
+colsample\_bytree & [0.6, 0.8, 1.0] & 0.8 \\
+reg\_alpha & [0, 0.01, 0.1] & 0.01 \\
+reg\_lambda & [0, 0.01, 0.1] & 0.1 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsubsection{Redes Neuronales}
+
+\begin{table}[H]
+\centering
+\caption{Arquitectura y configuración -- Red Neuronal}
+\label{tab:config_nn}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Componente} & \textbf{Configuración} \\
+\midrule
+Arquitectura & MLP (Multi-Layer Perceptron) \\
+Capas ocultas & [128, 64, 32] \\
+Función de activación & ReLU \\
+Dropout & 0.3 \\
+Batch normalization & Sí \\
+Optimizador & Adam \\
+Learning rate & 0.001 (con scheduler) \\
+Batch size & 64 \\
+Épocas máximas & 100 \\
+Early stopping & patience = 10 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{AutoML y Neural Architecture Search}
+
+Se implementaron dos enfoques de aprendizaje automático automatizado:
+
+\textbf{FLAML (Fast and Lightweight AutoML):}
+\begin{itemize}
+    \item Framework de Microsoft para búsqueda eficiente de modelos
+    \item Estimadores evaluados: LightGBM, XGBoost, CatBoost, Random Forest, Extra Trees, HistGradientBoosting, K-Neighbors, Regresión Logística (L1/L2), SVM, SGD
+    \item Presets disponibles: Quick (5 min), Balanced (1 hora), High Performance (4 horas)
+    \item Métrica de optimización: ROC-AUC
+\end{itemize}
+
+\textbf{Neural Architecture Search (NAS) con AutoKeras:}
+\begin{itemize}
+    \item Búsqueda automática de arquitectura de redes neuronales
+    \item Algoritmos de búsqueda: Greedy, Bayesian, Hyperband
+    \item Configuraciones evaluadas: 5--50 trials, 50--200 epochs
+    \item Mejor arquitectura encontrada automáticamente mediante validación cruzada
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{Comparación de frameworks AutoML}
+\label{tab:automl_comparison}
+{\footnotesize
+\begin{tabular}{@{}p{3cm}p{4cm}p{4cm}@{}}
+\toprule
+\textbf{Aspecto} & \textbf{FLAML} & \textbf{AutoKeras (NAS)} \\
+\midrule
+Tipo & Selección de modelos & Arquitectura neural \\
+Tiempo típico & 5--240 minutos & 30--240 minutos \\
+Modelos & Gradient Boosting, RF, etc. & Redes neuronales profundas \\
+Ventaja & Rápido, eficiente & Encuentra arquitecturas óptimas \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsection{Proceso de Optimización}
+
+\subsubsection{Método de Búsqueda}
+
+\begin{table}[H]
+\centering
+\caption{Configuración de la búsqueda de hiperparámetros}
+\label{tab:config_busqueda}
+{\footnotesize
+\begin{tabular}{@{}p{3.5cm}p{7cm}@{}}
+\toprule
+\textbf{Aspecto} & \textbf{Configuración} \\
+\midrule
+Método & Validación cruzada estratificada repetida \\
+Splits CV & 3$\times$3 (modo rápido) / 10$\times$10 (completo) \\
+Métrica optimización & roc\_auc (principal), average\_precision \\
+Scoring adicional & [recall, precision, f1, brier\_score] \\
+n\_jobs & -1 (todos los cores disponibles) \\
+Estrategia & Grid search + evaluación comparativa \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+El proceso de optimización sigue un pipeline riguroso de experimentación:
+
+\begin{enumerate}
+    \item \textbf{Validación Cruzada Estratificada Repetida}: Cada modelo se entrena y evalúa múltiples veces ($\geq$30 corridas) para obtener estimaciones robustas de media y desviación estándar.
+    \item \textbf{Curvas de Aprendizaje}: Se generan para diagnosticar sobreajuste/subajuste y determinar si se necesitan más datos.
+    \item \textbf{Comparación Estadística}: Se determina si las diferencias entre modelos son estadísticamente significativas usando pruebas de normalidad (Shapiro-Wilk), test paramétrico (t-Student) o no paramétrico (Mann-Whitney).
+    \item \textbf{Evaluación Final}: Bootstrap (1000 iteraciones) y Jackknife para intervalos de confianza al 95\%.
+\end{enumerate}
+
+\subsection{Comparación de Modelos en Validación}
+
+La Tabla~\ref{tab:comparacion_modelos_cv} presenta el rendimiento de los modelos evaluados mediante validación cruzada estratificada repetida. Se realizaron pruebas estadísticas pareadas para determinar si las diferencias observadas son significativas.
+
+\begin{table}[H]
+\centering
+\caption{Rendimiento de modelos en validación cruzada}
+\label{tab:comparacion_modelos_cv}
+{\footnotesize
+\begin{tabular}{@{}lcccp{3cm}@{}}
+\toprule
+\textbf{Modelo} & \textbf{AUROC} & \textbf{Dif. vs LR} & \textbf{p-valor} & \textbf{Effect Size} \\
+\midrule
+K-Nearest Neighbors & 0,797 & $-$0,053 & $<$0,001 & $-$1,91 (Large) \\
+Reg. Logística (baseline) & 0,850 & --- & --- & --- \\
+Árbol de Decisión & 0,705 & $-$0,145 & $<$0,001 & $-$4,15 (Large) \\
+Random Forest & 0,868 & +0,018 & $<$0,001 & $-$0,88 (Large) \\
+\textbf{XGBoost} & \textbf{0,863} & \textbf{+0,013} & $<$0,001 & $-$0,57 (Medium) \\
+XGBoost Balanced & 0,863 & +0,013 & $<$0,001 & $-$0,58 (Medium) \\
+LightGBM & 0,864 & +0,014 & $<$0,001 & $-$0,62 (Medium) \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\textit{Nota: No se encontraron diferencias estadísticamente significativas entre Random Forest, XGBoost, XGBoost Balanced y LightGBM (p $>$ 0,05 en comparaciones pareadas), pero todos superaron significativamente a Regresión Logística como baseline.}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{../complemento_del_informe_final/Propuesta_de_seleccion_de_variables/p-values_matrix_and_effect_size_matrix(cohen's d).png}
+\caption{Matrices de comparación estadística entre modelos. Izquierda: p-valores (pruebas pareadas). Derecha: Tamaño del efecto (d de Cohen). Valores de p cercanos a cero indican diferencias significativas. Tamaños de efecto $>$ 0,8 se consideran grandes.}
+\label{fig:pvalues_matrix}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{../complemento_del_informe_final/Propuesta_de_seleccion_de_variables/comparacion_logreg_vs_xgb.png}
+\caption{Comparación directa entre Regresión Logística (baseline) y XGBoost. Se observa la mejora significativa en el rendimiento predictivo del modelo XGBoost.}
+\label{fig:logreg_vs_xgb}
+\end{figure}
+
+\subsection{Selección del Modelo Final}
+
+\subsubsection{Criterios de Selección}
+
+El modelo final se seleccionó basándose en:
+
+\begin{enumerate}
+    \item \textbf{Discriminación}: Mayor AUROC y AUPRC.
+    \item \textbf{Calibración}: Menor Brier Score, buena calibración visual.
+    \item \textbf{Estabilidad}: Menor varianza entre folds de CV.
+    \item \textbf{Interpretabilidad}: Posibilidad de explicación con SHAP.
+    \item \textbf{Parsimonia}: Preferencia por modelos más simples a igual rendimiento.
+\end{enumerate}
+
+\subsubsection{Modelo Seleccionado}
+
+\begin{keypoint}
+\textbf{Modelos finales seleccionados:}
+
+\textbf{1. Modelo Reducido (comparable con GRACE):} XGBoost con 10 variables
+\begin{itemize}
+    \item Variables: filtrado glomerular, fracción de eyección, edad, glicemia, presión arterial diastólica, creatinina, presión arterial sistólica, diabetes mellitus, frecuencia cardíaca, betabloqueadores
+    \item AUROC: 0,901 (IC 95\%: 0,855--0,937)
+    \item Justificación: Permite comparación directa con escala GRACE usando variables similares
+\end{itemize}
+
+\textbf{2. Modelo Extendido (propuesta principal):} XGBoost con 57 variables
+\begin{itemize}
+    \item AUROC: 0,938 (IC 95\%: 0,884--0,977)
+    \item Precisión: 0,944 | Sensibilidad: 0,618 | Especificidad: 0,996
+    \item Justificación: Máximo rendimiento predictivo aprovechando toda la información disponible
+\end{itemize}
+\end{keypoint}
+
+\subsection{Calibración del Modelo}
+
+\subsubsection{Curva de Calibración}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/Comparacion_Escalas_Internacionales/Calibration Curve.png}
+\caption{Curva de calibración del modelo reducido. La diagonal representa calibración perfecta. El modelo muestra buena calibración general con Brier Score de 0,096.}
+\label{fig:curva_calibracion}
+\end{figure}
+
+\subsubsection{Curva de Aprendizaje}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/Comparacion_Escalas_Internacionales/curva_de_aprendizaje_xgboost.png}
+\caption{Curva de aprendizaje del modelo XGBoost. Muestra la evolución del rendimiento (score) en función del tamaño del conjunto de entrenamiento. La convergencia de las curvas de entrenamiento y validación indica un buen balance sin overfitting significativo.}
+\label{fig:learning_curve}
+\end{figure}
+
+

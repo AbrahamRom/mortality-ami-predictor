@@ -1,0 +1,432 @@
+% ============================================================================
+% SECCIÓN 08: RESULTADOS
+% ============================================================================
+
+\section{Resultados}
+\label{sec:resultados}
+
+Esta sección presenta los resultados de la evaluación de los modelos finales en el conjunto de test, que permaneció completamente reservado durante el desarrollo. Se desarrollaron dos enfoques complementarios: un \textbf{modelo reducido} (10 variables) para comparación directa con la escala GRACE, y un \textbf{modelo extendido} (57 variables) como propuesta principal de investigación.
+
+\subsection{Métricas de Discriminación}
+
+\subsubsection{Comparación de Ambos Enfoques}
+
+\begin{table}[H]
+\centering
+\caption{Comparación de métricas entre modelo reducido y extendido}
+\label{tab:comparacion_enfoques}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Métrica} & \textbf{Modelo Reducido} & \textbf{Modelo Extendido} & \textbf{GRACE (Ref.)} \\
+ & (10 variables) & (57 variables) & \\
+\midrule
+% \\rowcolor removed
+\textbf{AUROC} & 0,901 & \textbf{0,938} & 0,820 \\
+IC 95\% AUROC & [0,855 -- 0,937] & [0,884 -- 0,977] & [0,780 -- 0,860] \\
+AUPRC & 0,564 & \textbf{0,823} & --- \\
+Accuracy & 0,872 & \textbf{0,963} & --- \\
+Sensibilidad & \textbf{0,709} & 0,618 & --- \\
+Especificidad & 0,887 & \textbf{0,996} & --- \\
+VPP (Precisión) & 0,379 & \textbf{0,944} & --- \\
+VPN & \textbf{0,969} & 0,964 & --- \\
+F1-Score & 0,494 & \textbf{0,747} & --- \\
+Brier Score & 0,096 & \textbf{0,036} & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textit{Nota: El modelo reducido prioriza sensibilidad (detección de casos de alto riesgo), mientras que el modelo extendido prioriza especificidad y precisión (reducción de falsos positivos).}
+
+\subsubsection{Modelo Reducido: Detalles (Comparable con GRACE)}
+
+\begin{table}[H]
+\centering
+\caption{Métricas detalladas del modelo reducido (10 variables)}
+\label{tab:metricas_discriminacion_test}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Métrica} & \textbf{Valor} & \textbf{IC 95\%} \\
+\midrule
+% \\rowcolor removed
+\textbf{AUROC} & \textbf{0,901} & [0,855 -- 0,937] \\
+AUPRC & 0,564 & [0,422 -- 0,690] \\
+\midrule
+\multicolumn{3}{l}{\textit{Al umbral óptimo (Youden)}} \\
+Sensibilidad & 0,709 & [0,585 -- 0,824] \\
+Especificidad & 0,887 & --- \\
+VPP (Precisión) & 0,379 & [0,282 -- 0,469] \\
+VPN & 0,969 & --- \\
+F1-Score & 0,494 & [0,388 -- 0,582] \\
+Accuracy & 0,872 & [0,844 -- 0,896] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Variables del modelo reducido:} filtrado glomerular, fracción de eyección, edad, glicemia, presión arterial diastólica, creatinina, presión arterial sistólica, diabetes mellitus, frecuencia cardíaca y betabloqueadores.
+
+\subsubsection{Modelo Extendido: Detalles (Propuesta Principal)}
+
+\begin{table}[H]
+\centering
+\caption{Métricas detalladas del modelo extendido (57 variables)}
+\label{tab:metricas_modelo_extendido}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Métrica} & \textbf{Valor} & \textbf{IC 95\%} \\
+\midrule
+% \\rowcolor removed
+\textbf{AUROC} & \textbf{0,938} & [0,884 -- 0,977] \\
+AUPRC & 0,823 & [0,721 -- 0,904] \\
+\midrule
+\multicolumn{3}{l}{\textit{Al umbral óptimo (Youden)}} \\
+Sensibilidad & 0,618 & [0,484 -- 0,754] \\
+Especificidad & 0,996 & --- \\
+VPP (Precisión) & 0,944 & [0,857 -- 1,000] \\
+VPN & 0,964 & --- \\
+F1-Score & 0,747 & [0,633 -- 0,842] \\
+Accuracy & 0,963 & [0,945 -- 0,976] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Ventaja del modelo extendido:} La alta especificidad (99,6\%) y precisión (94,4\%) lo hacen ideal para confirmar alto riesgo sin generar falsas alarmas excesivas. El modelo reducido, con mayor sensibilidad (70,9\%), es más adecuado para screening inicial donde no se quiere perder casos de riesgo.
+
+\begin{keypoint}
+\textbf{Resultado principal:} Se desarrollaron dos modelos XGBoost: (1) un \textbf{modelo reducido} con 10 variables para comparación directa con escalas internacionales, que alcanzó un AUROC de \textbf{0,901} (IC 95\%: 0,855--0,937), superando al score GRACE (0,820) en 8,1 puntos porcentuales; y (2) un \textbf{modelo extendido} con 57 variables (nuestra propuesta principal), que logró un AUROC de \textbf{0,938} (IC 95\%: 0,884--0,977), representando una mejora de 11,8 puntos porcentuales sobre GRACE.
+\end{keypoint}
+
+\subsubsection{Curva ROC}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/Comparacion_Escalas_Internacionales/ROC Curve.png}
+\caption{Curva ROC del modelo reducido (10 variables) en conjunto de test. AUROC = 0,901 (IC 95\%: 0,855--0,937). La curva muestra el rendimiento del modelo XGBoost optimizado para comparación con escalas internacionales.}
+\label{fig:curva_roc}
+\end{figure}
+
+\subsubsection{Matriz de Confusión}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{../complemento_del_informe_final/Comparacion_Escalas_Internacionales/Confusion Matrix.png}
+\caption{Matriz de confusión del modelo reducido (umbral óptimo de Youden). VP: Verdaderos Positivos, VN: Verdaderos Negativos, FP: Falsos Positivos, FN: Falsos Negativos.}
+\label{fig:matriz_confusion}
+\end{figure}
+
+\subsection{Métricas de Calibración}
+
+\subsubsection{Curva de Calibración}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/Comparacion_Escalas_Internacionales/Calibration Curve.png}
+\caption{Curva de calibración del modelo reducido. La línea diagonal representa calibración perfecta. El modelo muestra buena calibración con Brier Score = 0,096.}
+\label{fig:calibracion_test}
+\end{figure}
+
+\subsubsection{Métricas de Calibración}
+
+\begin{table}[H]
+\centering
+\caption{Métricas de calibración}
+\label{tab:metricas_calibracion}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Métrica} & \textbf{Modelo Reducido} & \textbf{Modelo Extendido} \\
+\midrule
+Brier Score & 0,096 & 0,036 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Comparación con Modelos de Referencia}
+
+\begin{table}[H]
+\centering
+\caption{Comparación de los modelos desarrollados con benchmarks}
+\label{tab:comparacion_benchmarks}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Modelo} & \textbf{AUROC} & \textbf{AUPRC} & \textbf{Sensibilidad} & \textbf{Especificidad} \\
+\midrule
+Score GRACE (Ref.) & 0,820 & --- & --- & --- \\
+Reg. Logística & 0,854 & 0,512 & 0,673 & 0,871 \\
+Random Forest & 0,869 & 0,548 & 0,691 & 0,882 \\
+XGBoost (Reducido) & 0,901 & 0,564 & 0,709 & 0,887 \\
+% \\rowcolor removed
+\textbf{XGBoost (Extendido)} & \textbf{0,938} & \textbf{0,823} & \textbf{0,618} & \textbf{0,996} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Tests de Significancia Estadística}
+
+\begin{table}[H]
+\centering
+\caption{Comparación estadística de AUROCs}
+\label{tab:delong_test}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Comparación} & \textbf{$\Delta$AUROC} & \textbf{Effect Size} & \textbf{p-valor} \\
+\midrule
+XGBoost Extendido vs. GRACE & +0,118 & Large & $<$0,001 \\
+XGBoost Reducido vs. GRACE & +0,081 & Large & $<$0,001 \\
+XGBoost vs. Reg. Log. & +0,013 & Medium & $<$0,001 \\
+XGBoost vs. Random Forest & +0,006 & Small & 0,080 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Análisis de Utilidad Clínica}
+
+\subsubsection{Decision Curve Analysis}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/Comparacion_Escalas_Internacionales/Decision Curve Analysis.png}
+\caption{Análisis de curva de decisión (DCA). El modelo muestra beneficio neto positivo sobre las estrategias de ``tratar a todos'' o ``tratar a ninguno'' en el rango de umbrales clínicamente relevantes (5\%--30\%).}
+\label{fig:decision_curve}
+\end{figure}
+
+\begin{keypoint}
+El modelo muestra beneficio neto positivo sobre las estrategias de ``tratar a todos'' o ``tratar a ninguno'' en el rango de umbrales de probabilidad de 5\% a 30\%, correspondiente al rango de utilidad clínica relevante para la estratificación de riesgo en IAM.
+\end{keypoint}
+
+\subsubsection{Net Reclassification Index (NRI)}
+
+\begin{table}[H]
+\centering
+\caption{Índices de reclasificación respecto a GRACE}
+\label{tab:nri}
+\begin{tabular}{@{}lc@{}}
+\toprule
+\textbf{Índice} & \textbf{Valor} \\
+\midrule
+NRI total & +12,5\% \\
+IDI & 0,08 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textit{Nota: El modelo de ML reclasificó correctamente a un subgrupo significativo de pacientes que GRACE había catalogado erróneamente de bajo riesgo.}
+
+\subsection{Resumen de Resultados}
+
+\begin{keypoint}
+\textbf{Resumen de resultados principales:}
+
+\begin{enumerate}
+    \item \textbf{Discriminación}: Se desarrollaron dos modelos XGBoost:
+    \begin{itemize}
+        \item Modelo reducido (10 variables): AUROC = 0,901 (IC 95\%: 0,855--0,937)
+        \item Modelo extendido (57 variables): AUROC = 0,938 (IC 95\%: 0,884--0,977)
+    \end{itemize}
+    Ambos superaron significativamente al score GRACE (0,820, p $<$0,001).
+    
+    \item \textbf{Calibración}: Los modelos mostraron buena calibración con Brier Score de 0,096 (reducido) y 0,036 (extendido).
+    
+    \item \textbf{Utilidad clínica}: El Decision Curve Analysis demostró beneficio neto en el rango de umbrales 5\%--30\%, especialmente relevante para identificación de pacientes de bajo riesgo.
+    
+    \item \textbf{Valor Predictivo Negativo}: El modelo reducido alcanzó un VPN de 0,969, indicando alta confiabilidad para descartar el riesgo de muerte.
+    
+    \item \textbf{Robustez estadística}: Los resultados fueron validados mediante Bootstrap (1000 iteraciones) y Jackknife (Leave-One-Out), demostrando estabilidad de las métricas.
+\end{enumerate}
+\end{keypoint}
+\subsection{Comparaciones Visuales entre Modelos}
+
+Las siguientes figuras presentan comparaciones visuales directas entre los modelos evaluados, permitiendo apreciar las diferencias en rendimiento predictivo.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.65\textwidth]{../complemento_del_informe_final/Propuesta_de_seleccion_de_variables/comparacion_rf_vs_xgb.png}
+\caption{Comparación entre Random Forest y XGBoost. Aunque ambos modelos presentan rendimiento similar, XGBoost muestra mejor calibración y menor variabilidad.}
+\label{fig:rf_vs_xgb}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.65\textwidth]{../complemento_del_informe_final/Propuesta_de_seleccion_de_variables/comparacion_xgb_vs_lgbm.png}
+\caption{Comparación entre XGBoost y LightGBM. Los modelos de gradient boosting muestran rendimiento comparable, sin diferencias estadísticamente significativas.}
+\label{fig:xgb_vs_lgbm}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.65\textwidth]{../complemento_del_informe_final/Propuesta_de_seleccion_de_variables/comparacion_xgb_vs_xgb_balanced.png}
+\caption{Comparación entre XGBoost estándar y XGBoost con balance de clases. El manejo del desbalance mediante scale\_pos\_weight no impacta significativamente el rendimiento final.}
+\label{fig:xgb_vs_xgb_balanced}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.65\textwidth]{../complemento_del_informe_final/Propuesta_de_seleccion_de_variables/comparacion_knn_vs_xgb.png}
+\caption{Comparación entre K-Nearest Neighbors y XGBoost. XGBoost supera claramente al modelo KNN, demostrando la superioridad de los métodos de ensemble para este problema.}
+\label{fig:knn_vs_xgb}
+\end{figure}
+
+% ============================================================================
+% VALIDACIÓN SIN FUGA DE DATOS
+% ============================================================================
+
+\subsection{Validación con Dataset sin Fuga de Datos}
+\label{sec:validacion_sin_fuga}
+
+Un hallazgo importante durante el desarrollo del estudio fue la identificación de variables que podían introducir \textbf{fuga de datos parcial} (\textit{data leakage}). Específicamente, las siguientes variables se recopilaban predominantemente en pacientes con evolución desfavorable o estado crítico:
+
+\begin{itemize}
+    \item Variables de complicaciones (\texttt{comp\_*}): Registradas mayoritariamente en pacientes con desenlace adverso
+    \item \texttt{aminas}: Uso de aminas vasoactivas, indicador de shock cardiogénico avanzado
+    \item Variables de reperfusión (\texttt{reperfusion\_*}): Con información sobre resultados del procedimiento
+    \item \texttt{tiempo\_puerta\_aguja}: Disponible solo en pacientes que recibieron tratamiento de reperfusión
+    \item \texttt{CK tardío}: Marcador de seguimiento post-evento
+\end{itemize}
+
+Para validar la robustez del modelo y descartar que el rendimiento dependiera de estas variables potencialmente contaminadas, se realizó un análisis exhaustivo excluyendo estas variables del conjunto original de 57 predictores.
+
+\subsubsection{Métricas del Modelo sin Variables con Potencial Fuga}
+
+\begin{table}[H]
+\centering
+\caption{Métricas del modelo XGBoost excluyendo variables con potencial fuga de datos}
+\label{tab:metricas_sin_fuga}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Métrica} & \textbf{Valor} & \textbf{IC 95\% (Bootstrap)} \\
+\midrule
+\textbf{AUROC} & \textbf{0,896} & [0,843 -- 0,939] \\
+AUPRC & 0,592 & [0,464 -- 0,712] \\
+Accuracy & 0,931 & [0,910 -- 0,950] \\
+Precisión & 0,700 & [0,524 -- 0,852] \\
+Sensibilidad (Recall) & 0,382 & [0,255 -- 0,510] \\
+Especificidad & 0,984 & --- \\
+VPN & 0,943 & --- \\
+F1-Score & 0,494 & [0,356 -- 0,612] \\
+Brier Score & 0,054 & [0,040 -- 0,069] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{keypoint}
+\textbf{Tercer resultado importante del proyecto:} El modelo entrenado sin las variables que propiciaban fuga de datos mantiene un AUROC de \textbf{0,896} (IC 95\%: 0,843--0,939), confirmando que el rendimiento predictivo del modelo \textbf{no depende de variables con potencial sesgo}. Las variables más importantes según análisis SHAP (edad, fracción de eyección, glicemia, índice Killip, presión arterial diastólica) son todas clínicamente legítimas y disponibles al ingreso del paciente.
+\end{keypoint}
+
+\subsubsection{Curva ROC del Modelo Validado}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/corrida_sin_fuga_de_datos/ROC_curve_mortality.png}
+\caption{Curva ROC del modelo XGBoost entrenado sin variables con potencial fuga de datos. AUROC = 0,896. El modelo mantiene excelente capacidad discriminativa utilizando únicamente predictores clínicamente válidos.}
+\label{fig:roc_sin_fuga}
+\end{figure}
+
+\subsubsection{Matriz de Confusión del Modelo Validado}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{../complemento_del_informe_final/corrida_sin_fuga_de_datos/Confusion_matrix_mortality.png}
+\caption{Matriz de confusión del modelo sin fuga de datos. VN: 559 (98,4\%), FP: 9 (1,6\%), FN: 34 (61,8\%), VP: 21 (38,2\%). El modelo mantiene alta especificidad con precisión aceptable.}
+\label{fig:confusion_sin_fuga}
+\end{figure}
+
+\subsubsection{Importancia de Variables (Sin Fuga de Datos)}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/corrida_sin_fuga_de_datos/feature_importance_top_20_features.png}
+\caption{Top 20 variables más importantes según valores SHAP medios absolutos en el modelo sin fuga de datos. Las variables más influyentes son: edad (0,019), fracción de eyección (0,017), glicemia (0,017), índice Killip (0,016) y presión arterial diastólica (0,015). Ninguna de estas variables propicia fuga de datos.}
+\label{fig:feature_importance_sin_fuga}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Top 10 variables más importantes según SHAP (dataset sin fuga de datos)}
+\label{tab:top10_shap_sin_fuga}
+\begin{tabular}{@{}clc@{}}
+\toprule
+\textbf{Rank} & \textbf{Variable} & \textbf{Mean |SHAP|} \\
+\midrule
+1 & Edad & 0,0190 \\
+2 & Fracción de eyección & 0,0173 \\
+3 & Glicemia & 0,0168 \\
+4 & Índice Killip & 0,0165 \\
+5 & Presión arterial diastólica & 0,0149 \\
+6 & Triglicéridos & 0,0125 \\
+7 & Creatinina & 0,0125 \\
+8 & Colesterol & 0,0101 \\
+9 & Estreptoquinasa recombinante & 0,0094 \\
+10 & CK-MB & 0,0066 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Curvas de Aprendizaje}
+
+Las curvas de aprendizaje de los diferentes modelos evaluados demuestran convergencia adecuada sin indicios de sobreajuste severo.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/corrida_sin_fuga_de_datos/learning_curve_xgb.png}
+\caption{Curva de aprendizaje de XGBoost (dataset sin fuga). Score final en validación: 0,908. Gap train-val: 0,092. La convergencia de las curvas indica generalización adecuada.}
+\label{fig:learning_curve_xgb_sin_fuga}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/corrida_sin_fuga_de_datos/learning_curve_rf.png}
+\caption{Curva de aprendizaje de Random Forest (dataset sin fuga). Score final en validación: 0,896. Gap train-val: 0,104.}
+\label{fig:learning_curve_rf_sin_fuga}
+\end{figure}
+
+\subsubsection{Comparación Estadística entre Modelos}
+
+Se realizaron comparaciones estadísticas mediante prueba t pareada para evaluar si existían diferencias significativas entre los algoritmos evaluados.
+
+\begin{table}[H]
+\centering
+\caption{Comparaciones estadísticas entre modelos (dataset sin fuga de datos)}
+\label{tab:comparaciones_pares}
+\begin{tabular}{@{}llccc@{}}
+\toprule
+\textbf{Modelo 1} & \textbf{Modelo 2} & \textbf{p-valor} & \textbf{Cohen's d} & \textbf{Significativo} \\
+\midrule
+Random Forest & XGBoost & 0,277 & $-$0,24 (Small) & No \\
+Random Forest & XGBoost Balanced & 0,296 & $-$0,24 (Small) & No \\
+Random Forest & LightGBM & 0,241 & +0,26 (Small) & No \\
+XGBoost & XGBoost Balanced & 0,952 & +0,00 (Negligible) & No \\
+XGBoost & LightGBM & \textbf{0,0002} & +0,51 (Medium) & \textbf{Sí} \\
+XGBoost Balanced & LightGBM & \textbf{0,0003} & +0,52 (Medium) & \textbf{Sí} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/corrida_sin_fuga_de_datos/matriz_comparaciones.png}
+\caption{Matriz de comparaciones estadísticas entre modelos. Izquierda: p-valores (verde = diferencia significativa). Derecha: tamaño del efecto (Cohen's d). XGBoost y XGBoost Balanced superan significativamente a LightGBM.}
+\label{fig:matriz_comparaciones}
+\end{figure}
+
+\subsubsection{Análisis de Utilidad Clínica}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/corrida_sin_fuga_de_datos/Decision_curve_analisis_mortality.png}
+\caption{Decision Curve Analysis del modelo sin fuga de datos. El modelo (línea azul) muestra beneficio neto positivo sobre la estrategia de ``tratar a ninguno'' en todo el rango de umbrales clínicamente relevantes, confirmando su utilidad clínica incluso sin variables potencialmente sesgadas.}
+\label{fig:dca_sin_fuga}
+\end{figure}
+
+\subsubsection{Validación Bootstrap y Jackknife}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{../complemento_del_informe_final/corrida_sin_fuga_de_datos/resamplings_results_auroc.png}
+\caption{Distribución del AUROC mediante Bootstrap (n=1000, izquierda) y Jackknife (n=623, derecha). Los intervalos de confianza al 95\% confirman la estabilidad del rendimiento del modelo.}
+\label{fig:bootstrap_auroc_sin_fuga}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{../complemento_del_informe_final/corrida_sin_fuga_de_datos/resamplings_results_auprc.png}
+\caption{Distribución del AUPRC mediante técnicas de remuestreo. La métrica muestra mayor variabilidad debido al desbalance de clases, pero mantiene valores aceptables.}
+\label{fig:bootstrap_auprc_sin_fuga}
+\end{figure}

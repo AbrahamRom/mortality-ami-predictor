@@ -1,0 +1,1236 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{tocloft}
+\usepackage{titlesec}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{subcaption}
+
+% Configuración de página
+\geometry{margin=2.5cm}
+\setlength{\parskip}{0.8em}
+\setlength{\parindent}{0pt}
+\setlength{\headheight}{15pt}
+\onehalfspacing
+
+% Configuración de colores
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{primaryblue}{rgb}{0.1,0.3,0.6}
+
+% Configuración de listings para código
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{primaryblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    frame=single,
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+             {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+             {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {ü}{{\"u}}1 {Ü}{{\"U}}1
+}
+\lstset{style=mystyle}
+
+% Configuración de hyperref
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primaryblue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Informe Técnico - Mortality AMI Predictor},
+    pdfauthor={Equipo de Desarrollo},
+}
+
+% Configuración de encabezados
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyhead[R]{Mortality AMI Predictor}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Formato de secciones
+\titleformat{\section}{\Large\bfseries\color{primaryblue}}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+\begin{document}
+
+% ============================================================================
+% PORTADA
+% ============================================================================
+\begin{titlepage}
+    \centering
+    
+    % Logos institucionales
+    \vspace*{1cm}
+    \begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.25\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{logos/logo_uh.png}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.25\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth]{logos/logo_matcom.jpeg}
+    \end{subfigure}
+    \end{figure}
+    
+    \vspace{1cm}
+    
+    {\Huge\bfseries\color{primaryblue} Informe Técnico\\[0.5cm]}
+    {\LARGE\bfseries Mortality AMI Predictor\\[0.3cm]}
+    {\Large Sistema de Predicción de Mortalidad Intrahospitalaria\\
+    en Pacientes con Infarto Agudo de Miocardio\\[2cm]}
+
+    
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.25\textwidth]{logos/logo_ami_predictor.png}
+    \end{figure}
+    
+    {\large\textbf{Versión 1.0}\\[0.5cm]}
+
+    \vfill
+    
+    {\large
+    \textbf{Integrantes del Equipo:}\\[0.3cm]
+    }
+    {\normalsize
+    \begin{itemize}[leftmargin=*]
+        \item Richard Alejandro Matos Arderí
+        \item Abel Ponce González
+        \item Abraham Romero Imbert
+        \item Michell Viu Ramirez
+        \item Eveliz Espinaco Milián
+        \item Eduardo Brito Labrada
+        \item Ernesto Abreu Peraza
+    \end{itemize}
+    }
+
+    
+    \vfill
+
+    {\large
+    \textbf{Institución:}\\[0.3cm]
+    Facultad de Matemática y Computación\\
+    Universidad de La Habana\\[0.5cm]
+    Registro Cubano de Infarto Agudo del Miocardio
+    }
+    
+    {\large
+    \textbf{Tecnologías:} Python $\cdot$ Streamlit $\cdot$ Scikit-learn $\cdot$ XGBoost $\cdot$ SHAP\\[0.3cm]
+    \textbf{Arquitectura:} Modular $\cdot$ Orientada a Objetos $\cdot$ Patrones de Diseño\\[1cm]
+    }
+    
+    \vfill
+    
+    {\large \today}
+\end{titlepage}
+
+% ============================================================================
+% ÍNDICE
+% ============================================================================
+\tableofcontents
+\newpage
+
+% ============================================================================
+% RESUMEN EJECUTIVO
+% ============================================================================
+\section{Resumen Ejecutivo}
+
+\textbf{Mortality AMI Predictor} es una aplicación de Machine Learning de extremo a extremo diseñada para la predicción de mortalidad intrahospitalaria y arritmias ventriculares en pacientes con Infarto Agudo de Miocardio (IAM). El sistema integra las mejores prácticas de ingeniería de software con metodologías rigurosas de ciencia de datos para proporcionar una herramienta robusta, interpretable y clínicamente útil.
+
+\subsection{Características Principales}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Limpieza automatizada de datos} con múltiples estrategias de imputación, detección de outliers y codificación de variables categóricas.
+    \item \textbf{Análisis exploratorio interactivo} univariado, bivariado y multivariado con visualizaciones Plotly.
+    \item \textbf{Entrenamiento de múltiples modelos} incluyendo KNN, Regresión Logística, Árboles de Decisión, XGBoost, LightGBM y Redes Neuronales.
+    \item \textbf{Sistema AutoML} integrado con FLAML y soporte opcional para Auto-sklearn y AutoKeras (NAS).
+    \item \textbf{Evaluación exhaustiva} con métricas, curvas de calibración, Decision Curve Analysis y comparación con scores clínicos.
+    \item \textbf{Explicabilidad avanzada} mediante SHAP, importancia por permutación, PDP y optimización inversa.
+    \item \textbf{Scores clínicos integrados} (GRACE, TIMI) para validación y comparación.
+    \item \textbf{Sistema de modelos personalizados} que permite crear e integrar arquitecturas propias.
+    \item \textbf{Dashboard interactivo} multipágina en Streamlit con generación de reportes PDF.
+    \item \textbf{Despliegue containerizado} con Docker y Docker Compose.
+\end{itemize}
+
+\subsection{Métricas de Calidad del Código Fuente}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lc}
+\toprule
+\textbf{Métrica} & \textbf{Valor} \\
+\midrule
+Número de módulos & 10 \\
+Archivos Python especializados & 38+ \\
+Tests automatizados & 120+ \\
+Cobertura de tests & $>$ 80\% \\
+Type hints & 100\% \\
+Documentación (archivos .md) & 25+ \\
+\bottomrule
+\end{tabular}
+\caption{Métricas de calidad del código fuente}
+\end{table}
+
+% ============================================================================
+% ARQUITECTURA DEL SISTEMA
+% ============================================================================
+\section{Arquitectura del Sistema}
+
+\subsection{Visión General de la Arquitectura}
+
+El sistema sigue una arquitectura modular organizada en capas con clara separación de responsabilidades:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Capa de Presentación:} Dashboard Streamlit multipágina con 10 páginas especializadas.
+    \item \textbf{Capa de Lógica de Negocio:} Módulos Python especializados en \texttt{src/}.
+    \item \textbf{Capa de Datos:} Sistema de gestión de archivos con timestamps y versionado automático.
+    \item \textbf{Capa de Persistencia:} Almacenamiento de modelos, datasets y configuraciones.
+\end{enumerate}
+
+\subsection{Estructura de Directorios}
+
+\begin{lstlisting}[language=bash,caption={Estructura del proyecto}]
+Tools/
++-- dashboard/               # Aplicacion Streamlit
+|   +-- Dashboard.py        # Punto de entrada principal
+|   +-- app/                # Utilidades y estado compartido
+|   +-- pages/              # Paginas del dashboard (10)
++-- src/                    # Modulos de logica de negocio
+|   +-- automl/             # Integracion AutoML
+|   +-- cleaning/           # Limpieza de datos
+|   +-- data_load/          # Carga y gestion de datos
+|   +-- eda/                # Analisis exploratorio
+|   +-- evaluation/         # Evaluacion de modelos
+|   +-- explainability/     # Explicabilidad (SHAP, etc.)
+|   +-- features/           # Ingenieria de caracteristicas
+|   +-- models/             # Definicion de modelos
+|   +-- prediction/         # Sistema de prediccion
+|   +-- preprocessing/      # Pipelines de preprocesamiento
+|   +-- reporting/          # Generacion de reportes PDF
+|   +-- scoring/            # Scores clinicos
+|   +-- training/           # Entrenamiento de modelos
++-- tests/                  # Suite de tests automatizados
++-- docker/                 # Configuracion Docker
++-- docs/                   # Documentacion MkDocs
++-- processed/              # Datos procesados y modelos
+\end{lstlisting}
+
+\subsection{Patrones de Diseño Implementados}
+
+El sistema implementa múltiples patrones de diseño profesionales:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lp{8cm}}
+\toprule
+\textbf{Patrón} & \textbf{Aplicación} \\
+\midrule
+Factory & Creación de clasificadores y configuraciones de preprocesamiento \\
+Strategy & Estrategias de imputación, encoding, detección de outliers \\
+Builder & Construcción de pipelines de preprocesamiento \\
+Singleton & Configuración global del proyecto (\texttt{CONFIG}) \\
+Adapter & Integración de diferentes backends AutoML \\
+Registry & Registro de modelos personalizados y scores clínicos \\
+Template Method & Clase base para modelos custom (\texttt{BaseCustomModel}) \\
+\bottomrule
+\end{tabular}
+\caption{Patrones de diseño implementados en el sistema}
+\end{table}
+
+% ============================================================================
+% TECNOLOGÍAS Y DEPENDENCIAS
+% ============================================================================
+\section{Tecnologías y Dependencias}
+
+\subsection{Stack Tecnológico Principal}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llp{6cm}}
+\toprule
+\textbf{Categoría} & \textbf{Tecnología} & \textbf{Propósito} \\
+\midrule
+\multirow{2}{*}{Lenguaje} & Python 3.9+ & Lenguaje principal de desarrollo \\
+& Type Hints & Tipado estático opcional \\
+\midrule
+\multirow{4}{*}{ML Core} & Scikit-learn & Algoritmos de ML y pipelines \\
+& XGBoost & Gradient boosting optimizado \\
+& LightGBM & Gradient boosting eficiente \\
+& Imbalanced-learn & Manejo de clases desbalanceadas \\
+\midrule
+\multirow{2}{*}{Deep Learning} & PyTorch & Redes neuronales tabulares \\
+& AutoKeras/TensorFlow & Neural Architecture Search \\
+\midrule
+\multirow{2}{*}{AutoML} & FLAML & AutoML cross-platform \\
+& Auto-sklearn & AutoML (solo Linux) \\
+\midrule
+\multirow{3}{*}{Visualización} & Plotly & Gráficos interactivos \\
+& Matplotlib & Gráficos estáticos \\
+& Seaborn & Visualización estadística \\
+\midrule
+\multirow{2}{*}{Explicabilidad} & SHAP & Valores Shapley \\
+& Scikit-plot & Curvas ROC, calibración \\
+\midrule
+UI/Dashboard & Streamlit & Dashboard web interactivo \\
+\midrule
+Reportes & ReportLab & Generación de PDFs \\
+\midrule
+Tracking & MLflow & Seguimiento de experimentos \\
+\midrule
+\multirow{2}{*}{Testing} & Pytest & Framework de testing \\
+& Pytest-cov & Cobertura de código \\
+\midrule
+\multirow{2}{*}{Despliegue} & Docker & Containerización \\
+& Docker Compose & Orquestación de servicios \\
+\bottomrule
+\end{tabular}
+\caption{Stack tecnológico completo del sistema}
+\end{table}
+
+\subsection{Dependencias Principales}
+
+\begin{lstlisting}[language=bash,caption={Dependencias principales (requirements.txt)}]
+pandas                 # Manipulacion de datos
+numpy                  # Computacion numerica
+scikit-learn           # Machine Learning
+xgboost                # Gradient Boosting
+lightgbm               # Light Gradient Boosting
+imbalanced-learn       # Manejo de clases desbalanceadas
+optuna                 # Optimizacion de hiperparametros
+matplotlib             # Visualizacion
+seaborn                # Visualizacion estadistica
+plotly                 # Graficos interactivos
+shap                   # Explicabilidad
+streamlit              # Dashboard web
+joblib                 # Serializacion de modelos
+mlflow                 # Tracking de experimentos
+reportlab              # Generacion de PDFs
+scipy                  # Computacion cientifica
+flaml[automl]          # AutoML cross-platform
+torch                  # Deep Learning (opcional)
+\end{lstlisting}
+
+% ============================================================================
+% MÓDULOS FUNCIONALES
+% ============================================================================
+\section{Módulos Funcionales}
+
+\subsection{Módulo de Carga de Datos (\texttt{data\_load})}
+
+El módulo \texttt{data\_load} proporciona utilidades robustas para la carga, guardado y gestión de datasets.
+
+\subsubsection{Componentes}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{loaders.py:} Carga de datos con detección automática de formato (CSV, Parquet, Feather, Excel) y manejo robusto de codificaciones.
+    \item \textbf{io\_utils.py:} Utilidades de I/O con detección automática de encoding para archivos con caracteres especiales (español).
+    \item \textbf{splitters.py:} Estrategias de división de datos:
+    \begin{itemize}
+        \item División aleatoria estratificada
+        \item División temporal (para datos ordenados en el tiempo)
+        \item División con preservación de distribución de clases
+    \end{itemize}
+    \item \textbf{path\_utils.py:} Gestión de rutas con timestamps automáticos, limpieza de archivos antiguos y organización de outputs.
+\end{itemize}
+
+\subsubsection{Características Técnicas}
+
+\begin{lstlisting}[language=Python,caption={Ejemplo de uso del loader de datos}]
+from src.data_load import load_dataset, train_test_split
+
+# Carga automatica con deteccion de formato
+df = load_dataset("path/to/data.csv")  # Soporta CSV, Parquet, Excel
+
+# Division estratificada
+train_df, test_df = train_test_split(
+    df, 
+    test_size=0.2,
+    stratify_column="mortality"
+)
+
+# Division temporal
+train_df, test_df = train_test_split(
+    df,
+    time_column="admission_date",
+    test_size=0.2
+)
+\end{lstlisting}
+
+\subsection{Módulo de Limpieza de Datos (\texttt{cleaning})}
+
+El módulo \texttt{cleaning} implementa un pipeline completo de limpieza de datos con tracking de metadatos.
+
+\subsubsection{Componentes}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{cleaner.py:} Clase orquestadora \texttt{DataCleaner} que coordina todas las operaciones de limpieza.
+    \item \textbf{imputation.py:} Estrategias de imputación:
+    \begin{itemize}
+        \item Media, mediana, moda
+        \item KNN Imputer
+        \item Forward/Backward fill
+        \item Valores constantes personalizables
+    \end{itemize}
+    \item \textbf{outliers.py:} Métodos de detección y tratamiento de outliers:
+    \begin{itemize}
+        \item IQR (Rango Intercuartílico)
+        \item Z-score
+        \item Tratamientos: cap, remove, flag
+    \end{itemize}
+    \item \textbf{encoding.py:} Codificación de variables categóricas:
+    \begin{itemize}
+        \item Label Encoding
+        \item One-Hot Encoding
+        \item Ordinal Encoding (con orden personalizado)
+    \end{itemize}
+    \item \textbf{discretization.py:} Discretización de variables continuas:
+    \begin{itemize}
+        \item Equal-width binning
+        \item Equal-frequency binning
+        \item K-Means binning
+        \item Bins personalizados
+    \end{itemize}
+    \item \textbf{metadata.py:} Tracking de metadatos de variables (tipo original, transformaciones aplicadas, estadísticas).
+\end{itemize}
+
+\subsubsection{Configuración de Limpieza}
+
+\begin{lstlisting}[language=Python,caption={Configuración del pipeline de limpieza}]
+from src.cleaning import DataCleaner, CleaningConfig
+
+config = CleaningConfig(
+    # Imputacion
+    numeric_imputation="median",
+    categorical_imputation="mode",
+    knn_neighbors=5,
+    
+    # Outliers
+    outlier_method="iqr",
+    iqr_multiplier=1.5,
+    outlier_treatment="cap",
+    
+    # Encoding
+    categorical_encoding="label",
+    
+    # General
+    drop_duplicates=True,
+    drop_fully_missing=True,
+    drop_constant=True
+)
+
+cleaner = DataCleaner(config)
+df_clean = cleaner.fit_transform(df, target_column="mortality")
+\end{lstlisting}
+
+\subsection{Módulo de Análisis Exploratorio (\texttt{eda})}
+
+El módulo \texttt{eda} proporciona un análisis exploratorio completo con visualizaciones interactivas.
+
+\subsubsection{Componentes}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{analyzer.py:} Clase principal \texttt{EDAAnalyzer} que orquesta el análisis.
+    \item \textbf{univariate.py:} Análisis univariado (estadísticas descriptivas, distribuciones, detección de anomalías).
+    \item \textbf{bivariate.py:} Análisis bivariado (correlaciones, tests estadísticos, scatter plots).
+    \item \textbf{multivariate.py:} Análisis multivariado (PCA, matrices de correlación, análisis de componentes).
+    \item \textbf{visualizations.py:} Generación de visualizaciones interactivas con Plotly.
+    \item \textbf{pdf\_reports.py:} Generación de reportes PDF profesionales de EDA.
+\end{itemize}
+
+\subsubsection{Estadísticas Computadas}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lp{8cm}}
+\toprule
+\textbf{Tipo de Análisis} & \textbf{Métricas/Visualizaciones} \\
+\midrule
+Univariado Numérico & Media, mediana, desviación estándar, IQR, skewness, kurtosis, histogramas, boxplots \\
+Univariado Categórico & Frecuencias, proporciones, moda, gráficos de barras, pie charts \\
+Bivariado Num-Num & Correlación Pearson/Spearman, scatter plots, regresión lineal \\
+Bivariado Num-Cat & ANOVA, t-test, violin plots, boxplots agrupados \\
+Bivariado Cat-Cat & Chi-cuadrado, Cramér's V, tablas de contingencia \\
+Multivariado & PCA, matrices de correlación, pair plots \\
+\bottomrule
+\end{tabular}
+\caption{Análisis estadísticos disponibles en el módulo EDA}
+\end{table}
+
+\subsection{Módulo de Características (\texttt{features})}
+
+El módulo \texttt{features} implementa técnicas avanzadas de ingeniería y transformación de características.
+
+\subsubsection{Componentes}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{selectors.py:} Selección segura de columnas excluyendo identificadores y targets.
+    \item \textbf{ica.py:} Transformación mediante Análisis de Componentes Independientes (ICA):
+    \begin{itemize}
+        \item Separación de señales mixtas
+        \item Extracción de componentes no-Gaussianos
+        \item Comparación con PCA
+        \item Visualizaciones de componentes
+    \end{itemize}
+    \item \textbf{transformers.py:} Transformadores personalizados compatibles con sklearn pipelines.
+\end{itemize}
+
+\subsubsection{ICA vs PCA}
+
+El sistema permite comparar ambas técnicas de reducción de dimensionalidad:
+
+\begin{lstlisting}[language=Python,caption={Uso de ICA para transformación de features}]
+from src.features import ICATransformer, compare_pca_vs_ica
+
+# Transformacion ICA
+ica = ICATransformer(n_components=10, algorithm='parallel')
+ica.fit(X_train)
+X_transformed = ica.transform(X_train)
+
+# Comparacion PCA vs ICA
+comparison_fig = compare_pca_vs_ica(X_train, n_components=10)
+\end{lstlisting}
+
+\subsection{Módulo de Modelos (\texttt{models})}
+
+El módulo \texttt{models} define los clasificadores disponibles y el sistema de modelos personalizados.
+
+\subsubsection{Clasificadores Disponibles}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llp{5cm}}
+\toprule
+\textbf{Modelo} & \textbf{Clave} & \textbf{Características} \\
+\midrule
+K-Nearest Neighbors & \texttt{knn} & Algoritmo basado en instancias \\
+Regresión Logística & \texttt{logreg} & Modelo lineal calibrado \\
+Árbol de Decisión & \texttt{dtree} & Modelo interpretable \\
+XGBoost & \texttt{xgb} & Gradient boosting optimizado \\
+XGBoost Balanced & \texttt{xgb\_balanced} & Ponderación para clases desbalanceadas \\
+LightGBM & \texttt{lgbm} & Gradient boosting eficiente \\
+Red Neuronal & \texttt{nn} & MLP con PyTorch \\
+\bottomrule
+\end{tabular}
+\caption{Clasificadores estándar disponibles}
+\end{table}
+
+\subsubsection{Sistema de Modelos Personalizados}
+
+El sistema permite crear modelos personalizados que se integran completamente con el pipeline:
+
+\begin{lstlisting}[language=Python,caption={Creación de un modelo personalizado}]
+from src.models.custom_base import BaseCustomClassifier
+import numpy as np
+
+class MyCustomClassifier(BaseCustomClassifier):
+    def __init__(self, n_layers=3, learning_rate=0.01):
+        super().__init__(name="MyCustomClassifier")
+        self.n_layers = n_layers
+        self.learning_rate = learning_rate
+        
+    def fit(self, X, y):
+        self._validate_input(X, training=True)
+        self.classes_ = np.unique(y)
+        # Logica de entrenamiento
+        self.is_fitted_ = True
+        return self
+    
+    def predict(self, X):
+        self._validate_input(X)
+        # Logica de prediccion
+        return predictions
+    
+    def predict_proba(self, X):
+        # Probabilidades
+        return probabilities
+\end{lstlisting}
+
+\subsubsection{Persistencia de Modelos}
+
+El sistema de persistencia incluye:
+
+\begin{itemize}[leftmargin=*]
+    \item Serialización con joblib y pickle
+    \item Metadatos del modelo (hiperparámetros, métricas, fecha)
+    \item Versionado con timestamps
+    \item Validación de integridad (hash SHA256)
+    \item Soporte para pipelines de preprocesamiento
+\end{itemize}
+
+\subsection{Módulo de Entrenamiento (\texttt{training})}
+
+El módulo \texttt{training} implementa un pipeline de entrenamiento riguroso siguiendo estándares académicos.
+
+\subsubsection{Componentes}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{trainer.py:} Orquestador principal del pipeline de experimentación.
+    \item \textbf{cross\_validation.py:} Estrategias de validación cruzada:
+    \begin{itemize}
+        \item Nested Cross-Validation
+        \item Repeated Stratified K-Fold ($10\times10 = 100$ runs)
+    \end{itemize}
+    \item \textbf{hyperparameter\_tuning.py:} Búsqueda de hiperparámetros con RandomizedSearchCV y GridSearchCV.
+    \item \textbf{statistical\_tests.py:} Tests estadísticos para comparación de modelos (t-test, Mann-Whitney).
+    \item \textbf{learning\_curves.py:} Generación de curvas de aprendizaje.
+    \item \textbf{pdf\_reports.py:} Reportes PDF de entrenamiento.
+\end{itemize}
+
+\subsubsection{Pipeline de Experimentación Riguroso}
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{FASE 1 - Train + Validation:}
+    \begin{itemize}
+        \item Validación cruzada estratificada repetida ($\geq 30$ runs)
+        \item Estimación de $\mu$ (media) y $\sigma$ (desviación estándar)
+        \item Curvas de aprendizaje para cada modelo
+    \end{itemize}
+    
+    \item \textbf{FASE 2 - Test:}
+    \begin{itemize}
+        \item Bootstrap resampling en conjunto de test
+        \item Jackknife resampling (leave-one-out)
+        \item Intervalos de confianza
+    \end{itemize}
+    
+    \item \textbf{FASE 3 - Comparación Estadística:}
+    \begin{itemize}
+        \item Test de normalidad Shapiro-Wilk
+        \item Paired t-test (si normal) o Mann-Whitney U (si no normal)
+        \item Determinación de diferencias significativas
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Módulo de Evaluación (\texttt{evaluation})}
+
+El módulo \texttt{evaluation} proporciona métricas exhaustivas y análisis de rendimiento.
+
+\subsubsection{Métricas de Clasificación}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lp{8cm}}
+\toprule
+\textbf{Métrica} & \textbf{Descripción} \\
+\midrule
+AUROC & Área bajo la curva ROC \\
+AUPRC & Área bajo la curva Precision-Recall \\
+Accuracy & Exactitud general \\
+Precision & Precisión (valor predictivo positivo) \\
+Recall & Sensibilidad (tasa de verdaderos positivos) \\
+Specificity & Especificidad (tasa de verdaderos negativos) \\
+F1-Score & Media armónica de precision y recall \\
+NPV & Valor predictivo negativo \\
+Brier Score & Error cuadrático de calibración \\
+\bottomrule
+\end{tabular}
+\caption{Métricas de clasificación implementadas}
+\end{table}
+
+\subsubsection{Análisis Especializados}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Calibración:} Curvas de calibración con múltiples estrategias de binning.
+    \item \textbf{Decision Curve Analysis:} Evaluación de utilidad clínica vs. estrategias ``treat all'' y ``treat none''.
+    \item \textbf{Comparación con GRACE:} Benchmark contra el score clínico estándar.
+    \item \textbf{Bootstrap Validation:} Intervalos de confianza robustos.
+\end{itemize}
+
+\subsection{Módulo de Explicabilidad (\texttt{explainability})}
+
+El módulo \texttt{explainability} implementa técnicas de interpretación de modelos de ML.
+
+\subsubsection{Componentes}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{shap\_analysis.py:} Análisis SHAP completo:
+    \begin{itemize}
+        \item TreeExplainer para modelos basados en árboles
+        \item General Explainer para cualquier modelo
+        \item Beeswarm plots, bar plots, waterfall plots, force plots
+        \item Importancia de features basada en SHAP
+    \end{itemize}
+    
+    \item \textbf{permutation.py:} Importancia por permutación.
+    
+    \item \textbf{partial\_dependence.py:} Partial Dependence Plots (PDP) para visualizar efectos marginales.
+    
+    \item \textbf{inverse\_optimization.py:} \textbf{Optimización Inversa} para recomendaciones de tratamiento:
+    \begin{itemize}
+        \item Encuentra valores óptimos de features modificables
+        \item Minimiza/maximiza predicción del modelo
+        \item Respeta restricciones clínicas
+        \item Genera recomendaciones actionables
+    \end{itemize}
+    
+    \item \textbf{pdf\_reports.py:} Reportes PDF de explicabilidad.
+\end{itemize}
+
+\subsubsection{Optimización Inversa}
+
+Esta funcionalidad innovadora permite responder preguntas como: ``¿Qué valores de presión arterial y medicación optimizarían el pronóstico de este paciente?''
+
+\begin{lstlisting}[language=Python,caption={Uso de optimización inversa}]
+from src.explainability import InverseOptimizer
+
+optimizer = InverseOptimizer(
+    model=trained_model,
+    feature_names=feature_cols,
+    feature_bounds={'sbp': (80, 180), 'hr': (40, 150)}
+)
+
+result = optimizer.optimize(
+    target_value=0,  # Mortalidad = 0
+    modifiable_features=['sbp', 'hr', 'medication_X'],
+    fixed_features={'age': 65, 'sex': 1}
+)
+
+print(f"Valores optimos: {result['optimal_values']}")
+print(f"Reduccion de riesgo: {result['risk_reduction']}")
+\end{lstlisting}
+
+\subsection{Módulo de AutoML (\texttt{automl})}
+
+El módulo \texttt{automl} integra múltiples frameworks de AutoML.
+
+\subsubsection{Backends Soportados}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{llp{5cm}}
+\toprule
+\textbf{Backend} & \textbf{Plataforma} & \textbf{Características} \\
+\midrule
+FLAML & Cross-platform & Rápido, ligero, 12+ estimadores \\
+Auto-sklearn & Linux/WSL & Completo, meta-learning \\
+AutoKeras & Cross-platform & Neural Architecture Search \\
+\bottomrule
+\end{tabular}
+\caption{Backends AutoML disponibles}
+\end{table}
+
+\subsubsection{Estimadores FLAML}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Gradient Boosting:} LightGBM, XGBoost, CatBoost, HistGB
+    \item \textbf{Ensemble:} Random Forest, Extra Trees
+    \item \textbf{Lineales:} Logistic Regression (L1/L2), SGD, SVC
+    \item \textbf{Instance-Based:} K-Nearest Neighbors
+    \item \textbf{Neural:} Multi-Layer Perceptron
+\end{itemize}
+
+\subsubsection{Presets Configurables}
+
+\begin{lstlisting}[language=Python,caption={Configuración de AutoML}]
+from src.automl import FLAMLClassifier, AutoMLPreset
+
+# Preset rapido (5 minutos)
+clf_quick = FLAMLClassifier(
+    time_budget=300,
+    metric='roc_auc',
+    preset=AutoMLPreset.QUICK
+)
+
+# Preset balanceado (1 hora)
+clf_balanced = FLAMLClassifier(
+    time_budget=3600,
+    metric='roc_auc',
+    estimator_list=['lgbm', 'xgboost', 'rf', 'catboost']
+)
+
+clf_balanced.fit(X_train, y_train)
+\end{lstlisting}
+
+\subsection{Módulo de Scores Clínicos (\texttt{scoring})}
+
+El módulo \texttt{scoring} implementa calculadores de scores clínicos validados.
+
+\subsubsection{GRACE Score}
+
+El score GRACE (Global Registry of Acute Coronary Events) predice mortalidad intrahospitalaria y a 6 meses:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Variables:} Edad, frecuencia cardíaca, presión arterial sistólica, creatinina, clase Killip, desviación ST, enzimas cardíacas elevadas, parada cardíaca.
+    \item \textbf{Output:} Score numérico y categoría de riesgo (bajo/intermedio/alto).
+\end{itemize}
+
+\subsubsection{TIMI Score}
+
+El score TIMI (Thrombolysis In Myocardial Infarction):
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Variables:} Edad, diabetes, hipertensión, infarto previo, y otros factores de riesgo.
+    \item \textbf{Output:} Score y categoría de riesgo.
+\end{itemize}
+
+% ============================================================================
+% DASHBOARD STREAMLIT
+% ============================================================================
+\section{Dashboard Streamlit}
+
+\subsection{Arquitectura del Dashboard}
+
+El dashboard está construido como una aplicación multipágina de Streamlit con las siguientes características:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Página principal:} Resumen del sistema y estadísticas rápidas.
+    \item \textbf{10 páginas especializadas:} Cada una con funcionalidad específica.
+    \item \textbf{Gestión de estado:} Session state para persistencia de datos entre páginas.
+    \item \textbf{Configuración centralizada:} Rutas, temas y opciones en \texttt{app/config.py}.
+\end{itemize}
+
+\subsection{Páginas del Dashboard}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{clp{6cm}}
+\toprule
+\textbf{\#} & \textbf{Página} & \textbf{Funcionalidad} \\
+\midrule
+00 & Data Cleaning \& EDA & Limpieza de datos y análisis exploratorio completo \\
+01 & Data Overview & Resumen y estadísticas del dataset \\
+02 & Model Training & Entrenamiento de modelos con validación cruzada \\
+03 & Predictions & Predicciones individuales y por lotes \\
+04 & Model Evaluation & Métricas, ROC, calibración, DCA \\
+05 & Explainability & SHAP, permutación, PDP \\
+06 & Clinical Scores & Cálculo de GRACE y TIMI \\
+07 & Custom Models & Creación y gestión de modelos personalizados \\
+08 & Inverse Optimization & Optimización de features para mejorar pronóstico \\
+09 & AutoML & Entrenamiento automático con FLAML/AutoKeras \\
+\bottomrule
+\end{tabular}
+\caption{Páginas del dashboard Streamlit}
+\end{table}
+
+\subsection{Características de la UI}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Visualizaciones interactivas:} Gráficos Plotly con zoom, pan y exportación.
+    \item \textbf{Formularios dinámicos:} Configuración de parámetros con validación.
+    \item \textbf{Progreso en tiempo real:} Barras de progreso durante entrenamiento.
+    \item \textbf{Exportación de reportes:} Generación de PDFs profesionales.
+    \item \textbf{Caching inteligente:} Uso de \texttt{@st.cache\_data} para optimización.
+\end{itemize}
+
+% ============================================================================
+% SISTEMA DE TESTING
+% ============================================================================
+\section{Sistema de Testing}
+
+\subsection{Arquitectura de Tests}
+
+El sistema utiliza pytest con una arquitectura de tests organizada:
+
+\begin{lstlisting}[language=bash,caption={Estructura de tests}]
+tests/
++-- conftest.py                    # Fixtures compartidos
++-- test_data_cleaning.py          # Tests de limpieza (25 tests)
++-- test_modular_structure.py      # Tests de estructura (13 tests)
++-- test_data_preprocess.py        # Tests de preprocesamiento
++-- test_model_io.py               # Tests de I/O de modelos
++-- test_smoke_train.py            # Smoke test de entrenamiento
++-- test_custom_models.py          # Tests de modelos custom (30+ tests)
++-- test_model_serialization.py    # Tests de serializacion (25+ tests)
++-- test_integration_pipeline.py   # Tests end-to-end (20+ tests)
++-- test_inverse_optimization.py   # Tests de optimizacion inversa
++-- test_automl.py                 # Tests de AutoML
++-- TESTING_SUMMARY.md             # Documentacion de tests
+\end{lstlisting}
+
+\subsection{Fixtures Principales}
+
+\begin{lstlisting}[language=Python,caption={Fixtures de pytest}]
+@pytest.fixture
+def clinical_like_dataset(random_seed):
+    """Dataset sintetico similar a datos clinicos."""
+    data = pd.DataFrame({
+        'age': np.random.randint(40, 90, 300),
+        'sbp': np.random.normal(120, 20, 300),
+        'heart_rate': np.random.randint(60, 120, 300),
+        'creatinine': np.random.normal(1.0, 0.5, 300),
+        'mortality': np.random.choice([0, 1], 300, p=[0.8, 0.2])
+    })
+    return data
+
+@pytest.fixture
+def trained_simple_model(simple_dataset):
+    """Modelo sklearn entrenado."""
+    X, y = simple_dataset
+    model = RandomForestClassifier(n_estimators=10)
+    model.fit(X.select_dtypes(include=[np.number]), y)
+    return model
+\end{lstlisting}
+
+\subsection{Cobertura de Tests}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lcc}
+\toprule
+\textbf{Módulo} & \textbf{Tests} & \textbf{Estado} \\
+\midrule
+Data Cleaning & 25 & \checkmark \\
+Modular Structure & 13 & \checkmark \\
+Custom Models & 30+ & \checkmark \\
+Model Serialization & 25+ & \checkmark \\
+Integration Pipeline & 20+ & \checkmark \\
+AutoML & 5+ & \checkmark \\
+Inverse Optimization & 10+ & \checkmark \\
+\midrule
+\textbf{Total} & \textbf{120+} & \checkmark \\
+\bottomrule
+\end{tabular}
+\caption{Distribución de tests por módulo}
+\end{table}
+
+\subsection{Ejecución de Tests}
+
+\begin{lstlisting}[language=bash,caption={Comandos de testing}]
+# Ejecutar todos los tests
+pytest tests/ -v
+
+# Con cobertura
+pytest tests/ -v --cov=src --cov-report=html
+
+# Solo tests rapidos
+pytest tests/ -v -m "not slow"
+
+# Tests de integracion
+pytest tests/ -v -m integration
+\end{lstlisting}
+
+% ============================================================================
+% DESPLIEGUE Y CONTAINERIZACIÓN
+% ============================================================================
+\section{Despliegue y Containerización}
+
+\subsection{Configuración Docker}
+
+El sistema incluye configuración completa de Docker para despliegue reproducible.
+
+\subsubsection{Dockerfile Principal}
+
+\begin{lstlisting}[language=bash,caption={Dockerfile simplificado}]
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    gcc g++ git curl libgomp1 libopenblas-dev swig
+
+# Dependencias Python
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+RUN pip install "flaml[automl]"
+
+# Codigo de la aplicacion
+COPY src/ ./src/
+COPY dashboard/ ./dashboard/
+
+# Directorios
+RUN mkdir -p processed/models processed/plots models mlruns logs
+
+EXPOSE 8501
+
+CMD ["streamlit", "run", "dashboard/Dashboard.py", \
+     "--server.port=8501", "--server.address=0.0.0.0"]
+\end{lstlisting}
+
+\subsubsection{Docker Compose}
+
+\begin{lstlisting}[caption={docker-compose.yml}]
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: mortality-ami-predictor
+    ports:
+      - "8501:8501"
+    volumes:
+      - ../DATA:/app/DATA:ro
+      - ../processed:/app/processed
+      - ../models:/app/models
+    environment:
+      - AUTOML_BACKEND=flaml
+      - AUTOML_TIME_BUDGET=3600
+
+  jupyter:
+    # Servicio Jupyter para desarrollo
+    ports:
+      - "8888:8888"
+    profiles: [dev]
+
+  mlflow:
+    # Servicio MLflow para tracking
+    ports:
+      - "5000:5000"
+    profiles: [dev]
+\end{lstlisting}
+
+\subsection{Comandos de Despliegue}
+
+\begin{lstlisting}[language=bash,caption={Comandos de despliegue}]
+# Construir imagen
+docker build -t mortality-ami-predictor .
+
+# Ejecutar contenedor
+docker run -p 8501:8501 mortality-ami-predictor
+
+# Con Docker Compose (produccion)
+docker-compose up -d app
+
+# Con Docker Compose (desarrollo)
+docker-compose --profile dev up -d
+\end{lstlisting}
+
+% ============================================================================
+% DOCUMENTACIÓN
+% ============================================================================
+\section{Documentación}
+
+\subsection{Sistema de Documentación}
+
+El proyecto utiliza MkDocs con Material theme para documentación técnica:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Guías de Usuario:} Tutoriales paso a paso para cada funcionalidad.
+    \item \textbf{Referencia API:} Documentación automática de módulos Python.
+    \item \textbf{Guías de Desarrollo:} Contribución, testing, arquitectura.
+    \item \textbf{Changelog:} Historial de cambios por versión.
+\end{itemize}
+
+\subsection{Documentos Disponibles}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lp{8cm}}
+\toprule
+\textbf{Documento} & \textbf{Contenido} \\
+\midrule
+index.md & Página principal con overview del proyecto \\
+AUTOML\_GUIDE.md & Guía completa de AutoML \\
+CUSTOM\_MODELS\_GUIDE.md & Creación de modelos personalizados \\
+CUSTOM\_MODELS\_ARCHITECTURE.md & Arquitectura del sistema de modelos \\
+PDF\_GENERATION\_GUIDE.md & Generación de reportes PDF \\
+ICA\_UI\_IMPLEMENTATION.md & Implementación de ICA en la UI \\
+IMPLEMENTATION\_SUMMARY.md & Resumen de implementación \\
+\bottomrule
+\end{tabular}
+\caption{Documentación principal del proyecto}
+\end{table}
+
+% ============================================================================
+% CONFIGURACIÓN Y PERSONALIZACIÓN
+% ============================================================================
+\section{Configuración y Personalización}
+
+\subsection{Configuración Global}
+
+La configuración del proyecto se centraliza en \texttt{src/config.py}:
+
+\begin{lstlisting}[language=Python,caption={Configuración global del proyecto}]
+@dataclass
+class ProjectConfig:
+    # Rutas de datos
+    dataset_path: str = os.environ.get("DATASET_PATH", "")
+    processed_dir: str = "processed"
+    
+    # Columnas objetivo
+    target_column: str = "mortality_inhospital"
+    arrhythmia_column: str = "ventricular_arrhythmia"
+    
+    # Tracking de experimentos
+    experiment_tracker: str = "mlflow"
+    tracking_uri: Optional[str] = None
+
+CONFIG = ProjectConfig()
+RANDOM_SEED = 42
+\end{lstlisting}
+
+\subsection{Variables de Entorno}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{lp{6cm}}
+\toprule
+\textbf{Variable} & \textbf{Descripción} \\
+\midrule
+DATASET\_PATH & Ruta al dataset principal \\
+TARGET\_COLUMN & Nombre de la columna objetivo \\
+AUTOML\_BACKEND & Backend AutoML (flaml, auto-sklearn) \\
+AUTOML\_TIME\_BUDGET & Tiempo máximo para AutoML (segundos) \\
+EXPERIMENT\_TRACKER & Sistema de tracking (mlflow, wandb) \\
+\bottomrule
+\end{tabular}
+\caption{Variables de entorno configurables}
+\end{table}
+
+% ============================================================================
+% RENDIMIENTO Y OPTIMIZACIÓN
+% ============================================================================
+\section{Rendimiento y Optimización}
+
+\subsection{Estrategias de Optimización}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Caching:} Uso extensivo de \texttt{@st.cache\_data} y \texttt{@st.cache\_resource} en Streamlit.
+    \item \textbf{Lazy Loading:} Carga diferida de módulos pesados (SHAP, PyTorch).
+    \item \textbf{Parallel Processing:} Uso de \texttt{n\_jobs=-1} en sklearn cuando es posible.
+    \item \textbf{Optimización de memoria:} Uso de dtypes apropiados en pandas.
+    \item \textbf{Batch Processing:} Predicciones y SHAP en lotes para grandes datasets.
+\end{itemize}
+
+\subsection{Consideraciones de Escalabilidad}
+
+\begin{itemize}[leftmargin=*]
+    \item Soporte para datasets de hasta 1M+ registros.
+    \item Limpieza incremental para datasets muy grandes.
+    \item Subsampling inteligente para análisis SHAP.
+    \item Opciones de GPU para redes neuronales y AutoKeras.
+\end{itemize}
+
+% ============================================================================
+% LIMITACIONES Y TRABAJO FUTURO
+% ============================================================================
+\section{Limitaciones y Trabajo Futuro}
+
+\subsection{Limitaciones Actuales}
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Auto-sklearn:} Solo disponible en Linux/WSL.
+    \item \textbf{GPU Support:} Limitado a PyTorch y TensorFlow/AutoKeras.
+    \item \textbf{Datos Temporales:} No hay soporte nativo para series temporales de ECG.
+    \item \textbf{Multi-idioma:} La UI está principalmente en inglés/español.
+\end{enumerate}
+
+\subsection{Roadmap Futuro}
+
+\begin{itemize}[leftmargin=*]
+    \item Integración de modelos de deep learning para señales ECG.
+    \item API REST para integración con sistemas hospitalarios.
+    \item Soporte para datos longitudinales.
+    \item Dashboard de monitoreo de modelos en producción.
+    \item Integración con FHIR para interoperabilidad clínica.
+\end{itemize}
+
+% ============================================================================
+% CONCLUSIONES
+% ============================================================================
+\section{Conclusiones}
+
+\textbf{Mortality AMI Predictor} representa una solución integral y profesional para la predicción de mortalidad intrahospitalaria en pacientes con infarto agudo de miocardio. El sistema destaca por:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Arquitectura modular y extensible:} 10 módulos especializados con 38+ archivos y clara separación de responsabilidades.
+    
+    \item \textbf{Rigor metodológico:} Pipeline de experimentación siguiendo estándares académicos con validación cruzada repetida, tests estadísticos y comparación con scores clínicos validados.
+    
+    \item \textbf{Explicabilidad avanzada:} Integración completa de SHAP, importancia por permutación, PDP y optimización inversa para recomendaciones actionables.
+    
+    \item \textbf{Flexibilidad:} Sistema de modelos personalizados, múltiples backends AutoML y soporte para diversos formatos de datos.
+    
+    \item \textbf{Calidad de software:} 120+ tests automatizados, 100\% type hints, documentación completa y containerización para despliegue reproducible.
+    
+    \item \textbf{Usabilidad:} Dashboard interactivo multipágina con visualizaciones Plotly y generación de reportes PDF profesionales.
+\end{enumerate}
+
+El sistema está preparado para su uso en investigación clínica y, con las validaciones apropiadas, podría integrarse en entornos de práctica médica para apoyar la toma de decisiones clínicas en el manejo de pacientes con IAM.
+
+% ============================================================================
+% ANEXOS
+% ============================================================================
+\appendix
+
+\section{Glosario de Términos}
+
+\begin{description}
+    \item[AUROC] Área Bajo la Curva ROC (Receiver Operating Characteristic)
+    \item[AUPRC] Área Bajo la Curva Precision-Recall
+    \item[AutoML] Machine Learning Automatizado
+    \item[DCA] Decision Curve Analysis
+    \item[FLAML] Fast and Lightweight AutoML
+    \item[GRACE] Global Registry of Acute Coronary Events
+    \item[IAM] Infarto Agudo de Miocardio
+    \item[ICA] Análisis de Componentes Independientes
+    \item[NAS] Neural Architecture Search
+    \item[PDP] Partial Dependence Plot
+    \item[SHAP] SHapley Additive exPlanations
+    \item[SMOTE] Synthetic Minority Over-sampling Technique
+    \item[TIMI] Thrombolysis In Myocardial Infarction
+\end{description}
+
+\section{Referencias de API}
+
+\subsection{Funciones Principales}
+
+\begin{lstlisting}[language=Python,caption={API principal del sistema}]
+# Carga de datos
+from src.data_load import load_dataset, train_test_split
+
+# Limpieza
+from src.cleaning import DataCleaner, CleaningConfig
+
+# EDA
+from src.eda import EDAAnalyzer, quick_eda
+
+# Modelos
+from src.models import make_classifiers, make_automl_classifiers
+
+# Entrenamiento
+from src.training import run_rigorous_experiment_pipeline
+
+# Evaluacion
+from src.evaluation import compute_classification_metrics
+
+# Explicabilidad
+from src.explainability import compute_shap_values, InverseOptimizer
+
+# Scores clinicos
+from src.scoring import GraceScore, TIMIScore
+
+# AutoML
+from src.automl import FLAMLClassifier, NASClassifier
+\end{lstlisting}
+
+\end{document}

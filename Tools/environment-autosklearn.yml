@@ -1,0 +1,42 @@
+# Conda environment for auto-sklearn
+# -----------------------------------
+# Este entorno está optimizado para usar auto-sklearn en Linux.
+#
+# Crear el entorno:
+#   conda env create -f environment-autosklearn.yml
+#
+# Activar:
+#   conda activate autosklearn-env
+
+name: autosklearn-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - pip
+  - numpy<1.24
+  - pandas<2.0
+  - scikit-learn=0.24.2
+  - scipy<1.10
+  - auto-sklearn
+  - matplotlib
+  - seaborn
+  - plotly
+  - shap
+  - joblib
+  - reportlab
+  # - kaleido
+  - openpyxl
+  - xlrd
+  - pytest
+  - pytest-cov
+  - plotly>=5.20
+  - streamlit
+  - pip:
+      - flaml[automl]
+      - autogoal
+      - python-decouple
+      - pyyaml
+      - jinja2
+      - kaleido==0.2.1

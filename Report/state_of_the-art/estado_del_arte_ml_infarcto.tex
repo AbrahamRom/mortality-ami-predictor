@@ -1,0 +1,75 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0pt}
+\onehalfspacing
+
+\title{Estado del Arte: Predicción de mortalidad intrahospitalaria por infarto agudo de miocardio mediante técnicas de aprendizaje automático}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Introducción}
+El infarto agudo de miocardio (IAM) continúa siendo una de las principales causas de mortalidad en el mundo, tanto en países desarrollados como en entornos con recursos limitados. La predicción temprana de la mortalidad intrahospitalaria es esencial para optimizar la toma de decisiones clínicas, estratificar el riesgo y asignar recursos de manera eficiente. Tradicionalmente, esta estimación se ha basado en escalas clínicas derivadas de modelos estadísticos como GRACE, TIMI o ACTION-GWTG, desarrolladas a partir de cohortes amplias y validadas internacionalmente. Sin embargo, la evolución de las técnicas de aprendizaje automático (\textit{machine learning}, ML) ha abierto un nuevo paradigma para la modelación de riesgo en cardiología, al permitir la integración de gran cantidad de variables clínicas, analíticas y electrocardiográficas con relaciones no lineales y de alta complejidad.
+
+En los últimos años, múltiples investigaciones han explorado el uso de algoritmos de ML para predecir la mortalidad intrahospitalaria por IAM y, en menor medida, la aparición de arritmias ventriculares graves durante la hospitalización. Los resultados muestran mejoras sustanciales en la capacidad discriminativa frente a los modelos tradicionales, aunque persisten desafíos metodológicos y éticos que deben abordarse antes de una implementación clínica rutinaria.
+
+\section{Modelos clásicos de predicción de mortalidad en IAM}
+Las escalas de riesgo clásicas constituyen la base sobre la que se ha desarrollado la predicción pronóstica en el IAM. Entre ellas destacan:
+
+\begin{itemize}
+  \item \textbf{GRACE} (\textit{Global Registry of Acute Coronary Events}): modelo ampliamente validado que utiliza variables como edad, frecuencia cardiaca, presión arterial sistólica, creatinina sérica, clase Killip, desviación del ST, elevación de enzimas cardíacas y parada cardiorrespiratoria al ingreso \citep{fox2006grace}.
+  \item \textbf{TIMI} (\textit{Thrombolysis In Myocardial Infarction}): escala derivada de ensayos clínicos controlados, basada en un conjunto reducido de variables clínicas fácilmente disponibles \citep{antman2000timi}.
+  \item \textbf{ACTION-GWTG} y \textbf{ProACS}: incorporan datos contemporáneos, incluyendo biomarcadores y tratamientos de reperfusión, mejorando la discriminación en poblaciones modernas \citep{morrow2013action, pinto2015proacs}.
+\end{itemize}
+
+A pesar de su solidez, estas herramientas presentan limitaciones relevantes: (1) dependencia de variables no siempre disponibles en entornos con recursos restringidos; (2) suposiciones lineales que no capturan interacciones complejas; (3) falta de actualización periódica; y (4) posible pérdida de rendimiento en cohortes externas o subpoblaciones específicas. Estas deficiencias motivan la exploración de modelos más flexibles, como los propuestos por el aprendizaje automático.
+
+\section{Limitaciones y necesidad de nuevos enfoques}
+Los modelos tradicionales, basados en regresión logística, asumen relaciones lineales y aditivas entre variables independientes y resultado, lo cual puede no reflejar adecuadamente la naturaleza multifactorial del IAM. Por ejemplo, interacciones entre edad, presión arterial, función renal y signos electrocardiográficos pueden modificar de forma no lineal el riesgo de muerte. Asimismo, las variables clínicas y bioquímicas poseen distribuciones asimétricas y correlaciones que desafían los supuestos clásicos de independencia.
+
+El aprendizaje automático ofrece un marco alternativo capaz de aprender relaciones complejas y jerárquicas sin requerir una especificación funcional previa. Modelos como \textit{random forests}, \textit{gradient boosting} (XGBoost, LightGBM) o redes neuronales permiten detectar patrones sutiles en los datos y manejar variables de alta dimensionalidad, incluso ante presencia de colinealidad. De este modo, los algoritmos ML no sólo pueden mejorar la discriminación (área bajo la curva ROC), sino también facilitar la identificación de nuevos predictores clínicos relevantes.
+
+\section{Aplicaciones de aprendizaje automático en la predicción de mortalidad intrahospitalaria}
+Diversos estudios recientes han demostrado el potencial del ML para mejorar la predicción de mortalidad en el IAM. Zhu et al. (2024) desarrollaron un modelo basado en XGBoost utilizando una cohorte multicéntrica de más de 20 000 pacientes con IAM, alcanzando un AUROC de 0.93, significativamente superior al de las escalas GRACE y TIMI \citep{zhu2024ml}. Los predictores más importantes fueron edad, presión arterial sistólica, fracción de eyección, niveles de NT-proBNP y creatinina, además de variables relacionadas con el choque cardiogénico.
+
+De modo similar, Oliveira et al. (2023) compararon diferentes algoritmos (regresión logística penalizada, \textit{random forest}, XGBoost, redes neuronales multicapa) sobre un conjunto de datos de 5 000 pacientes con IAM. Encontraron que los modelos basados en árboles de decisión presentaron mejor rendimiento global (AUROC = 0.89) y mejor calibración tras aplicar validación cruzada estratificada \citep{oliveira2023ml}.
+
+Estudios adicionales destacan el papel de los biomarcadores inflamatorios (proteína C reactiva, leucocitos), la función renal (filtrado glomerular estimado) y los signos electrocardiográficos (número de derivaciones afectadas, bloqueo auriculoventricular) como variables altamente informativas \citep{wang2022ami, santos2022tesis}. Estos hallazgos coinciden con las observaciones clásicas descritas en la literatura clínica y confirman la robustez de estos predictores bajo metodologías modernas.
+
+No obstante, la literatura advierte riesgos comunes: sobreajuste debido al tamaño limitado de muestras, falta de validación externa y escasa transparencia en la interpretación de los modelos. Steyerberg (2019) enfatiza que la validez y utilidad clínica de cualquier modelo predictivo dependen no sólo de su capacidad discriminativa, sino también de su calibración y evaluación del impacto en la práctica médica \citep{steyerberg2019clinical}.
+
+\section{Predicción de arritmias ventriculares en el contexto del IAM}
+Las arritmias ventriculares, particularmente la taquicardia y fibrilación ventricular, constituyen una de las principales causas de muerte súbita hospitalaria en pacientes con IAM. Su predicción temprana permitiría implementar medidas de monitorización intensiva y tratamiento oportuno. Los enfoques basados en ML se han centrado principalmente en el análisis de señales electrocardiográficas (ECG) mediante redes neuronales convolucionales (CNN) y transformadores de atención temporal.
+
+Kolk et al. (2023) realizaron una revisión sistemática de modelos de ML aplicados a la predicción de arritmias ventriculares utilizando señales electrofisiológicas \citep{kolk2023review}. Concluyeron que las arquitecturas profundas (CNN, RNN) alcanzan sensibilidades superiores al 85\% en la predicción de arritmias de aparición inminente, aunque su generalización se ve limitada por la heterogeneidad de los datasets y la escasez de validaciones externas. Otros trabajos recientes emplean ECG ambulatorios y técnicas de \textit{transfer learning} para anticipar arritmias a corto plazo con resultados prometedores \citep{liu2024ecg}.
+
+En entornos donde no se dispone de trazas electrocardiográficas continuas, la predicción de arritmias puede realizarse mediante variables clínicas y electrocardiográficas simples, como el número de derivaciones afectadas, la presencia de bloqueo de rama o el intervalo QTc prolongado. En este contexto, modelos tabulares de ML como XGBoost o \textit{random forests} han mostrado buen rendimiento y fácil interpretabilidad.
+
+\section{Discusión crítica y vacíos en la literatura}
+Aunque el aprendizaje automático ofrece mejoras notables en la predicción de mortalidad y arritmias en el IAM, existen limitaciones que restringen su aplicación clínica rutinaria:
+
+\begin{enumerate}
+  \item \textbf{Falta de validación externa}: la mayoría de los estudios se entrenan y validan en una sola cohorte, lo que compromete su generalización. Los modelos deben probarse en poblaciones externas y contextos distintos.
+  \item \textbf{Desbalance de clases}: la mortalidad intrahospitalaria suele ser inferior al 10\%, generando sesgos hacia la clase mayoritaria. Se requieren estrategias de reponderación o métricas alternativas como el área bajo la curva de precisión-recall.
+  \item \textbf{Interpretabilidad}: el uso de explicadores como SHAP o LIME es esencial para comprender las contribuciones de cada variable y garantizar confianza clínica en las predicciones.
+  \item \textbf{Calibración y actualización}: un modelo con buena discriminación pero mala calibración puede inducir decisiones clínicas erróneas. Es necesaria la recalibración periódica y el uso de técnicas de actualización según Steyerberg \citep{steyerberg2019clinical}.
+\end{enumerate}
+
+A nivel científico, las oportunidades de investigación incluyen la integración multimodal de datos (clínicos, de laboratorio y de imagen), la actualización dinámica del riesgo en tiempo real y la evaluación de impacto clínico mediante ensayos de implementación.
+
+\section{Conclusiones}
+La evidencia actual indica que los modelos de aprendizaje automático poseen un potencial significativo para mejorar la predicción de mortalidad intrahospitalaria por infarto agudo de miocardio, superando a las escalas tradicionales en capacidad discriminativa y flexibilidad. Sin embargo, la utilidad clínica de estos modelos dependerá de su transparencia, calibración, validación externa y adaptabilidad a diferentes entornos hospitalarios. El desarrollo de modelos específicos para poblaciones locales, como los propuestos en investigaciones recientes, constituye una vía prometedora para reducir la mortalidad hospitalaria y optimizar la atención de pacientes con IAM.
+
+\bibliographystyle{apalike}
+\bibliography{referencias}
+
+\end{document}

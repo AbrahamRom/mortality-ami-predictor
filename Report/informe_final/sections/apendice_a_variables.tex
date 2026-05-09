@@ -1,0 +1,173 @@
+% ============================================================================
+% APÉNDICE A: DICCIONARIO DE VARIABLES
+% ============================================================================
+
+\section{Diccionario de Variables}
+\label{app:variables}
+
+Este apéndice contiene el diccionario completo de variables utilizadas en el estudio.
+
+\subsection{Variables del Modelo Reducido (10 variables)}
+
+Las siguientes variables fueron seleccionadas para el modelo reducido, comparable con la escala GRACE:
+
+\begin{table}[H]
+\centering
+\caption{Variables del modelo reducido para comparación con GRACE}
+\label{tab:vars_modelo_reducido}
+\begin{tabular}{@{}llp{6cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} \\
+\midrule
+filtrado\_glomerular & Numérica & Tasa de filtrado glomerular estimada (mL/min/1.73m²) \\
+fraccion\_eyeccion & Numérica & Fracción de eyección del ventrículo izquierdo (\%) \\
+edad & Numérica & Edad del paciente en años \\
+glicemia & Numérica & Glucemia al ingreso (mg/dL) \\
+presion\_arterial\_diastolica & Numérica & Presión arterial diastólica (mmHg) \\
+creatinina & Numérica & Creatinina sérica (mg/dL) \\
+presion\_arterial\_sistolica & Numérica & Presión arterial sistólica (mmHg) \\
+diabetes\_mellitus & Binaria & Antecedente de diabetes mellitus \\
+frecuencia\_cardiaca & Numérica & Frecuencia cardíaca (lpm) \\
+betabloqueadores & Binaria & Uso de betabloqueadores \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Variables Incluidas en el Modelo Extendido (57 variables)}
+
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}p{2.5cm}p{1.2cm}p{5cm}p{2.8cm}@{}}
+\caption{Diccionario de variables del modelo final}
+\label{tab:diccionario_variables} \\
+\toprule
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} & \textbf{Rango/Valores} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{c}{\tablename\ \thetable{} -- Continuación} \\
+\toprule
+\textbf{Variable} & \textbf{Tipo} & \textbf{Descripción} & \textbf{Rango/Valores} \\
+\midrule
+\endhead
+\midrule
+\multicolumn{4}{r}{\textit{Continúa en la siguiente página...}} \\
+\endfoot
+\bottomrule
+\endfoot
+\multicolumn{4}{l}{\textbf{Variables Demográficas}} \\
+\midrule
+EDAD & Numérica & Edad del paciente en años & 25--98 \\
+SEXO & Binaria & Sexo biológico & 0=F, 1=M \\
+\midrule
+\multicolumn{4}{l}{\textbf{Antecedentes Patológicos}} \\
+\midrule
+APP\_HTA & Binaria & Hipertensión arterial & 0=No, 1=Sí \\
+APP\_DM & Binaria & Diabetes mellitus & 0=No, 1=Sí \\
+APP\_DISLIPIDEMIA & Binaria & Dislipidemia & 0=No, 1=Sí \\
+APP\_TABAQUISMO & Categórica & Estado de tabaquismo & 0=Nunca, 1=Ex, 2=Activo \\
+APP\_IAM\_PREVIO & Binaria & IAM previo & 0=No, 1=Sí \\
+APP\_ICP\_PREVIO & Binaria & ICP previa & 0=No, 1=Sí \\
+APP\_ERC & Binaria & Enfermedad renal crónica & 0=No, 1=Sí \\
+APP\_FA & Binaria & Fibrilación auricular & 0=No, 1=Sí \\
+APP\_EPOC & Binaria & Enfermedad pulmonar obstructiva crónica & 0=No, 1=Sí \\
+APP\_ICTUS & Binaria & Ictus/ACV previo & 0=No, 1=Sí \\
+\midrule
+\multicolumn{4}{l}{\textbf{Presentación Clínica}} \\
+\midrule
+PAS & Numérica & Presión arterial sistólica (mmHg) & 60--250 \\
+PAD & Numérica & Presión arterial diastólica (mmHg) & 30--150 \\
+FC & Numérica & Frecuencia cardíaca (lpm) & 30--200 \\
+FR & Numérica & Frecuencia respiratoria (rpm) & 8--40 \\
+SAT\_O2 & Numérica & Saturación de oxígeno (\%) & 50--100 \\
+KILLIP & Ordinal & Clasificación Killip-Kimball & 1, 2, 3, 4 \\
+TIEMPO\_SINTOMAS & Numérica & Tiempo desde inicio síntomas (h) & 0--72 \\
+DOLOR\_TIPICO & Binaria & Dolor torácico típico & 0=No, 1=Sí \\
+SHOCK & Binaria & Presencia de shock & 0=No, 1=Sí \\
+\midrule
+\multicolumn{4}{l}{\textbf{Variables Electrocardiográficas}} \\
+\midrule
+ECG\_ELEVACION\_ST & Binaria & Elevación del segmento ST & 0=No, 1=Sí \\
+ECG\_N\_DERIVACIONES & Numérica & Número derivaciones con ST & 0--12 \\
+ECG\_BRIHH & Binaria & Bloqueo de rama izquierda & 0=No, 1=Sí \\
+ECG\_BAV & Binaria & Bloqueo auriculoventricular & 0=No, 1=Sí \\
+ECG\_LOCALIZACION & Categórica & Localización del IAM & Anterior, Inferior, Lateral \\
+\midrule
+\multicolumn{4}{l}{\textbf{Biomarcadores}} \\
+\midrule
+TROPONINA & Numérica & Troponina I/T (ng/mL) & 0--100 \\
+CK\_MB & Numérica & Creatina quinasa MB (U/L) & 0--500 \\
+NT\_PROBNP & Numérica & NT-proBNP (pg/mL) & 0--35000 \\
+CREATININA & Numérica & Creatinina sérica (mg/dL) & 0.3--15 \\
+TFG\_E & Numérica & Tasa filtrado glomerular (mL/min/1.73m²) & 5--150 \\
+GLUCOSA & Numérica & Glucemia (mg/dL) & 40--500 \\
+HEMOGLOBINA & Numérica & Hemoglobina (g/dL) & 5--20 \\
+LEUCOCITOS & Numérica & Leucocitos ($\times 10^9$/L) & 1--50 \\
+PCR & Numérica & Proteína C reactiva (mg/L) & 0--300 \\
+PLAQUETAS & Numérica & Recuento de plaquetas ($\times 10^9$/L) & 50--600 \\
+COLESTEROL & Numérica & Colesterol total (mg/dL) & 80--400 \\
+\midrule
+\multicolumn{4}{l}{\textbf{Variables de Imagen}} \\
+\midrule
+ECO\_FEVI & Numérica & Fracción de eyección VI (\%) & 10--80 \\
+CORO\_N\_VASOS & Numérica & Número de vasos enfermos & 0, 1, 2, 3 \\
+CORO\_TCI & Binaria & Enfermedad del tronco coronario izquierdo & 0=No, 1=Sí \\
+\midrule
+\multicolumn{4}{l}{\textbf{Variables Derivadas}} \\
+\midrule
+IMC & Numérica & Índice de masa corporal (kg/m²) & 15--50 \\
+PAM & Numérica & Presión arterial media (mmHg) & Calculada \\
+SHOCK\_INDEX & Numérica & FC/PAS & Calculada \\
+GRACE\_SCORE & Numérica & Score GRACE calculado & 0--372 \\
+\midrule
+\multicolumn{4}{l}{\textbf{Variable Objetivo}} \\
+\midrule
+% \\rowcolor removed
+MORTALIDAD\_HOSP & Binaria & Mortalidad intrahospitalaria & 0=Vivo, 1=Fallecido \\
+\end{longtable}
+\normalsize
+\setlength{\tabcolsep}{6pt}
+
+\subsection{Variables Excluidas del Análisis}
+
+\begin{table}[H]
+\centering
+\caption{Variables excluidas y motivo de exclusión}
+\label{tab:variables_excluidas_apendice}
+\begin{tabular}{@{}lp{2.5cm}p{5.5cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{Motivo} & \textbf{Detalle} \\
+\midrule
+ID\_PACIENTE & Identificador & No tiene valor predictivo \\
+FECHA\_INGRESO & Fecha & Variable de registro \\
+FECHA\_ALTA & Fecha & Variable de registro \\
+ANGIOPLASTIA\_RESCUE & Data leakage & Procedimiento post-ingreso \\
+DURACION\_UCI & Data leakage & Variable de evolución \\
+CREATININA\_PICO & Data leakage & Valor máximo durante hospitalización \\
+NT\_PROBNP & Datos faltantes & $>$65\% de valores ausentes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Transformaciones Aplicadas}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Transformaciones aplicadas a cada variable}
+\label{tab:transformaciones_apendice}
+\begin{tabular}{@{}p{2.8cm}p{2.5cm}p{2.5cm}p{2.8cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{Transformación} & \textbf{Imputación} & \textbf{Escalado} \\
+\midrule
+EDAD & Ninguna & Sin faltantes & RobustScaler \\
+PAS & Ninguna & KNN Imputer & RobustScaler \\
+TROPONINA & Log(x+1) & Mediana & StandardScaler \\
+CK\_MB & Log(x+1) & Mediana & StandardScaler \\
+CREATININA & Log(x) & KNN Imputer & StandardScaler \\
+TFG\_E & Ninguna & Calculado & RobustScaler \\
+GLUCOSA & Ninguna & Mediana & RobustScaler \\
+KILLIP & Ninguna & Moda & Ninguno (ordinal) \\
+FEVI & Ninguna & Mediana & StandardScaler \\
+\bottomrule
+\end{tabular}
+\end{table}

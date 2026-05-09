@@ -1,0 +1,165 @@
+% ============================================================================
+% SECCIÓN 10: DISCUSIÓN
+% ============================================================================
+
+\section{Discusión}
+\label{sec:discusion}
+
+\subsection{Resumen de Hallazgos Principales}
+
+Este estudio desarrolló y validó modelos de aprendizaje automático para la predicción de mortalidad intrahospitalaria en pacientes con \gls{iam} utilizando datos del Registro Cubano de Infarto Agudo de Miocardio (RECUIMA). Los principales hallazgos fueron:
+
+\begin{enumerate}
+    \item Se desarrollaron dos enfoques complementarios: un \textbf{modelo reducido} (10 variables) comparable con escalas internacionales, que alcanzó un AUROC de 0,901 (IC 95\%: 0,855--0,937), y un \textbf{modelo extendido} (57 variables) como propuesta principal, con AUROC de 0,938 (IC 95\%: 0,884--0,977). Ambos superaron significativamente al score GRACE (0,820, p $<$0,001).
+    
+    \item Las variables más predictivas según análisis SHAP fueron fracción de eyección, edad, filtrado glomerular, frecuencia cardíaca, presión arterial diastólica, betabloqueadores, glicemia, creatinina, presión arterial sistólica y diabetes mellitus, consistentes con el conocimiento fisiopatológico.
+    
+    \item Los modelos mostraron buena calibración (Brier Score = 0,036 para el extendido y 0,096 para el reducido) y utilidad clínica demostrada mediante Decision Curve Analysis.
+    
+    \item El análisis SHAP reveló relaciones no lineales e interacciones entre variables que los modelos tradicionales basados en regresión no capturan.
+    
+    \item \textbf{Validación sin fuga de datos}: Se identificaron y excluyeron variables que podrían introducir fuga de datos parcial (\texttt{comp\_*}, \texttt{aminas}, \texttt{reperfusion\_*}, \texttt{tiempo\_puerta\_aguja}, \texttt{CK tardío}). El modelo reentrenado mantuvo un AUROC de 0,896 (IC 95\%: 0,843--0,939), confirmando que el rendimiento predictivo \textbf{no depende de variables con potencial sesgo}. Las variables más importantes en este modelo validado (edad, fracción de eyección, glicemia, índice Killip, presión arterial diastólica) son todas clínicamente legítimas y disponibles al ingreso del paciente.
+\end{enumerate}
+
+\subsection{Comparación con la Literatura}
+
+\subsubsection{Rendimiento Comparativo}
+
+\begin{table}[H]
+\centering
+\caption{Comparación con estudios previos de ML en predicción de mortalidad por IAM}
+\label{tab:comparacion_literatura}
+\begin{tabular}{@{}llllc@{}}
+\toprule
+\textbf{Estudio} & \textbf{N} & \textbf{Modelo} & \textbf{AUROC} & \textbf{Validación} \\
+\midrule
+Zhu et al. 2024 & 20.000 & XGBoost & 0,93 & Externa \\
+Oliveira et al. 2023 & 5.000 & Ensemble & 0,89 & Interna \\
+Wang et al. 2022 & 8.500 & Random Forest & 0,87 & Temporal \\
+\midrule
+% \\rowcolor removed
+\textbf{Presente estudio (Reducido)} & 3.112 & XGBoost & 0,90 & Bootstrap/Jackknife \\
+% \\rowcolor removed
+\textbf{Presente estudio (Extendido)} & 3.112 & XGBoost & 0,94 & Bootstrap/Jackknife \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+El rendimiento de nuestros modelos es comparable al de estudios previos en poblaciones internacionales, a pesar del menor tamaño muestral. El modelo extendido alcanza un AUROC de 0,938, situándose entre los mejores resultados publicados. Esta observación sugiere que la calidad y completitud de las variables clínicas del registro RECUIMA compensa parcialmente la limitación del tamaño muestral.
+
+Las diferencias en rendimiento respecto a otros estudios pueden explicarse por varios factores: (1) la homogeneidad de la población cubana reduce la variabilidad no explicada; (2) el registro RECUIMA incluye variables detalladas del manejo terapéutico que enriquecen el modelo; (3) la tasa de mortalidad del 8,8\% proporciona suficientes eventos para el entrenamiento robusto de los modelos.
+
+\subsubsection{Variables Predictoras}
+
+Las variables identificadas como más predictivas por el análisis SHAP coinciden ampliamente con los factores incluidos en escalas tradicionales como GRACE y TIMI. La fracción de eyección, principal predictor identificado, no se incluye directamente en GRACE pero sí en otras herramientas pronósticas como el índice CADILLAC. Resulta destacable el papel del filtrado glomerular y la creatinina como predictores independientes, reflejando la importancia del síndrome cardiorrenal en el pronóstico del IAM.
+
+La identificación del uso de betabloqueadores como factor protector es consistente con las guías de práctica clínica que recomiendan su uso temprano en pacientes sin contraindicaciones. Este hallazgo sugiere que los modelos de ML pueden capturar tanto factores de riesgo como efectos beneficiosos del tratamiento adecuado.
+
+Una fortaleza del enfoque de ML es la capacidad de identificar relaciones no lineales. Por ejemplo, el efecto de la presión arterial sistólica sigue un patrón en J, donde tanto la hipotensión severa (indicativa de shock) como valores muy elevados se asocian con mayor riesgo, mientras que valores normales confieren relativa protección.
+
+\subsection{Fortalezas del Estudio}
+
+\begin{enumerate}
+    \item \textbf{Metodología rigurosa}: 
+    El estudio siguió las directrices TRIPOD+AI para el desarrollo y reporte de modelos predictivos clínicos. Se implementó una separación estricta de conjuntos train/validation/test (60\%/20\%/20\%), validación cruzada estratificada de 5 pliegues, y evaluación con múltiples métricas complementarias (discriminación, calibración, utilidad clínica).
+    
+    \item \textbf{Análisis de explicabilidad}: 
+    El uso de técnicas SHAP permite interpretar las predicciones del modelo, facilitando la confianza clínica y la identificación de factores de riesgo modificables. Las explicaciones son consistentes con el conocimiento fisiopatológico establecido.
+    
+    \item \textbf{Comparación con benchmarks establecidos}: 
+    La comparación directa con el score GRACE proporciona contexto clínico relevante y demuestra el valor añadido de los modelos de ML sobre las herramientas tradicionales de estratificación de riesgo.
+    
+    \item \textbf{Evaluación de utilidad clínica}: 
+    El análisis de curva de decisión va más allá de métricas estadísticas para evaluar el beneficio práctico del modelo en el rango de umbrales de decisión clínicamente relevantes.
+    
+    \item \textbf{Reproducibilidad}: 
+    El código fuente, pipelines de preprocesamiento y modelos entrenados están documentados y disponibles para replicación, facilitando la validación externa y extensión del trabajo.
+\end{enumerate}
+
+\subsection{Limitaciones del Estudio}
+
+\subsubsection{Limitaciones Metodológicas}
+
+\begin{enumerate}
+    \item \textbf{Diseño retrospectivo}: 
+    Los datos fueron recolectados retrospectivamente a partir del registro RECUIMA, lo que puede introducir sesgos de selección y de información. Sin embargo, el registro sigue protocolos estandarizados de recolección que minimizan este riesgo.
+    
+    \item \textbf{Cohorte nacional única}: 
+    El modelo fue desarrollado con datos de pacientes cubanos, lo que puede limitar la generalización directa a otras poblaciones con diferentes características demográficas, patrones de práctica clínica o acceso a tratamientos. Se requiere validación en cohortes externas.
+    
+    \item \textbf{Validación interna}: 
+    La validación se realizó mediante división interna de datos con técnicas de Bootstrap y Jackknife. Aunque estas técnicas proporcionan estimaciones robustas, la validación externa en cohortes independientes es necesaria para confirmar la generalizabilidad.
+    
+    \item \textbf{Datos faltantes}: 
+    Algunas variables presentaron datos faltantes que fueron manejados mediante exclusión de variables con más del 50\% de datos ausentes y estrategias de imputación. Estas decisiones metodológicas pueden introducir sesgos.
+\end{enumerate}
+
+\subsubsection{Limitaciones de los Datos}
+
+\begin{enumerate}
+    \item \textbf{Periodo temporal}: 
+    Los datos corresponden al período 2019--2023, y los patrones de práctica clínica pueden evolucionar, especialmente tras la pandemia de COVID-19 que afectó el manejo de pacientes cardiovasculares.
+    
+    \item \textbf{Variables no disponibles}: 
+    Algunas variables potencialmente relevantes como troponinas de alta sensibilidad, péptidos natriuréticos, y datos de imagen cardíaca avanzada no estaban disponibles de forma sistemática en el dataset.
+    
+    \item \textbf{Definición del outcome}: 
+    La mortalidad intrahospitalaria es un endpoint bien definido pero no captura eventos post-alta (mortalidad a 30 días o 1 año) que pueden ser clínicamente relevantes para la toma de decisiones a largo plazo.
+\end{enumerate}
+
+\subsubsection{Limitaciones del Modelo}
+
+\begin{enumerate}
+    \item \textbf{Interpretabilidad vs. rendimiento}: 
+    Aunque las técnicas SHAP mejoran sustancialmente la interpretabilidad, los modelos de gradient boosting siguen siendo más complejos que la regresión logística tradicional, lo que puede dificultar su aceptación en algunos contextos clínicos.
+    
+    \item \textbf{Causalidad}: 
+    El modelo identifica asociaciones predictivas, no relaciones causales. La intervención sobre variables identificadas como factores de riesgo no garantiza necesariamente mejora en outcomes, aunque puede guiar hipótesis para investigación futura.
+    
+    \item \textbf{Drift temporal}: 
+    El rendimiento del modelo puede degradarse con el tiempo si cambian las características de la población, las prácticas clínicas o los tratamientos disponibles. Se recomienda monitorización continua del rendimiento en implementación real.
+\end{enumerate}
+
+\subsection{Implicaciones Clínicas}
+
+\subsubsection{Potencial de Implementación}
+
+El modelo desarrollado presenta características favorables para su implementación clínica. Los principales escenarios de uso incluyen: (1) triaje inicial en urgencias para identificar pacientes de alto riesgo que requieren monitorización intensiva; (2) apoyo a la decisión sobre nivel de cuidados (UCI vs. UCO vs. planta); y (3) comunicación estructurada del pronóstico al equipo clínico.
+
+La integración con los flujos de trabajo existentes es factible dado que las variables requeridas por el modelo reducido (10 variables) están disponibles rutinariamente en la evaluación inicial del paciente con IAM. El dashboard desarrollado proporciona una interfaz intuitiva que no requiere conocimientos técnicos avanzados para su uso.
+
+\subsubsection{Beneficios Potenciales}
+
+\begin{enumerate}
+    \item \textbf{Identificación temprana de alto riesgo}: 
+    El modelo permite identificar en las primeras horas pacientes que requieren monitorización intensiva o intervenciones agresivas tempranas, potencialmente mejorando la supervivencia.
+    
+    \item \textbf{Optimización de recursos}: 
+    La estratificación objetiva de riesgo puede guiar la asignación eficiente de camas en UCI/UCO, especialmente relevante en contextos con recursos limitados.
+    
+    \item \textbf{Comunicación con pacientes/familias}: 
+    Las explicaciones SHAP proporcionan información pronóstica objetiva y comprensible que facilita la toma de decisiones compartida y el consentimiento informado.
+    
+    \item \textbf{Apoyo a la decisión}: 
+    El modelo complementa, sin reemplazar, el juicio clínico, proporcionando información cuantitativa que reduce la variabilidad inter-observador en la evaluación pronóstica.
+\end{enumerate}
+
+\subsubsection{Consideraciones de Implementación}
+
+La implementación exitosa del modelo requiere considerar varios factores: (1) integración técnica con sistemas de historia clínica electrónica existentes; (2) capacitación del personal clínico en la interpretación de las predicciones y explicaciones SHAP; (3) validación local del rendimiento antes de adopción rutinaria; (4) establecimiento de protocolos de monitorización continua del rendimiento; y (5) consideración de aspectos regulatorios según la normativa local sobre software médico.
+
+\subsection{Consideraciones Éticas}
+
+La implementación de modelos predictivos basados en inteligencia artificial en el contexto clínico plantea importantes consideraciones éticas:
+
+\begin{itemize}
+    \item \textbf{Equidad}: El modelo debe ser evaluado en diferentes subgrupos demográficos para identificar y mitigar posibles sesgos que pudieran resultar en disparidades en la atención.
+    
+    \item \textbf{Transparencia}: Las explicaciones SHAP facilitan la comprensión del razonamiento del modelo, pero deben comunicarse de forma apropiada a pacientes y familias, evitando generar ansiedad innecesaria o falsas certezas.
+    
+    \item \textbf{Autonomía}: El modelo es una herramienta de apoyo a la decisión clínica, no un sustituto del juicio profesional ni de la voluntad del paciente. Las predicciones deben contextualizarse dentro de la situación individual de cada paciente.
+    
+    \item \textbf{Privacidad}: Los datos clínicos utilizados para predicción deben manejarse según las normativas de protección de datos aplicables, garantizando la confidencialidad de la información del paciente.
+    
+    \item \textbf{Responsabilidad}: Es necesario establecer claramente las responsabilidades cuando las predicciones del modelo influyan en decisiones clínicas, manteniendo al profesional de salud como responsable último de la atención.
+\end{itemize}

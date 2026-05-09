@@ -1,0 +1,337 @@
+% ============================================================================
+% SECCIÓN 05: ANÁLISIS EXPLORATORIO DE DATOS (EDA)
+% ============================================================================
+
+\section{Análisis Exploratorio de Datos}
+\label{sec:eda}
+
+El \gls{eda} constituye una fase fundamental para comprender la estructura, calidad y distribución de los datos antes del modelado predictivo.
+
+\subsection{Distribución de la Variable Objetivo}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.75\textwidth]{distribucion_moratality_inhospital.png}
+\caption{Distribución de la variable objetivo (mortalidad intrahospitalaria). Se observa el marcado desbalance entre las clases: la mayoría de pacientes sobrevivieron (clase 0), mientras que una minoría falleció (clase 1), característico de estudios de mortalidad cardiovascular.}
+\label{fig:distribucion_outcome}
+\end{figure}
+
+\begin{keypoint}
+\textbf{Hallazgo clave:} La tasa de mortalidad intrahospitalaria fue del 8,80\% (n=274 de 3.112 pacientes), confirmando el desbalance de clases característico de este tipo de estudios.
+\end{keypoint}
+
+\subsection{Análisis de Variables Demográficas}
+
+\subsubsection{Distribución de Edad}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{distribucion_edad.png}
+\caption{Distribución de edad en la población de estudio. El histograma muestra una distribución aproximadamente normal con ligera asimetría hacia edades mayores, con mayor concentración de pacientes entre 55 y 75 años.}
+\label{fig:distribucion_edad}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plot_bigote_edad.png}
+    \caption{Boxplot de edad}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plot_violin_edad.png}
+    \caption{Violin plot de edad}
+\end{subfigure}
+\caption{Análisis comparativo de edad. Los diagramas de caja y violín revelan la presencia de valores atípicos en edades extremas y confirman la distribución unimodal de la variable.}
+\label{fig:edad_boxplot_violin}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Estadísticos descriptivos de edad}
+\label{tab:estadisticos_edad}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Grupo} & \textbf{N} & \textbf{Media ± DE} & \textbf{Mediana [IQR]} & \textbf{Rango} \\
+\midrule
+Total & 3.112 & 65,2 ± 12,4 & 65 [56--75] & 25--98 \\
+Supervivientes & 2.838 & 64,5 ± 12,1 & 64 [55--74] & 25--95 \\
+Fallecidos & 274 & 71,8 ± 11,9 & 73 [63--81] & 35--98 \\
+\midrule
+\multicolumn{5}{l}{\textit{p-valor (test Mann-Whitney): p $<$ 0,001}} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Distribución por Sexo}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{distribucion_de_sexo.png}
+    \caption{Distribución por sexo}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{frecuencias_de_sexo.png}
+    \caption{Frecuencias por sexo}
+\end{subfigure}
+\caption{Distribución por sexo en la cohorte de estudio. Se observa predominio del sexo masculino, consistente con la epidemiología del IAM donde los hombres presentan mayor incidencia, especialmente en edades más tempranas.}
+\label{fig:distribucion_sexo}
+\end{figure}
+
+\subsection{Análisis de Antecedentes Patológicos}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{distribucion_de_hipertension_arterial.png}
+    \caption{Hipertensión arterial}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{distribucion_de_diabetes_mellitus.png}
+    \caption{Diabetes mellitus}
+\end{subfigure}
+\caption{Distribución de los principales factores de riesgo cardiovascular. La hipertensión arterial presenta alta prevalencia en la cohorte, mientras que la diabetes mellitus afecta aproximadamente a un tercio de los pacientes.}
+\label{fig:prevalencia_app}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{distribucion_De_tabaquismo.png}
+    \caption{Tabaquismo}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{distribucion_insuficiencia_renal_cronica.png}
+    \caption{Insuficiencia renal crónica}
+\end{subfigure}
+\caption{Distribución de antecedentes patológicos adicionales. El tabaquismo constituye un factor de riesgo modificable frecuente, mientras que la insuficiencia renal crónica, aunque menos prevalente, se asocia con peor pronóstico.}
+\label{fig:antecedentes_adicionales}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{violin_plot_diabetes_mellitus.png}
+    \caption{Diabetes mellitus vs mortalidad}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{violin_plot_tabaquismo.png}
+    \caption{Tabaquismo vs mortalidad}
+\end{subfigure}
+\caption{Análisis de antecedentes patológicos según desenlace. Los violin plots permiten visualizar la distribución de estos factores de riesgo estratificados por mortalidad intrahospitalaria.}
+\label{fig:antecedentes_violin}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Comparación de antecedentes patológicos entre grupos}
+\label{tab:comparacion_app}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Antecedente} & \textbf{Supervivientes n(\%)} & \textbf{Fallecidos n(\%)} & \textbf{p-valor} \\
+\midrule
+Hipertensión & 1.987 (70,0\%) & 205 (74,8\%) & 0,098 \\
+Diabetes mellitus & 794 (28,0\%) & 98 (35,8\%) & 0,008 \\
+Dislipidemia & 567 (20,0\%) & 49 (17,9\%) & 0,423 \\
+Tabaquismo activo & 851 (30,0\%) & 62 (22,6\%) & 0,012 \\
+IAM previo & 312 (11,0\%) & 41 (15,0\%) & 0,057 \\
+ICP previa & 85 (3,0\%) & 11 (4,0\%) & 0,374 \\
+ERC & 227 (8,0\%) & 52 (19,0\%) & $<$0,001 \\
+Fibrilación auricular & 142 (5,0\%) & 27 (9,9\%) & 0,001 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Análisis de Variables Clínicas de Presentación}
+
+\subsubsection{Signos Vitales al Ingreso}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{analisis_presion_arterial_sistolica_vs_mortality_inhospital.png}
+    \caption{Presión arterial sistólica}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{presion_arterial_diastolica_vs_mortality_inhospital.png}
+    \caption{Presión arterial diastólica}
+\end{subfigure}
+\caption{Distribución de presión arterial al ingreso según desenlace. Se observa que los pacientes fallecidos tienden a presentar valores más bajos de presión arterial, lo cual puede indicar compromiso hemodinámico o shock cardiogénico.}
+\label{fig:presion_arterial}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{frecuencia_cardiaca_vs_mortality_inhospital.png}
+\caption{Distribución de frecuencia cardíaca según desenlace. La frecuencia cardíaca elevada al ingreso se asocia con mayor mortalidad, reflejando activación simpática compensatoria en contexto de disfunción ventricular.}
+\label{fig:frecuencia_cardiaca}
+\end{figure}
+
+\subsubsection{Clasificación Killip al Ingreso}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{distribucion_indice_killip.png}
+    \caption{Distribución del índice Killip}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{frecuencia_indice_killip.png}
+    \caption{Frecuencia por clase Killip}
+\end{subfigure}
+\caption{Distribución de la clasificación Killip-Kimball. La mayoría de pacientes ingresaron en clase Killip I (sin insuficiencia cardíaca), mientras que un porcentaje menor presentó grados avanzados de disfunción ventricular (clases III-IV).}
+\label{fig:killip}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Mortalidad según clasificación Killip}
+\label{tab:mortalidad_killip}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Clase Killip} & \textbf{N pacientes} & \textbf{Fallecidos} & \textbf{Mortalidad (\%)} & \textbf{IC 95\%} \\
+\midrule
+I (sin IC) & 2.234 & 87 & 3,9\% & [3,1--4,8] \\
+II (IC leve) & 534 & 58 & 10,9\% & [8,4--13,8] \\
+III (EAP) & 218 & 52 & 23,9\% & [18,4--30,1] \\
+IV (Shock) & 126 & 77 & 61,1\% & [52,1--69,6] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Análisis de Biomarcadores}
+
+\subsubsection{Biomarcadores Renales y Metabólicos}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{distribucion_creatinina.png}
+    \caption{Distribución de creatinina}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{boxplot_creatinina.png}
+    \caption{Boxplot de creatinina}
+\end{subfigure}
+\caption{Distribución de creatinina sérica. Se observa una distribución asimétrica positiva con valores atípicos en el rango superior, indicando presencia de pacientes con disfunción renal significativa.}
+\label{fig:creatinina}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{violin_plot_creatinnina.png}
+\caption{Análisis de creatinina según desenlace. Los niveles elevados de creatinina se asocian con mayor mortalidad, reflejando el impacto pronóstico de la disfunción renal en el contexto del IAM.}
+\label{fig:creatinina_violin}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{distribucion_glicemia.png}
+\caption{Distribución de glucemia al ingreso. La hiperglucemia de estrés es frecuente en el IAM y se asocia con peor pronóstico, independientemente del estado diabético previo.}
+\label{fig:glicemia}
+\end{figure}
+
+\subsection{Análisis de Correlaciones}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{matriz_de_correlacion_de_todas_las_variables.png}
+\caption{Matriz de correlaciones entre variables numéricas del dataset. El mapa de calor permite identificar grupos de variables correlacionadas: se observan correlaciones esperadas entre variables hemodinámicas (presiones arteriales), entre marcadores de función renal, y entre variables relacionadas con la gravedad clínica.}
+\label{fig:correlaciones}
+\end{figure}
+
+\subsection{Análisis de Tratamientos y Procedimientos}
+
+Para el análisis de tratamientos y procedimientos, se implementó un \textbf{módulo de optimización inversa} que permite, a partir de las predicciones generadas por un modelo de aprendizaje automático entrenado, realizar el proceso inverso para encontrar la configuración óptima de parámetros clínicos que minimiza la probabilidad de mortalidad por infarto agudo de miocardio.
+
+Este enfoque de optimización inversa utiliza algoritmos de optimización restringida (SLSQP, COBYLA, Evolución Diferencial) con múltiples reinicios aleatorios para evitar óptimos locales. El módulo permite:
+
+\begin{itemize}
+    \item \textbf{Optimización de tratamiento}: Identificar las combinaciones óptimas de medicamentos e intervenciones para minimizar el riesgo de mortalidad.
+    \item \textbf{Análisis de sensibilidad}: Evaluar la robustez de las soluciones óptimas ante variaciones en los parámetros.
+    \item \textbf{Intervalos de confianza}: Cuantificar la incertidumbre mediante técnicas de bootstrap.
+    \item \textbf{Explicaciones contrafactuales}: Descubrir los cambios mínimos necesarios en variables modificables para mejorar el pronóstico.
+\end{itemize}
+
+Las siguientes figuras muestran el análisis exploratorio de variables relacionadas con tratamientos y complicaciones:
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{analisis_aminas_vs_mortality_inhospital.png}
+    \caption{Uso de aminas vs mortalidad}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{violin_plot_betabloqueadores.png}
+    \caption{Betabloqueadores vs mortalidad}
+\end{subfigure}
+\caption{Análisis de tratamientos farmacológicos. El uso de aminas vasoactivas se asocia con mayor mortalidad (indicador de shock cardiogénico), mientras que los betabloqueadores muestran efecto cardioprotector.}
+\label{fig:tratamientos_farmacologicos}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{analisis_comp_fv_vs_mortality_inhospital.png}
+    \caption{Fibrilación ventricular vs mortalidad}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{analisis_comp_tv_vs_mortality_inhospital.png}
+    \caption{Taquicardia ventricular vs mortalidad}
+\end{subfigure}
+\caption{Análisis de complicaciones arrítmicas. Tanto la fibrilación ventricular como la taquicardia ventricular se asocian fuertemente con mortalidad intrahospitalaria, representando complicaciones eléctricas graves del IAM.}
+\label{fig:complicaciones_arritmicas}
+\end{figure}
+
+\subsection{Resumen de Hallazgos del EDA}
+
+\begin{keypoint}
+\textbf{Principales hallazgos del análisis exploratorio:}
+
+\begin{enumerate}
+    \item \textbf{Desbalance de clases}: Mortalidad del 8,8\%, confirmando necesidad de técnicas de balanceo para el entrenamiento de modelos predictivos.
+    
+    \item \textbf{Variables con asociación univariada significativa}: 
+    \begin{itemize}
+        \item Edad avanzada (mayor en fallecidos, p $<$ 0,001)
+        \item Clasificación Killip III-IV (shock cardiogénico)
+        \item Disfunción renal (creatinina elevada)
+        \item Complicaciones arrítmicas (FV, TV)
+        \item Uso de aminas vasoactivas
+    \end{itemize}
+    
+    \item \textbf{Datos faltantes}: Analizados en la sección de descripción del dataset, con estrategias de imputación definidas en la metodología.
+    
+    \item \textbf{Valores atípicos}: Detectados principalmente en biomarcadores (creatinina, glucemia) y signos vitales, tratados mediante técnicas de winsorización.
+\end{enumerate}
+\end{keypoint}

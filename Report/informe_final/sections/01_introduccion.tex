@@ -1,0 +1,110 @@
+% ============================================================================
+% SECCIÓN 01: INTRODUCCIÓN
+% ============================================================================
+
+\section{Introducción}
+\label{sec:introduccion}
+
+\subsection{Contexto y Motivación}
+
+El infarto agudo de miocardio (\gls{iam}) constituye una emergencia cardiovascular que representa una de las principales causas de morbilidad y mortalidad a nivel mundial \citep{fox2006grace}. Según la Organización Mundial de la Salud, las enfermedades cardiovasculares causan aproximadamente 17,9 millones de muertes anuales, de las cuales una proporción significativa corresponde a eventos coronarios agudos.
+
+La identificación temprana de pacientes con alto riesgo de mortalidad intrahospitalaria resulta fundamental para:
+
+\begin{itemize}
+    \item \textbf{Optimizar la estratificación de riesgo}: Clasificar pacientes según su probabilidad de eventos adversos.
+    \item \textbf{Guiar decisiones terapéuticas}: Seleccionar estrategias de reperfusión y tratamiento farmacológico.
+    \item \textbf{Asignar recursos}: Determinar niveles de monitorización y cuidados intensivos.
+    \item \textbf{Informar al paciente y familia}: Comunicar pronóstico de manera fundamentada.
+\end{itemize}
+
+\subsection{Escalas de Riesgo Tradicionales}
+
+Históricamente, la predicción de mortalidad en el \gls{iam} se ha basado en escalas clínicas derivadas de modelos de regresión logística:
+
+\begin{itemize}
+    \item \textbf{Escala GRACE} (\textit{Global Registry of Acute Coronary Events}): Desarrollada a partir de un registro multinacional, incorpora variables como edad, frecuencia cardíaca, presión arterial sistólica, creatinina sérica, clase Killip, elevación de biomarcadores cardíacos, desviación del segmento ST y parada cardiorrespiratoria \citep{fox2006grace}.
+    
+    \item \textbf{Escala TIMI} (\textit{Thrombolysis In Myocardial Infarction}): Derivada de ensayos clínicos, utiliza un conjunto reducido de variables fácilmente disponibles \citep{antman2000timi}.
+    
+    \item \textbf{ACTION Registry-GWTG}: Incorpora datos contemporáneos incluyendo tratamientos de reperfusión \citep{morrow2013action}.
+\end{itemize}
+
+\subsection{Limitaciones de los Enfoques Tradicionales}
+
+A pesar de su amplia validación, las escalas clásicas presentan limitaciones relevantes:
+
+\begin{enumerate}
+    \item \textbf{Asunciones de linealidad}: Los modelos de regresión logística asumen relaciones lineales entre predictores y el logit de la probabilidad, lo cual puede no reflejar la complejidad biológica real.
+    
+    \item \textbf{Interacciones no capturadas}: Las interacciones de alto orden entre variables (ej. edad $\times$ función renal $\times$ biomarcadores) no se modelan adecuadamente.
+    
+    \item \textbf{Dependencia del contexto}: Escalas desarrolladas en poblaciones específicas pueden perder rendimiento en cohortes diferentes.
+    
+    \item \textbf{Variables faltantes}: Muchas escalas requieren determinaciones analíticas que no siempre están disponibles en entornos con recursos limitados.
+\end{enumerate}
+
+\subsection{Aprendizaje Automático en Predicción Clínica}
+
+El \gls{ml} ofrece un paradigma alternativo que permite:
+
+\begin{itemize}
+    \item Capturar relaciones no lineales y de alta complejidad entre variables.
+    \item Manejar grandes volúmenes de datos heterogéneos.
+    \item Identificar patrones predictivos no evidentes mediante análisis convencional.
+    \item Proporcionar interpretabilidad mediante técnicas de explicabilidad (\gls{shap}).
+\end{itemize}
+
+Estudios recientes han demostrado que algoritmos como \gls{xgb}, \gls{rf} y redes neuronales pueden superar el rendimiento de escalas tradicionales en la predicción de mortalidad por \gls{iam} \citep{zhu2024ml, oliveira2023ml}.
+
+\subsection{Objetivos del Estudio}
+
+\subsubsection{Objetivo General}
+
+Desarrollar y validar modelos de aprendizaje automático para predecir la mortalidad intrahospitalaria en pacientes con infarto agudo de miocardio utilizando datos del Registro Cubano de Infarto Agudo de Miocardio (RECUIMA).
+
+\subsubsection{Objetivos Específicos}
+
+\begin{enumerate}
+    \item Caracterizar el perfil clínico y demográfico de los pacientes con \gls{iam} en el registro RECUIMA.
+    
+    \item Implementar y comparar múltiples algoritmos de clasificación:
+    \begin{itemize}
+        \item Regresión Logística (baseline)
+        \item Random Forest
+        \item Gradient Boosting (XGBoost, LightGBM)
+        \item Redes Neuronales Artificiales
+        \item Modelos de ensamble
+    \end{itemize}
+    
+    \item Evaluar el rendimiento predictivo mediante métricas de:
+    \begin{itemize}
+        \item Discriminación (AUROC, AUPRC)
+        \item Calibración (curva de calibración, Brier score)
+        \item Utilidad clínica (curvas de decisión)
+    \end{itemize}
+    
+    \item Comparar el rendimiento de los modelos de ML con las escalas GRACE y TIMI.
+    
+    \item Identificar los predictores más importantes mediante análisis de explicabilidad \gls{shap}.
+    
+    \item Desarrollar una herramienta de predicción integrada en un dashboard interactivo.
+\end{enumerate}
+
+\subsection{Estructura del Informe}
+
+El presente informe se organiza siguiendo las recomendaciones de las guías TRIPOD+AI para el reporte transparente de modelos de predicción clínica:
+
+\begin{itemize}
+    \item \textbf{Sección 2}: Estado del arte en predicción de mortalidad por IAM.
+    \item \textbf{Sección 3}: Descripción detallada del dataset RECUIMA.
+    \item \textbf{Sección 4}: Metodología de desarrollo y validación.
+    \item \textbf{Sección 5}: Análisis exploratorio de datos.
+    \item \textbf{Sección 6}: Preprocesamiento y preparación de datos.
+    \item \textbf{Sección 7}: Desarrollo de modelos predictivos.
+    \item \textbf{Sección 8}: Resultados y evaluación de rendimiento.
+    \item \textbf{Sección 9}: Análisis de explicabilidad.
+    \item \textbf{Sección 10}: Discusión de hallazgos.
+    \item \textbf{Sección 11}: Conclusiones.
+    \item \textbf{Sección 12}: Limitaciones y trabajo futuro.
+\end{itemize}

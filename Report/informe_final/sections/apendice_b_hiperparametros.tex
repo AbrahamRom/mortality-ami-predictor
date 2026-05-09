@@ -1,0 +1,246 @@
+% ============================================================================
+% APÉNDICE B: HIPERPARÁMETROS Y CONFIGURACIÓN DE MODELOS
+% ============================================================================
+
+\section{Hiperparámetros y Configuración de Modelos}
+\label{app:hiperparametros}
+
+Este apéndice documenta los espacios de búsqueda de hiperparámetros y las configuraciones finales de todos los modelos evaluados.
+
+\subsection{Configuración General}
+
+\begin{table}[H]
+\centering
+\caption{Configuración general del proceso de modelado}
+\label{tab:config_general}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Parámetro} & \textbf{Valor} \\
+\midrule
+Semilla aleatoria (random\_state) & \placeholder{42} \\
+Validación cruzada & \placeholder{5-fold} estratificada \\
+Métrica de optimización & \placeholder{roc\_auc} \\
+Método de búsqueda & \placeholder{RandomizedSearchCV / Optuna} \\
+N iteraciones búsqueda & \placeholder{100} \\
+Early stopping (donde aplica) & \placeholder{10 rondas sin mejora} \\
+n\_jobs & \placeholder{-1 (todos los cores)} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Regresión Logística}
+
+\begin{table}[H]
+\centering
+\caption{Hiperparámetros -- Regresión Logística}
+\label{tab:hp_lr_apendice}
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{2.5cm}p{4cm}p{2cm}p{3cm}@{}}
+\toprule
+\textbf{Hiperpar.} & \textbf{Espacio búsqueda} & \textbf{Óptimo} & \textbf{Descripción} \\
+\midrule
+penalty & [l1, l2, elasticnet] & \placeholder{l2} & Tipo regularización \\
+C & [0.001, 0.01, 0.1, 1, 10, 100] & \placeholder{1.0} & Inverso reg. \\
+solver & [lbfgs, saga, liblinear] & \placeholder{lbfgs} & Algoritmo opt. \\
+class\_weight & [None, balanced] & \placeholder{balanced} & Pond. clases \\
+max\_iter & [500, 1000, 2000] & \placeholder{1000} & Máx iteraciones \\
+l1\_ratio & [0.0, 0.25, 0.5, 0.75, 1.0] & \placeholder{N/A} & Ratio L1/L2 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsection{Random Forest}
+
+\begin{table}[H]
+\centering
+\caption{Hiperparámetros -- Random Forest}
+\label{tab:hp_rf_apendice}
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{2.5cm}p{4cm}p{2cm}p{3cm}@{}}
+\toprule
+\textbf{Hiperpar.} & \textbf{Espacio búsqueda} & \textbf{Óptimo} & \textbf{Descripción} \\
+\midrule
+n\_estimators & [100, 200, 300, 500, 1000] & \placeholder{500} & Núm. árboles \\
+max\_depth & [None, 5, 10, 15, 20, 25] & \placeholder{15} & Prof. máxima \\
+min\_samples\_split & [2, 5, 10, 20] & \placeholder{5} & Min muestras split \\
+min\_samples\_leaf & [1, 2, 4, 8] & \placeholder{2} & Min muestras hoja \\
+max\_features & [sqrt, log2, 0.3, 0.5, 0.7] & \placeholder{sqrt} & Features/split \\
+class\_weight & [balanced, balanced\_sub] & \placeholder{balanced} & Pond. clases \\
+bootstrap & [True, False] & \placeholder{True} & Bootstrap \\
+criterion & [gini, entropy] & \placeholder{gini} & Criterio split \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsection{XGBoost}
+
+\begin{table}[H]
+\centering
+\caption{Hiperparámetros -- XGBoost}
+\label{tab:hp_xgb_apendice}
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{2.5cm}p{3.8cm}p{2cm}p{3cm}@{}}
+\toprule
+\textbf{Hiperpar.} & \textbf{Espacio búsqueda} & \textbf{Óptimo} & \textbf{Descripción} \\
+\midrule
+n\_estimators & [100, 200, 300, 500, 1000] & \placeholder{300} & Rondas boosting \\
+max\_depth & [3, 4, 5, 6, 7, 8, 10] & \placeholder{5} & Prof. máxima \\
+learning\_rate & [0.01, 0.02, 0.05, 0.1, 0.2] & \placeholder{0.05} & Tasa aprendizaje \\
+subsample & [0.6, 0.7, 0.8, 0.9, 1.0] & \placeholder{0.8} & Fracc. muestras \\
+colsample\_bytree & [0.6, 0.7, 0.8, 0.9, 1.0] & \placeholder{0.8} & Fracc. features \\
+colsample\_bylevel & [0.6, 0.7, 0.8, 0.9, 1.0] & \placeholder{1.0} & Features/nivel \\
+min\_child\_weight & [1, 3, 5, 7, 10] & \placeholder{5} & Min suma pesos \\
+gamma & [0, 0.1, 0.2, 0.3, 0.5] & \placeholder{0.1} & Min red. pérdida \\
+reg\_alpha & [0, 0.001, 0.01, 0.1, 1] & \placeholder{0.01} & Reg. L1 \\
+reg\_lambda & [0, 0.001, 0.01, 0.1, 1] & \placeholder{0.1} & Reg. L2 \\
+scale\_pos\_weight & [1, ratio\_clases] & \placeholder{ratio} & Balance clases \\
+objective & -- & binary:logistic & Función obj. \\
+eval\_metric & -- & auc, logloss & Métricas eval. \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsection{LightGBM}
+
+\begin{table}[H]
+\centering
+\caption{Hiperparámetros -- LightGBM}
+\label{tab:hp_lgbm_apendice}
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{2.5cm}p{3.8cm}p{2cm}p{3cm}@{}}
+\toprule
+\textbf{Hiperpar.} & \textbf{Espacio búsqueda} & \textbf{Óptimo} & \textbf{Descripción} \\
+\midrule
+n\_estimators & [100, 200, 300, 500, 1000] & \placeholder{400} & Núm. iteraciones \\
+num\_leaves & [31, 50, 70, 100, 150] & \placeholder{70} & Hojas/árbol \\
+max\_depth & [-1, 5, 10, 15, 20] & \placeholder{10} & Prof. máxima \\
+learning\_rate & [0.01, 0.02, 0.05, 0.1, 0.2] & \placeholder{0.05} & Tasa aprendizaje \\
+min\_child\_samples & [5, 10, 20, 50, 100] & \placeholder{20} & Min datos hoja \\
+min\_child\_weight & [0.001, 0.01, 0.1] & \placeholder{0.01} & Min suma hessian \\
+subsample & [0.6, 0.7, 0.8, 0.9, 1.0] & \placeholder{0.8} & Fracc. muestras \\
+colsample\_bytree & [0.6, 0.7, 0.8, 0.9, 1.0] & \placeholder{0.8} & Fracc. features \\
+reg\_alpha & [0, 0.01, 0.1, 1] & \placeholder{0.1} & Reg. L1 \\
+reg\_lambda & [0, 0.01, 0.1, 1] & \placeholder{0.1} & Reg. L2 \\
+class\_weight & [None, balanced] & \placeholder{balanced} & Pond. clases \\
+boosting\_type & [gbdt, dart] & \placeholder{gbdt} & Tipo boosting \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsection{Red Neuronal (MLP)}
+
+\begin{table}[H]
+\centering
+\caption{Hiperparámetros -- Red Neuronal}
+\label{tab:hp_nn_apendice}
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{2.5cm}p{4.5cm}p{2cm}p{2.5cm}@{}}
+\toprule
+\textbf{Hiperpar.} & \textbf{Espacio búsqueda} & \textbf{Óptimo} & \textbf{Descripción} \\
+\midrule
+hidden\_layers & [(64,32), (128,64), (128,64,32)] & \placeholder{(128,64,32)} & Arquitectura \\
+activation & [relu, tanh, selu] & \placeholder{relu} & Func. activación \\
+solver & [adam, sgd] & \placeholder{adam} & Optimizador \\
+alpha & [0.0001, 0.001, 0.01, 0.1] & \placeholder{0.001} & Reg. L2 \\
+learning\_rate & [constant, adaptive] & \placeholder{adaptive} & Esquema LR \\
+learning\_rate\_init & [0.001, 0.01, 0.1] & \placeholder{0.001} & LR inicial \\
+batch\_size & [32, 64, 128, 256] & \placeholder{64} & Tamaño batch \\
+max\_iter & [200, 500, 1000] & \placeholder{500} & Máx épocas \\
+early\_stopping & [True] & True & Early stopping \\
+n\_iter\_no\_change & [10, 20, 30] & \placeholder{20} & Paciencia ES \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsection{Configuración de AutoML (si aplica)}
+
+\begin{placeholderblock}
+\textbf{[COMPLETAR SI SE USÓ AUTOML]}
+
+\begin{table}[H]
+\centering
+\caption{Configuración de AutoML}
+\label{tab:config_automl}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Parámetro} & \textbf{Valor} \\
+\midrule
+Framework & \placeholder{AutoKeras / Auto-sklearn / H2O} \\
+Tiempo máximo de búsqueda & \placeholder{X horas} \\
+Máximo de trials/modelos & \placeholder{XX} \\
+Métrica de optimización & \placeholder{roc\_auc} \\
+Mejor arquitectura encontrada & \placeholder{Descripción} \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{placeholderblock}
+
+\subsection{Configuración de Calibración}
+
+\begin{table}[H]
+\centering
+\caption{Configuración de calibración de probabilidades}
+\label{tab:config_calibracion}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Parámetro} & \textbf{Valor} \\
+\midrule
+Método & \placeholder{CalibratedClassifierCV} \\
+cv & \placeholder{5} \\
+method & \placeholder{sigmoid / isotonic} \\
+ensemble & \placeholder{True/False} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Configuración de SHAP}
+
+\begin{table}[H]
+\centering
+\caption{Configuración de análisis SHAP}
+\label{tab:config_shap}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Parámetro} & \textbf{Valor} \\
+\midrule
+Explainer type & \placeholder{TreeExplainer / KernelExplainer} \\
+Data para background & \placeholder{shap.sample(X\_train, 100)} \\
+N muestras para summary plot & \placeholder{N} \\
+Cálculo de interacciones & \placeholder{Sí/No} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Reproducibilidad}
+
+Para garantizar la reproducibilidad de los experimentos:
+
+\begin{lstlisting}[language=Python, caption=Configuración de semillas aleatorias]
+import numpy as np
+import random
+import os
+
+# Seed configuration
+RANDOM_SEED = 42
+
+def set_seed(seed=RANDOM_SEED):
+    np.random.seed(seed)
+    random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    # For TensorFlow/Keras (if used):
+    # tf.random.set_seed(seed)
+    # For PyTorch (if used):
+    # torch.manual_seed(seed)
+
+set_seed()
+\end{lstlisting}

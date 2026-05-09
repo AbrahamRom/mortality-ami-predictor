@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  # Servicio principal de la aplicación
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        - INSTALL_AUTOSKLEARN=${INSTALL_AUTOSKLEARN:-false}
+    container_name: mortality-ami-predictor
+    ports:
+      - "8501:8501"
+    volumes:
+      # Montar datos y modelos para persistencia
+      - ../DATA:/app/DATA:ro
+      - ../processed:/app/processed
+      - ../models:/app/models
+      - ../mlruns:/app/mlruns
+      - ../logs:/app/logs
+      # Directorio para modelos AutoML exportados
+      - automl-models:/app/models/automl
+    environment:
+      - PYTHONPATH=/app
+      - STREAMLIT_SERVER_PORT=8501
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - STREAMLIT_SERVER_HEADLESS=true
+      # AutoML configuration
+      - AUTOML_BACKEND=${AUTOML_BACKEND:-flaml}
+      - AUTOML_TIME_BUDGET=${AUTOML_TIME_BUDGET:-3600}
+      - AUTOML_METRIC=${AUTOML_METRIC:-roc_auc}
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # Servicio para Jupyter Notebook (opcional, para desarrollo)
+  jupyter:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.jupyter
+      args:
+        - INSTALL_AUTOSKLEARN=${INSTALL_AUTOSKLEARN:-false}
+    container_name: mortality-ami-jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - ../:/app
+      - automl-models:/app/models/automl
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - PYTHONPATH=/app
+      # AutoML configuration for notebooks
+      - AUTOML_BACKEND=${AUTOML_BACKEND:-flaml}
+      - AUTOML_TIME_BUDGET=${AUTOML_TIME_BUDGET:-3600}
+    command: jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password=''
+    restart: unless-stopped
+    networks:
+      - app-network
+    profiles:
+      - dev
+
+  # Servicio MLflow (opcional, para tracking)
+  mlflow:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: mortality-ami-mlflow
+    ports:
+      - "5000:5000"
+    volumes:
+      - ../mlruns:/app/mlruns
+    command: mlflow ui --host 0.0.0.0 --port 5000 --backend-store-uri file:///app/mlruns
+    restart: unless-stopped
+    networks:
+      - app-network
+    profiles:
+      - dev
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  # Volumen para persistir modelos AutoML
+  automl-models:
+    driver: local

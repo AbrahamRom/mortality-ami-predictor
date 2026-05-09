@@ -1,0 +1,342 @@
+% ============================================================================
+% SECCIÓN 04: METODOLOGÍA
+% ============================================================================
+
+\section{Metodología}
+\label{sec:metodologia}
+
+Este estudio sigue las recomendaciones de las guías TRIPOD+AI (Transparent Reporting of a multivariable prediction model for Individual Prognosis Or Diagnosis with Artificial Intelligence) para el desarrollo y reporte de modelos de predicción clínica basados en aprendizaje automático \citep{steyerberg2019clinical}.
+
+\subsection{Diseño del Estudio}
+
+\begin{table}[H]
+\centering
+\caption{Características del diseño del estudio}
+\label{tab:diseno_estudio}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Aspecto} & \textbf{Descripción} \\
+\midrule
+Tipo de estudio & Estudio de desarrollo y validación de modelo predictivo \\
+Enfoque analítico & Supervisado (clasificación binaria) \\
+Variable objetivo & Mortalidad intrahospitalaria \\
+Horizonte de predicción & Durante la hospitalización índice \\
+Marco temporal & Retrospectivo \\
+Validación & Interna (Bootstrap 1000 iter. + Jackknife) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Preprocesamiento de Datos}
+
+\subsubsection{Tratamiento de Datos Faltantes}
+
+\begin{table}[H]
+\centering
+\caption{Estrategias de imputación según tipo de variable y patrón de missingness}
+\label{tab:estrategias_imputacion}
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Tipo de variable} & \textbf{Estrategia} & \textbf{Justificación} \\
+\midrule
+Numéricas (MAR) & Mediana & Robustez ante outliers \\
+Numéricas (MNAR) & Indicador + imputación & Preservar información de missingness \\
+Categóricas & Moda o categoría ``Desconocido'' & Preservar distribución original \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Variables excluidas por exceso de datos faltantes ($>$50\%) y sin relevancia crítica para la predicción:
+
+{\footnotesize
+\begin{itemize}
+    \item \texttt{coronariografias\_centro/medico} (100\%) -- Datos administrativos
+    \item \texttt{proteccion\_embolica, rehabilitacion, prescripcion\_optima} (99,4\%) -- Variables post-alta
+    \item \texttt{volumen\_contraste, funcion\_renal} (99,4\%) -- Solo en intervencionismo
+    \item \texttt{estenosis, arteria, abordaje, localizacion} (92,8\%) -- Datos de coronariografía
+    \item \texttt{annos\_sin\_fumar} (92,2\%) -- Solo aplica a exfumadores
+    \item \texttt{tiempo\_llegada, tiempo\_respuesta} (84,9\%) -- Tiempos prehospitalarios
+    \item \texttt{insulina} (83,3\%) -- Solo en diabéticos con insulinoterapia
+    \item \texttt{fs} (función sistólica) (81,1\%) -- Medición ecocardiográfica avanzada
+    \item \texttt{ingresos\_anteriores} (78,1\%) -- Dato histórico incompleto
+    \item \texttt{ud, pat} (77\%) -- Variables administrativas
+    \item \texttt{ee} (espesor endócrano) (65,3\%) -- Parámetro ecocardiográfico
+    \item \texttt{tiempo\_isquemia} (64,1\%) -- Difícil determinación retrospectiva
+    \item \texttt{tapse, ea, pp, dsvi, tiv, ddvi} (54--63\%) -- Parámetros ecocardiográficos avanzados
+    \item \texttt{ckmb, ck} (53--55\%) -- Biomarcadores en desuso (reemplazados por troponinas)
+\end{itemize}
+}
+
+\subsubsection{Tratamiento de Valores Atípicos}
+
+\begin{itemize}
+    \item \textbf{Detección}: Método IQR para variables continuas y análisis de distribución.
+    \item \textbf{Manejo}: Winsorización al percentil 1-99 para variables numéricas extremas.
+    \item \textbf{Variables afectadas}: Troponinas, tiempos de atención, CK-MB, glucemia.
+\end{itemize}
+
+\subsubsection{Codificación de Variables Categóricas}
+
+\begin{table}[H]
+\centering
+\small
+\caption{Estrategias de codificación de variables categóricas}
+\label{tab:codificacion_categoricas}
+\begin{tabular}{@{}p{2cm}p{2.2cm}p{8cm}@{}}
+\toprule
+\textbf{Tipo} & \textbf{Codificación} & \textbf{Variables} \\
+\midrule
+Binarias & 0/1 & Sexo, DM, HTA, tabaquismo, IAM previo, ICP previa, CABG previo, ERC, fibrilación auricular \\
+Nominales baja card. & One-Hot & Localización del IAM, tipo de SCA, ritmo cardíaco \\
+Nominales alta card. & Target Encoding & Provincia, municipio, área de salud \\
+Ordinales & Ordinal Encoding & Killip I$\rightarrow$IV, categoría GRACE \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Transformación y Normalización}
+
+\begin{itemize}
+    \item \textbf{Variables sesgadas}: Transformación log para biomarcadores (troponinas, CK-MB, NT-proBNP).
+    \item \textbf{Normalización}: RobustScaler para variables con outliers residuales.
+    \item \textbf{Variables aplicadas}: Creatinina, glucemia, biomarcadores cardíacos, tiempos de atención.
+\end{itemize}
+
+\subsection{Ingeniería de Características}
+
+\subsubsection{Creación de Variables Derivadas}
+
+\begin{table}[H]
+\centering
+\caption{Variables derivadas creadas}
+\label{tab:variables_derivadas}
+\begin{tabular}{@{}p{3cm}p{4.5cm}p{5cm}@{}}
+\toprule
+\textbf{Variable nueva} & \textbf{Fórmula/Definición} & \textbf{Justificación clínica} \\
+\midrule
+IMC & peso/(talla/100)² & Indicador de obesidad, factor de riesgo cardiovascular \\
+TFG estimada & CKD-EPI (creatinina, edad, sexo) & Función renal, predictor de mortalidad en IAM \\
+Índice de shock & FC/PAS & Indicador de inestabilidad hemodinámica \\
+SCORE\_GRACE\_CALC & Cálculo según fórmula original & Comparación con escala de referencia internacional \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Selección de Características}
+
+Métodos aplicados:
+
+\begin{enumerate}
+    \item \textbf{Filtrado}: Correlación con variable objetivo, test $\chi^2$/ANOVA.
+    
+    \item \textbf{Embedded}: Importancia de características en \gls{rf} y XGBoost.
+    
+    \item \textbf{Wrapper}: RFE (Recursive Feature Elimination) con XGBoost.
+\end{enumerate}
+
+\begin{keypoint}
+\textbf{Resultado de selección de variables:}
+
+Se desarrollaron dos modelos con diferente número de variables:
+\begin{itemize}
+    \item \textbf{Modelo reducido (10 variables)}: Para comparación directa con la escala GRACE. Variables: filtrado glomerular, fracción de eyección, edad, glicemia, presión arterial diastólica, creatinina, presión arterial sistólica, diabetes mellitus, frecuencia cardíaca, betabloqueadores.
+    \item \textbf{Modelo extendido (57 variables)}: Propuesta principal de investigación, incluyendo variables demográficas, antecedentes, biomarcadores, variables electrocardiográficas, tratamientos y complicaciones.
+\end{itemize}
+\end{keypoint}
+
+\subsection{División de Datos}
+
+\begin{table}[H]
+\centering
+\caption{Esquema de partición de datos}
+\label{tab:particion_datos}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Conjunto} & \textbf{Porcentaje} & \textbf{N pacientes} & \textbf{Uso} \\
+\midrule
+Entrenamiento & 80\% & 2.489 & Ajuste de modelos \\
+Test & 20\% & 623 & Evaluación final \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{itemize}
+    \item \textbf{Estratificación}: Por variable objetivo (mortalidad) para mantener proporción de eventos.
+    \item \textbf{Semilla aleatoria}: 42 para reproducibilidad.
+\end{itemize}
+
+\subsection{Manejo del Desbalance de Clases}
+
+Dado que la mortalidad intrahospitalaria por IAM típicamente oscila entre 5--10\%, se implementaron las siguientes estrategias:
+
+\begin{table}[H]
+\centering
+\caption{Técnicas para manejo de desbalance de clases evaluadas}
+\label{tab:manejo_desbalance}
+\begin{tabular}{@{}lp{6cm}l@{}}
+\toprule
+\textbf{Técnica} & \textbf{Descripción} & \textbf{Aplicada} \\
+\midrule
+Class weights & Ponderación inversa a frecuencia de clase & Sí \\
+SMOTE & Synthetic Minority Over-sampling & Evaluado \\
+ADASYN & Adaptive Synthetic Sampling & Evaluado \\
+Random Undersampling & Submuestreo de clase mayoritaria & No \\
+Threshold adjustment & Ajuste del umbral de decisión & Sí (Youden) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Algoritmos de Aprendizaje Automático}
+
+\subsubsection{Modelos Evaluados}
+
+\begin{enumerate}
+    \item \textbf{Regresión Logística Penalizada} (\gls{lr}): Modelo baseline lineal con regularización L2.
+    
+    \item \textbf{K-Nearest Neighbors} (KNN): Clasificación basada en vecinos más cercanos.
+    
+    \item \textbf{Árbol de Decisión}: Modelo interpretable basado en particiones recursivas.
+    
+    \item \textbf{Random Forest} (\gls{rf}): Ensamble de árboles de decisión con bagging y selección aleatoria de características.
+    
+    \item \textbf{XGBoost}: Gradient boosting optimizado con regularización y manejo de missings.
+    
+    \item \textbf{XGBoost Balanced}: XGBoost con ajuste de scale\_pos\_weight para desbalance.
+    
+    \item \textbf{LightGBM}: Gradient boosting basado en histogramas para eficiencia computacional.
+\end{enumerate}
+
+\subsubsection{Optimización de Hiperparámetros}
+
+\begin{table}[H]
+\centering
+\caption{Estrategia de optimización de hiperparámetros}
+\label{tab:optimizacion_hp}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Aspecto} & \textbf{Configuración} \\
+\midrule
+Método de búsqueda & Validación cruzada estratificada \\
+Validación cruzada & 5-fold estratificada \\
+Métrica de optimización & AUROC \\
+Validación robustez & Bootstrap (1000 iter.) + Jackknife \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+El espacio de búsqueda de hiperparámetros se detalla en el Apéndice \ref{app:hiperparametros}.
+
+\subsection{Métricas de Evaluación}
+
+\subsubsection{Discriminación}
+
+\begin{table}[H]
+\centering
+\caption{Métricas de discriminación}
+\label{tab:metricas_discriminacion}
+\begin{tabular}{@{}lp{8cm}@{}}
+\toprule
+\textbf{Métrica} & \textbf{Descripción} \\
+\midrule
+\gls{auroc} & Área bajo la curva ROC. Probabilidad de que el modelo asigne mayor riesgo a un caso positivo que a uno negativo. \\
+AUPRC & Área bajo la curva Precision-Recall. Más informativa con clases desbalanceadas. \\
+Sensibilidad & Tasa de verdaderos positivos (recall). \\
+Especificidad & Tasa de verdaderos negativos. \\
+Precisión & Valor predictivo positivo. \\
+F1-Score & Media armónica de precisión y recall. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Calibración}
+
+\begin{itemize}
+    \item \textbf{Curva de calibración}: Probabilidades predichas vs. frecuencias observadas por deciles.
+    \item \textbf{Brier Score}: $\text{BS} = \frac{1}{N}\sum_{i=1}^{N}(p_i - y_i)^2$, donde menor es mejor.
+    \item \textbf{Test de Hosmer-Lemeshow}: Bondad de ajuste de probabilidades calibradas.
+    \item \textbf{Calibration slope e intercept}: Regresión logística de outcomes sobre probabilidades predichas.
+\end{itemize}
+
+\subsubsection{Utilidad Clínica}
+
+\begin{itemize}
+    \item \textbf{Decision Curve Analysis}: Beneficio neto a diferentes umbrales de probabilidad.
+    \item \textbf{Net Reclassification Index (NRI)}: Mejora en reclasificación respecto a modelo baseline.
+    \item \textbf{Integrated Discrimination Index (IDI)}: Mejora en separación de probabilidades.
+\end{itemize}
+
+\subsection{Análisis de Explicabilidad}
+
+Para garantizar la interpretabilidad clínica del modelo, se aplicaron las siguientes técnicas:
+
+\subsubsection{Explicabilidad Global}
+
+\begin{itemize}
+    \item \textbf{Feature Importance}: Importancia permutacional y basada en ganancia (para modelos de árboles).
+    \item \textbf{\gls{shap} Summary Plot}: Distribución del impacto de cada variable en las predicciones.
+    \item \textbf{Partial Dependence Plots}: Efecto marginal de variables individuales.
+\end{itemize}
+
+\subsubsection{Explicabilidad Local}
+
+\begin{itemize}
+    \item \textbf{SHAP Force Plots}: Explicación de predicciones individuales.
+    \item \textbf{SHAP Waterfall Plots}: Contribución acumulativa de variables por caso.
+\end{itemize}
+
+\subsection{Validación del Modelo}
+
+\begin{table}[H]
+\centering
+\caption{Estrategia de validación}
+\label{tab:estrategia_validacion}
+{\footnotesize
+\begin{tabular}{@{}p{3.5cm}p{7cm}@{}}
+\toprule
+\textbf{Tipo} & \textbf{Descripción} \\
+\midrule
+Validación rápida & K-fold 3$\times$3 estratificada para selección inicial de modelos \\
+Validación completa & K-fold 100$\times$100 estratificada para evaluación final robusta \\
+Análisis sensibilidad & Estabilidad ante diferentes imputaciones y particiones \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+La validación interna se realizó exclusivamente mediante validación cruzada estratificada repetida, sin validación temporal ni externa debido a las características del estudio.
+
+\subsection{Herramientas Tecnológicas}
+
+\begin{table}[H]
+\centering
+\caption{Stack tecnológico utilizado}
+\label{tab:stack_tecnologico}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Componente} & \textbf{Herramienta/Versión} \\
+\midrule
+Lenguaje de programación & Python 3.x \\
+Manipulación de datos & pandas, numpy \\
+Visualización & matplotlib, seaborn, plotly \\
+Aprendizaje automático & scikit-learn, XGBoost, LightGBM \\
+Redes neuronales & \placeholder{TensorFlow/PyTorch/AutoKeras} \\
+Explicabilidad & SHAP, eli5 \\
+Tracking de experimentos & MLflow \\
+Interfaz de usuario & Streamlit \\
+Control de versiones & Git, GitHub \\
+Documentación & MkDocs \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Reproducibilidad}
+
+Para garantizar la reproducibilidad del estudio:
+
+\begin{itemize}
+    \item Todo el código fuente está disponible en \url{https://github.com/Pol4720/mortality-ami-predictor}.
+    \item Se fijaron semillas aleatorias en todos los procesos estocásticos.
+    \item Las dependencias están especificadas en archivos \texttt{requirements.txt} y \texttt{environment.yml}.
+    \item Los modelos entrenados se guardaron en formato serializado (\texttt{.joblib}).
+    \item Se utilizó MLflow para el tracking de experimentos y versiones de modelos.
+\end{itemize}

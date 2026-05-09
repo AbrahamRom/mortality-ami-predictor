@@ -1,0 +1,307 @@
+site_name: Mortality AMI Predictor Documentation
+site_description: 'Complete documentation for the Mortality AMI Predictor ML system'
+site_author: 'Mortality AMI Predictor Team'
+site_url: 'https://mortality-ami-predictor.github.io'
+
+repo_name: 'Pol4720/mortality-ami-predictor'
+repo_url: 'https://github.com/Pol4720/mortality-ami-predictor'
+edit_uri: 'edit/main/Tools/docs/'
+
+# Theme configuration
+theme:
+  name: material
+  icon:
+    logo: material/heart-pulse
+  
+  # Color scheme matching the heart logo (red/dark blue)
+  palette:
+    # Light mode
+    - scheme: default
+      primary: red
+      accent: deep orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    
+    # Dark mode
+    - scheme: slate
+      primary: red
+      accent: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  
+  # Features
+  features:
+    - navigation.instant        # Instant loading
+    - navigation.tracking       # URL tracking
+    - navigation.tabs           # Top-level tabs
+    - navigation.tabs.sticky    # Sticky tabs
+    - navigation.sections       # Navigation sections
+    - navigation.expand         # Expand navigation by default
+    - navigation.path           # Breadcrumb navigation
+    - navigation.indexes        # Section index pages
+    - navigation.top            # Back to top button
+    - search.suggest            # Search suggestions
+    - search.highlight          # Highlight search results
+    - search.share              # Share search results
+    - toc.follow                # TOC follows scroll
+    - toc.integrate             # Integrate TOC into navigation
+    - content.code.copy         # Copy code button
+    - content.code.annotate     # Code annotations
+    - content.tabs.link         # Link content tabs
+  
+  # Icons
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+    
+  # Font
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+# Extra CSS and JavaScript
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js
+
+# Extensions
+markdown_extensions:
+  # Python Markdown
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      toc_depth: 3
+  
+  # Python Markdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Plugins
+plugins:
+  - search:
+      lang: 
+        - en
+        - es
+      separator: '[\s\-\.]+'
+  
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            # General options
+            show_source: true
+            show_root_heading: true
+            show_root_full_path: false
+            show_object_full_path: false
+            show_category_heading: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            
+            # Members options
+            members_order: source
+            group_by_category: true
+            show_submodules: true
+            
+            # Docstrings options
+            docstring_style: google
+            docstring_section_style: table
+            merge_init_into_class: true
+            show_if_no_docstring: false
+            
+            # Signatures options
+            show_signature: true
+            show_signature_annotations: true
+            separate_signature: true
+            line_length: 80
+            
+            # Additional options
+            filters: ["!^_"]
+            inherited_members: true
+            
+  - awesome-pages
+  
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: timeago
+      fallback_to_build_date: true
+      enable_git_follow: false
+  
+  - minify:
+      minify_html: true
+
+# Navigation structure
+nav:
+  - Home: index.md
+  
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quickstart.md
+    - Configuration: getting-started/configuration.md
+  
+  - User Guide:
+    - Dashboard Overview: user-guide/dashboard.md
+    - Dashboard Architecture: user-guide/dashboard-overview.md
+    - Dashboard Pages Reference: user-guide/dashboard-pages-reference.md
+    - Data Cleaning: user-guide/data-cleaning.md
+    - Exploratory Data Analysis: user-guide/eda.md
+    - Model Training: user-guide/training.md
+    - Making Predictions: user-guide/predictions.md
+    - Model Evaluation: user-guide/evaluation.md
+    - Explainability: user-guide/explainability.md
+    - Clinical Scores: user-guide/clinical-scores.md
+    - Custom Models: user-guide/custom-models.md
+  
+  - API Reference:
+    - Overview: api/index.md
+    - Configuration: api/config.md
+    - Data Loading:
+      - Loaders: api/data_load/loaders.md
+      - Splitters: api/data_load/splitters.md
+      - I/O Utils: api/data_load/io_utils.md
+      - Path Utils: api/data_load/path_utils.md
+    - Cleaning:
+      - Overview: api/cleaning/index.md
+      - Cleaner: api/cleaning/cleaner.md
+      - Imputation: api/cleaning/imputation.md
+      - Encoding: api/cleaning/encoding.md
+      - Discretization: api/cleaning/discretization.md
+      - Outliers: api/cleaning/outliers.md
+      - Metadata: api/cleaning/metadata.md
+    - EDA:
+      - Overview: api/eda/index.md
+      - Analyzer: api/eda/analyzer.md
+      - Univariate: api/eda/univariate.md
+      - Bivariate: api/eda/bivariate.md
+      - Multivariate: api/eda/multivariate.md
+      - Visualizations: api/eda/visualizations.md
+      - PDF Reports: api/eda/pdf_reports.md
+    - Preprocessing:
+      - Pipelines: api/preprocessing/pipelines.md
+      - Integrations: api/preprocessing/integrations.md
+    - Features:
+      - Selectors: api/features/selectors.md
+      - Transformers: api/features/transformers.md
+    - Models:
+      - Overview: api/models/index.md
+      - Classifiers: api/models/classifiers.md
+      - Regressors: api/models/regressors.md
+      - Neural Networks: api/models/neural_networks.md
+      - Custom Base: api/models/custom_base.md
+      - Registry: api/models/registry.md
+      - Persistence: api/models/persistence.md
+      - Selection: api/models/selection.md
+      - Metadata: api/models/metadata.md
+    - Training:
+      - Overview: api/training/index.md
+      - Trainer: api/training/trainer.md
+      - Cross Validation: api/training/cross_validation.md
+      - Hyperparameter Tuning: api/training/hyperparameter_tuning.md
+      - Learning Curves: api/training/learning_curves.md
+      - Statistical Tests: api/training/statistical_tests.md
+      - Custom Integration: api/training/custom_integration.md
+      - PDF Reports: api/training/pdf_reports.md
+    - Prediction:
+      - Predictor: api/prediction/predictor.md
+    - Evaluation:
+      - Overview: api/evaluation/index.md
+      - Metrics: api/evaluation/metrics.md
+      - Calibration: api/evaluation/calibration.md
+      - Decision Curves: api/evaluation/decision_curves.md
+      - Resampling: api/evaluation/resampling.md
+      - Reporters: api/evaluation/reporters.md
+      - Custom Integration: api/evaluation/custom_integration.md
+      - PDF Reports: api/evaluation/pdf_reports.md
+    - Explainability:
+      - SHAP Analysis: api/explainability/shap_analysis.md
+      - Partial Dependence: api/explainability/partial_dependence.md
+      - Permutation Importance: api/explainability/permutation.md
+      - Custom Integration: api/explainability/custom_integration.md
+      - PDF Reports: api/explainability/pdf_reports.md
+    - Scoring:
+      - GRACE Score: api/scoring/grace.md
+      - TIMI Score: api/scoring/timi.md
+      - Registry: api/scoring/registry.md
+    - Reporting:
+      - PDF Generator: api/reporting/pdf_generator.md
+      - Streamlit Utils: api/reporting/streamlit_utils.md
+  
+  - Architecture:
+    - Overview: architecture/index.md
+  
+  - Developer Guide:
+    - Overview: developer/index.md
+  
+  - Guides:
+    - Custom Models Architecture: CUSTOM_MODELS_ARCHITECTURE.md
+    - Custom Models Guide: CUSTOM_MODELS_GUIDE.md
+    - Custom Models Quickstart: CUSTOM_MODELS_QUICKSTART.md
+    - PDF Generation Guide: PDF_GENERATION_GUIDE.md
+    - Implementation Summary: IMPLEMENTATION_SUMMARY.md
+  
+  - Changelog: changelog.md
+  - About: about.md
+
+# Extra configuration
+extra:
+  version:
+    provider: mike
+  
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Pol4720/mortality-ami-predictor
+      name: GitHub Repository
+    
+  analytics:
+    feedback:
+      title: Was this page helpful?
+      ratings:
+        - icon: material/emoticon-happy-outline
+          name: This page was helpful
+          data: 1
+          note: >-
+            Thanks for your feedback!
+        - icon: material/emoticon-sad-outline
+          name: This page could be improved
+          data: 0
+          note: >-
+            Thanks for your feedback! Help us improve by
+            <a href="https://github.com/Pol4720/mortality-ami-predictor/issues/new" target="_blank" rel="noopener">opening an issue</a>.
+
+# Copyright
+copyright: Copyright &copy; 2025 Mortality AMI Predictor Team

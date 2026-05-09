@@ -1,0 +1,285 @@
+% ============================================================================
+% SECCIÓN 12: LIMITACIONES Y TRABAJO FUTURO
+% ============================================================================
+
+\section{Limitaciones y Trabajo Futuro}
+\label{sec:limitaciones}
+
+\subsection{Limitaciones del Estudio}
+
+\subsubsection{Limitaciones del Diseño}
+
+\begin{table}[H]
+\centering
+\caption{Resumen de limitaciones metodológicas}
+\label{tab:limitaciones_metodologicas}
+{\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{2.2cm}p{4.2cm}p{4.2cm}@{}}
+\toprule
+\textbf{Limitación} & \textbf{Descripción} & \textbf{Impacto} \\
+\midrule
+Diseño retrosp. & \placeholder{Registros clínicos} & \placeholder{Sesgo selección} \\
+Centro único & \placeholder{Una institución} & \placeholder{Generalización} \\
+Periodo temp. & \placeholder{Datos [periodo]} & \placeholder{Drift temporal} \\
+Valid. interna & \placeholder{División datos} & \placeholder{Optimismo} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsubsection{Limitaciones de los Datos}
+
+\begin{enumerate}
+    \item \textbf{Datos faltantes}:
+    \begin{placeholderblock}
+    \begin{itemize}
+        \item \placeholder{X} variables con $>$20\% de datos faltantes
+        \item Imputación puede introducir sesgos
+        \item Patrón de missingness posiblemente MNAR en algunas variables
+    \end{itemize}
+    \end{placeholderblock}
+    
+    \item \textbf{Calidad de datos}:
+    \begin{placeholderblock}
+    \begin{itemize}
+        \item Errores de transcripción posibles en registros clínicos
+        \item Variabilidad en protocolos de laboratorio
+        \item Inconsistencias en definiciones de variables
+    \end{itemize}
+    \end{placeholderblock}
+    
+    \item \textbf{Variables no disponibles}:
+    \begin{placeholderblock}
+    \begin{itemize}
+        \item Biomarcadores emergentes (ej. \placeholder{copeptina, GDF-15})
+        \item Datos genéticos/farmacogenómicos
+        \item Variables socioeconómicas
+        \item Señales de ECG continuo
+        \item Datos de imagen (ecocardiografía cuantitativa)
+    \end{itemize}
+    \end{placeholderblock}
+    
+    \item \textbf{Definición del outcome}:
+    \begin{placeholderblock}
+    \begin{itemize}
+        \item Mortalidad intrahospitalaria no captura eventos post-alta
+        \item Duración de estancia variable afecta la ventana de observación
+        \item Causa de muerte no siempre documentada
+    \end{itemize}
+    \end{placeholderblock}
+\end{enumerate}
+
+\subsubsection{Limitaciones del Modelo}
+
+\begin{enumerate}
+    \item \textbf{Complejidad vs. interpretabilidad}:
+    \begin{placeholderblock}
+    Aunque SHAP mejora la interpretabilidad, los modelos de ensemble son inherentemente más complejos que la regresión logística, lo que puede dificultar la adopción clínica.
+    \end{placeholderblock}
+    
+    \item \textbf{Predicción estática}:
+    \begin{placeholderblock}
+    El modelo realiza predicción en un punto temporal (ingreso), sin actualización dinámica durante la evolución del paciente.
+    \end{placeholderblock}
+    
+    \item \textbf{Umbral de decisión}:
+    \begin{placeholderblock}
+    La selección del umbral óptimo depende del contexto clínico específico y los costos de errores de clasificación, que no fueron formalmente evaluados.
+    \end{placeholderblock}
+    
+    \item \textbf{Asunción de estacionariedad}:
+    \begin{placeholderblock}
+    El modelo asume que las relaciones entre variables y outcome se mantienen estables, lo cual puede no ser cierto ante cambios en tratamientos o características poblacionales.
+    \end{placeholderblock}
+\end{enumerate}
+
+\subsubsection{Limitaciones de Validación}
+
+\begin{enumerate}
+    \item \textbf{Ausencia de validación externa}:
+    \begin{placeholderblock}
+    El modelo no ha sido validado en cohortes de otras instituciones, regiones o países.
+    \end{placeholderblock}
+    
+    \item \textbf{Ausencia de validación prospectiva}:
+    \begin{placeholderblock}
+    No se ha evaluado el rendimiento del modelo en un escenario de uso en tiempo real.
+    \end{placeholderblock}
+    
+    \item \textbf{Ausencia de estudio de impacto}:
+    \begin{placeholderblock}
+    No se ha evaluado si el uso del modelo mejora los outcomes clínicos de los pacientes.
+    \end{placeholderblock}
+\end{enumerate}
+
+\subsection{Sesgos Potenciales}
+
+\begin{table}[H]
+\centering
+\caption{Análisis de sesgos potenciales}
+\label{tab:sesgos}
+{\footnotesize
+\begin{tabular}{@{}p{2.5cm}p{1.5cm}p{5.5cm}@{}}
+\toprule
+\textbf{Tipo de sesgo} & \textbf{Riesgo} & \textbf{Mitigación aplicada} \\
+\midrule
+Sesgo de selección & \placeholder{Medio} & \placeholder{Criterios de inclusión claros} \\
+Sesgo de información & \placeholder{Bajo} & \placeholder{Uso de variables objetivas} \\
+Sesgo de confusión & \placeholder{Medio} & \placeholder{Ajuste multivariable, ML} \\
+Sesgo de publicación & N/A & Reporte de todos los modelos \\
+Overfitting & \placeholder{Bajo} & \placeholder{CV, regularización} \\
+Data leakage & \placeholder{Bajo} & \placeholder{Separación temporal} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\subsection{Trabajo Futuro}
+
+\subsubsection{Corto Plazo (6--12 meses)}
+
+\begin{enumerate}
+    \item \textbf{Validación externa}:
+    \begin{placeholderblock}
+    \begin{itemize}
+        \item Colaboración con otras instituciones para obtener cohortes de validación
+        \item Evaluación de rendimiento en diferentes poblaciones
+        \item Análisis de transportabilidad del modelo
+    \end{itemize}
+    \end{placeholderblock}
+    
+    \item \textbf{Refinamiento del modelo}:
+    \begin{placeholderblock}
+    \begin{itemize}
+        \item Incorporación de feedback clínico
+        \item Optimización de la calibración
+        \item Ajuste de umbrales según contexto local
+    \end{itemize}
+    \end{placeholderblock}
+    
+    \item \textbf{Mejora de la interfaz}:
+    \begin{placeholderblock}
+    \begin{itemize}
+        \item Usability testing con usuarios clínicos
+        \item Integración con sistemas de historia clínica
+        \item Generación automática de reportes
+    \end{itemize}
+    \end{placeholderblock}
+\end{enumerate}
+
+\subsubsection{Mediano Plazo (1--2 años)}
+
+\begin{enumerate}
+    \item \textbf{Estudio prospectivo}:
+    \begin{placeholderblock}
+    \begin{itemize}
+        \item Implementación piloto en entorno clínico real
+        \item Evaluación de rendimiento prospectivo
+        \item Análisis de aceptabilidad y usabilidad
+    \end{itemize}
+    \end{placeholderblock}
+    
+    \item \textbf{Extensión del modelo}:
+    \begin{placeholderblock}
+    \begin{itemize}
+        \item Predicción de otros outcomes (arritmias, shock, reingresos)
+        \item Predicción dinámica con actualización durante hospitalización
+        \item Incorporación de variables adicionales (imágenes, señales)
+    \end{itemize}
+    \end{placeholderblock}
+    
+    \item \textbf{Aspectos regulatorios}:
+    \begin{placeholderblock}
+    \begin{itemize}
+        \item Certificación como dispositivo médico de software (si aplica)
+        \item Documentación de conformidad regulatoria
+        \item Evaluación de aspectos legales de responsabilidad
+    \end{itemize}
+    \end{placeholderblock}
+\end{enumerate}
+
+\subsubsection{Largo Plazo (2--5 años)}
+
+\begin{enumerate}
+    \item \textbf{Estudio de impacto clínico}:
+    \begin{placeholderblock}
+    \begin{itemize}
+        \item Ensayo clínico aleatorizado evaluando si el uso del modelo mejora outcomes
+        \item Análisis de costo-efectividad
+        \item Evaluación de implementación a escala
+    \end{itemize}
+    \end{placeholderblock}
+    
+    \item \textbf{Aprendizaje federado}:
+    \begin{placeholderblock}
+    \begin{itemize}
+        \item Desarrollo de modelos multicéntricos preservando privacidad
+        \item Colaboración internacional
+        \item Modelos adaptativos por región/población
+    \end{itemize}
+    \end{placeholderblock}
+    
+    \item \textbf{Medicina personalizada}:
+    \begin{placeholderblock}
+    \begin{itemize}
+        \item Integración de datos genómicos y ómicos
+        \item Predicción de respuesta a tratamientos específicos
+        \item Optimización terapéutica individualizada
+    \end{itemize}
+    \end{placeholderblock}
+    
+    \item \textbf{Mantenimiento continuo}:
+    \begin{placeholderblock}
+    \begin{itemize}
+        \item Sistemas de monitorización de drift
+        \item Re-entrenamiento periódico
+        \item Actualización con nuevas evidencias y variables
+    \end{itemize}
+    \end{placeholderblock}
+\end{enumerate}
+
+\subsection{Consideraciones para Implementación}
+
+\begin{table}[H]
+\centering
+\caption{Checklist para implementación clínica}
+\label{tab:checklist_implementacion}
+\begin{tabular}{@{}lcc@{}}
+\toprule
+\textbf{Requisito} & \textbf{Estado actual} & \textbf{Prioridad} \\
+\midrule
+Validación externa en $\geq$1 cohorte independiente & \placeholder{Pendiente} & Alta \\
+Validación prospectiva & \placeholder{Pendiente} & Alta \\
+Integración con HCE/EHR & \placeholder{Pendiente/Parcial} & Alta \\
+Evaluación de equidad por subgrupos & \placeholder{Completado/Parcial} & Alta \\
+Documentación técnica completa & \placeholder{Completado} & Media \\
+Manual de usuario & \placeholder{Completado} & Media \\
+Proceso de re-entrenamiento definido & \placeholder{Pendiente} & Media \\
+Marco de gobernanza establecido & \placeholder{Pendiente} & Media \\
+Evaluación regulatoria (si aplica) & \placeholder{Pendiente} & Variable \\
+Estudio de impacto clínico & \placeholder{Pendiente} & Largo plazo \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Propuesta de Colaboración}
+
+\begin{placeholderblock}
+\textbf{[INVITACIÓN A COLABORACIÓN]}
+
+Invitamos a investigadores, clínicos e instituciones interesadas en:
+\begin{itemize}
+    \item Participar en estudios de validación externa
+    \item Colaborar en el desarrollo de modelos multicéntricos
+    \item Contribuir al refinamiento de la herramienta
+    \item Implementar y evaluar el modelo en sus contextos locales
+\end{itemize}
+
+Para más información:
+\begin{itemize}
+    \item Repositorio: \placeholder{URL del repositorio}
+    \item Contacto: \placeholder{email del equipo}
+    \item Documentación: \placeholder{URL de documentación}
+\end{itemize}
+\end{placeholderblock}

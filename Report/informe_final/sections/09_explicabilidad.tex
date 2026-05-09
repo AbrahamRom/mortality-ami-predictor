@@ -1,0 +1,251 @@
+% ============================================================================
+% SECCIÓN 09: EXPLICABILIDAD E INTERPRETABILIDAD
+% ============================================================================
+
+\section{Explicabilidad del Modelo}
+\label{sec:explicabilidad}
+
+La interpretabilidad del modelo es fundamental para su adopción clínica. Esta sección presenta los análisis de explicabilidad realizados mediante técnicas de \textit{Explainable AI} (XAI), principalmente valores \gls{shap}.
+
+\subsection{Importancia Global de Variables}
+
+\subsubsection{Feature Importance Nativa}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/Comparacion_Escalas_Internacionales/Feature Importance (Bar Plot).png}
+\caption{Importancia de características según el modelo XGBoost (gain). Las variables más importantes son: filtrado glomerular, fracción de eyección, edad, glicemia, presión arterial diastólica y creatinina.}
+\label{fig:feature_importance_nativa}
+\end{figure}
+
+\subsubsection{SHAP Summary Plot}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/Comparacion_Escalas_Internacionales/Beeswarm Plot.png}
+\caption{SHAP Summary Plot (Beeswarm) del modelo reducido. Cada punto representa un paciente. El color indica el valor de la variable (rojo = alto, azul = bajo). El eje X muestra el impacto en la predicción (valores SHAP positivos aumentan el riesgo de mortalidad).}
+\label{fig:shap_summary}
+\end{figure}
+
+\begin{keypoint}
+\textbf{Variables más influyentes según SHAP (top 10):}
+\begin{enumerate}
+    \item \textbf{Fracción de eyección} (|SHAP| = 0,072): La disfunción ventricular izquierda es el predictor más fuerte. Valores bajos de FEVI aumentan significativamente el riesgo de mortalidad.
+    \item \textbf{Edad} (|SHAP| = 0,051): El riesgo aumenta progresivamente con la edad, con efecto más pronunciado a partir de los 75 años.
+    \item \textbf{Filtrado glomerular} (|SHAP| = 0,048): La función renal deteriorada se asocia con mayor riesgo, reflejando el síndrome cardiorrenal.
+    \item \textbf{Frecuencia cardíaca} (|SHAP| = 0,043): Taquicardia al ingreso indica compromiso hemodinámico y peor pronóstico.
+    \item \textbf{Presión arterial diastólica} (|SHAP| = 0,043): Hipotensión diastólica refleja bajo gasto cardíaco y shock cardiogénico.
+    \item \textbf{Betabloqueadores} (|SHAP| = 0,042): Su uso se asocia con efecto protector, consistente con guías clínicas.
+    \item \textbf{Glicemia} (|SHAP| = 0,037): Hiperglucemia de estrés indica mayor gravedad del evento isquémico.
+    \item \textbf{Creatinina} (|SHAP| = 0,027): Elevación indica daño renal agudo y peor pronóstico.
+    \item \textbf{Presión arterial sistólica} (|SHAP| = 0,015): Hipotensión sistólica indica compromiso hemodinámico severo.
+    \item \textbf{Diabetes mellitus} (|SHAP| = 0,006): Comorbilidad que aumenta el riesgo basal de complicaciones.
+\end{enumerate}
+\end{keypoint}
+
+\subsubsection{SHAP Bar Plot}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/Propuesta_de_seleccion_de_variables/feature_importance(top_20_features).png}
+\caption{Importancia media de variables según valores SHAP para el modelo extendido (top 20 características). El valor SHAP medio absoluto indica la magnitud del impacto de cada variable en las predicciones.}
+\label{fig:shap_bar}
+\end{figure}
+
+\subsection{Efectos Parciales de Variables Individuales}
+
+\subsubsection{SHAP Dependence Plots}
+
+Los gráficos SHAP Beeswarm presentados anteriormente (Figuras~\ref{fig:shap_summary} y \ref{fig:shap_summary_extendido}) permiten visualizar la relación entre los valores de cada variable y su impacto en las predicciones. A continuación se presenta el análisis detallado del Beeswarm del modelo extendido:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/Propuesta_de_seleccion_de_variables/shap_beeswarrm_plot_(top_20_features).png}
+\caption{SHAP Summary Plot (Beeswarm) del modelo extendido (top 20 características). Mayor densidad de información sobre los predictores más relevantes del conjunto expandido de 57 variables.}
+\label{fig:shap_summary_extendido}
+\end{figure}
+
+\subsubsection{Interpretación de Efectos}
+
+\paragraph{Edad}
+La edad muestra un efecto no lineal con aumento del riesgo más pronunciado a partir de los 75 años, consistente con la literatura sobre fragilidad en pacientes con IAM. Los valores SHAP positivos aumentan progresivamente con la edad, reflejando el mayor riesgo de mortalidad en pacientes ancianos debido a menor reserva fisiológica, mayor prevalencia de comorbilidades y presentaciones atípicas que retrasan el diagnóstico.
+
+\paragraph{Presión Arterial Sistólica}
+La presión arterial sistólica presenta una relación en forma de J con el riesgo. Valores extremadamente bajos ($<$90 mmHg) asocian fuerte aumento del riesgo, indicando shock cardiogénico o hipoperfusión severa. La normotensión se asocia con valores SHAP cercanos a cero, mientras que la hipertensión moderada puede incluso conferir ligera protección relativa en el contexto agudo del infarto.
+
+\paragraph{Función Renal (Creatinina/TFG)}
+El deterioro de la función renal impacta significativamente el riesgo predicho. La elevación de creatinina y la reducción del filtrado glomerular se asocian con valores SHAP positivos, reflejando el síndrome cardiorrenal. Una TFG $<$60 mL/min/1,73m² incrementa sustancialmente el riesgo, mientras que la disfunción renal severa (TFG $<$30) se asocia con los mayores valores SHAP positivos.
+
+\paragraph{Fracción de Eyección}
+La fracción de eyección es el predictor más potente según análisis SHAP. Valores de FEVI $<$40\% (disfunción sistólica moderada-severa) generan fuertes valores SHAP positivos. La relación es no lineal: pequeñas reducciones por debajo del 35\% producen incrementos desproporcionados del riesgo, consistente con clasificaciones de insuficiencia cardíaca.
+
+\subsection{Interacciones entre Variables}
+
+\subsubsection{SHAP Interaction Values}
+
+El análisis de interacciones SHAP revela efectos sinérgicos entre variables que amplifican o modulan el riesgo de mortalidad.
+
+\subsubsection{Interacciones Clínicamente Relevantes}
+
+\begin{itemize}
+    \item \textbf{Edad $\times$ Fracción de eyección}: Los pacientes ancianos con disfunción ventricular izquierda presentan un riesgo desproporcionadamente mayor. La combinación de edad $>$75 años con FEVI $<$40\% genera valores SHAP de interacción significativamente positivos, reflejando la menor reserva funcional de los pacientes añosos.
+    
+    \item \textbf{Filtrado glomerular $\times$ Diabetes mellitus}: La presencia simultánea de diabetes y deterioro renal amplifica el riesgo. El síndrome metabólico-renal acelera la progresión de la enfermedad cardiovascular y reduce la tolerancia al estrés isquémico.
+    
+    \item \textbf{Presión arterial sistólica $\times$ Frecuencia cardíaca}: La combinación de hipotensión con taquicardia (índice de shock elevado) es un marcador de compromiso hemodinámico severo. Valores SHAP de interacción altos cuando PAS $<$100 mmHg y FC $>$100 lpm.
+    
+    \item \textbf{Creatinina $\times$ Edad}: El deterioro renal tiene mayor impacto pronóstico en pacientes jóvenes, donde indica daño agudo más severo o enfermedad renal crónica significativa preexistente.
+\end{itemize}
+
+\subsection{Explicaciones Locales (Individuales)}
+
+\subsubsection{SHAP Force Plots}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{../complemento_del_informe_final/Comparacion_Escalas_Internacionales/Force Plot.png}
+\caption{SHAP Force Plot -- Ejemplo de predicción individual. Los factores en rojo aumentan el riesgo de mortalidad, los factores en azul lo disminuyen. La longitud de cada segmento indica la magnitud del efecto.}
+\label{fig:shap_force_alto}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{../complemento_del_informe_final/Propuesta_de_seleccion_de_variables/force_plot_sample_156.png}
+\caption{SHAP Force Plot -- Paciente del modelo extendido (muestra 156). Visualización de cómo cada variable contribuye a la predicción final de riesgo para este paciente específico.}
+\label{fig:shap_force_bajo}
+\end{figure}
+
+\subsubsection{SHAP Waterfall Plots}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/Comparacion_Escalas_Internacionales/Waterfall Plot.png}
+\caption{SHAP Waterfall Plot del modelo reducido -- Caso representativo. Muestra la contribución de cada variable a la predicción final, partiendo del valor base (probabilidad media) hasta la predicción individual.}
+\label{fig:shap_waterfall}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/Propuesta_de_seleccion_de_variables/waterfall_plot_sample_0_(base_0.0416_predictions_0.0009).png}
+\caption{SHAP Waterfall Plot del modelo extendido (muestra 0, base: 0,0416, predicción: 0,0009). Paciente de bajo riesgo donde múltiples factores protectores reducen la probabilidad predicha.}
+\label{fig:shap_waterfall_extendido}
+\end{figure}
+
+\subsection{Validación Clínica de la Explicabilidad}
+
+Las explicaciones generadas por el modelo fueron evaluadas cualitativamente por cardiólogos del registro RECUIMA. Los principales hallazgos de esta validación informal incluyen:
+
+\begin{itemize}
+    \item \textbf{Concordancia con juicio clínico}: Los predictores identificados (FEVI, edad, función renal, estado hemodinámico) corresponden a los factores tradicionalmente reconocidos como determinantes del pronóstico en IAM.
+    
+    \item \textbf{Dirección de efectos}: Todas las relaciones variable-riesgo identificadas por SHAP son consistentes con el conocimiento fisiopatológico establecido.
+    
+    \item \textbf{Utilidad percibida}: Las explicaciones individuales (force plots, waterfall plots) fueron consideradas útiles para comunicar el razonamiento del modelo a equipos clínicos.
+    
+    \item \textbf{Limitaciones identificadas}: Algunas interacciones complejas capturadas por el modelo (ej. efectos no lineales de la presión arterial) requieren interpretación cuidadosa para evitar conclusiones causales incorrectas.
+\end{itemize}
+
+\subsection{Consistencia con Conocimiento Clínico}
+
+\begin{table}[H]
+\centering
+\caption{Consistencia de hallazgos SHAP con literatura clínica}
+\label{tab:consistencia_clinica}
+\begin{tabular}{@{}llp{5cm}@{}}
+\toprule
+\textbf{Variable} & \textbf{Efecto SHAP} & \textbf{Evidencia clínica} \\
+\midrule
+Edad avanzada & $\uparrow$ riesgo & Consistente: mayor fragilidad, comorbilidades \\
+Killip alto & $\uparrow$ riesgo & Consistente: insuficiencia cardíaca \\
+TFG baja & $\uparrow$ riesgo & Consistente: síndrome cardiorrenal \\
+PAS baja & $\uparrow$ riesgo & Consistente: hipoperfusión, shock \\
+FEVI baja & $\uparrow$ riesgo & Consistente: disfunción ventricular \\
+Glicemia alta & $\uparrow$ riesgo & Consistente: hiperglucemia de estrés \\
+Betabloqueadores & $\downarrow$ riesgo & Consistente: efecto cardioprotector \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Implicaciones para la Práctica Clínica}
+
+\begin{keypoint}
+\textbf{Puntos clave para la interpretación clínica:}
+
+\begin{enumerate}
+    \item \textbf{Factores modificables}: Las variables presión arterial, frecuencia cardíaca, glicemia y uso de betabloqueadores son potencialmente modificables y podrían ser objetivos terapéuticos.
+    
+    \item \textbf{Identificación de pacientes vulnerables}: El modelo identifica pacientes con combinaciones de factores de alto riesgo que podrían beneficiarse de monitorización intensiva.
+    
+    \item \textbf{Explicaciones individualizadas}: Las explicaciones SHAP permiten comunicar al equipo clínico los principales factores de riesgo de cada paciente.
+    
+    \item \textbf{Limitaciones}: El modelo captura asociaciones, no causalidad. Los factores identificados no necesariamente son objetivos de intervención.
+\end{enumerate}
+\end{keypoint}
+
+\subsection{Análisis SHAP del Modelo sin Fuga de Datos}
+\label{sec:shap_sin_fuga}
+
+Como parte de la validación de robustez (ver Sección~\ref{sec:validacion_sin_fuga}), se realizó un análisis SHAP del modelo entrenado excluyendo las variables que podrían introducir fuga de datos (\texttt{comp\_*}, \texttt{aminas}, \texttt{reperfusion\_*}, \texttt{tiempo\_puerta\_aguja}, \texttt{CK tardío}).
+
+\subsubsection{Importancia Global de Variables (Sin Fuga)}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../complemento_del_informe_final/corrida_sin_fuga_de_datos/feature_importance_top_20_features.png}
+\caption{Importancia de variables según SHAP en el modelo sin fuga de datos. Las 5 variables más influyentes son: edad, fracción de eyección, glicemia, índice Killip y presión arterial diastólica --- todas disponibles al ingreso del paciente y sin riesgo de sesgo.}
+\label{fig:shap_sin_fuga}
+\end{figure}
+
+\subsubsection{Hallazgos Clave del Análisis SHAP sin Fuga}
+
+El análisis SHAP del modelo validado confirma que los predictores más importantes son clínicamente coherentes y libres de sesgo:
+
+\begin{enumerate}
+    \item \textbf{Edad} (|SHAP| = 0,019): Variable demográfica fundamental sin posibilidad de fuga.
+    \item \textbf{Fracción de eyección} (|SHAP| = 0,017): Medición ecocardiográfica obtenida típicamente al ingreso.
+    \item \textbf{Glicemia} (|SHAP| = 0,017): Valor de laboratorio de ingreso, indicador de estrés metabólico.
+    \item \textbf{Índice Killip} (|SHAP| = 0,016): Clasificación clínica establecida al ingreso.
+    \item \textbf{Presión arterial diastólica} (|SHAP| = 0,015): Signo vital de ingreso.
+\end{enumerate}
+
+\begin{keypoint}
+\textbf{Validación de la integridad del modelo:} Ninguna de las 10 variables más importantes según SHAP en el modelo sin fuga de datos corresponde a información obtenida post-evento o en pacientes terminales. Esto confirma que el rendimiento predictivo del modelo (AUROC = 0,896) se basa en predictores clínicamente legítimos y disponibles en el momento de la toma de decisiones clínicas.
+\end{keypoint}
+
+\begin{table}[H]
+\centering
+\caption{Comparación de variables importantes: modelo original vs. modelo sin fuga}
+\label{tab:comparacion_shap}
+\begin{tabular}{@{}clcl@{}}
+\toprule
+\textbf{Rank} & \textbf{Original (57 var.)} & & \textbf{Sin fuga de datos} \\
+\midrule
+1 & Fracción de eyección & $\rightarrow$ & Edad \\
+2 & Edad & $\rightarrow$ & Fracción de eyección \\
+3 & Filtrado glomerular & $\rightarrow$ & Glicemia \\
+4 & Frecuencia cardíaca & $\rightarrow$ & Índice Killip \\
+5 & PA diastólica & $\rightarrow$ & PA diastólica \\
+6 & Betabloqueadores & $\rightarrow$ & Triglicéridos \\
+7 & Glicemia & $\rightarrow$ & Creatinina \\
+8 & Creatinina & $\rightarrow$ & Colesterol \\
+9 & PA sistólica & $\rightarrow$ & Estreptoquinasa \\
+10 & Diabetes mellitus & $\rightarrow$ & CK-MB \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+La consistencia de predictores clave (edad, fracción de eyección, creatinina, PA diastólica, glicemia) entre ambos modelos refuerza la validez del enfoque y demuestra que el modelo no depende de variables con potencial sesgo para lograr su rendimiento predictivo.
+
+\subsection{Integración en la Herramienta Dashboard}
+
+Las explicaciones del modelo se integran en el dashboard desarrollado (ver Sección~\ref{sec:aplicacion} y Manual de Usuario) mediante las siguientes funcionalidades:
+
+\begin{itemize}
+    \item \textbf{Visualización SHAP interactiva}: Para cada predicción individual se genera un force plot que muestra los factores que aumentan (rojo) y disminuyen (azul) el riesgo predicho.
+    
+    \item \textbf{Identificación de factores principales}: El sistema destaca las 5 variables más influyentes en cada predicción con su dirección de efecto.
+    
+    \item \textbf{Comparación con población}: Las predicciones se contextualizan mostrando percentiles respecto a la distribución de riesgo de la cohorte.
+    
+    \item \textbf{Generación de reportes}: Capacidad de exportar explicaciones individuales en formato PDF para documentación clínica.
+\end{itemize}

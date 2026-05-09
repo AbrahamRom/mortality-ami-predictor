@@ -1,0 +1,10 @@
+# .pages file for awesome-pages plugin
+nav:
+  - index.md
+  - Getting Started: getting-started
+  - User Guide: user-guide
+  - API Reference: api
+  - Architecture: architecture
+  - Developer Guide: developer
+  - changelog.md
+  - about.md

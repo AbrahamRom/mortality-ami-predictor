@@ -1,0 +1,248 @@
+% ============================================================================
+% APÉNDICE C: CÓDIGO Y RECURSOS
+% ============================================================================
+
+\section{Código y Recursos}
+\label{app:codigo}
+
+Este apéndice proporciona información sobre el código fuente, recursos y herramientas utilizadas en el proyecto.
+
+\subsection{Estructura del Repositorio}
+
+{\small
+\begin{verbatim}
+mortality-ami-predictor/
++-- DATA/              # Datos (no en repo publico)
+|   +-- raw/           # Datos crudos
+|   +-- processed/     # Datos procesados
++-- Report/            # Documentacion e informes
+|   +-- informe_final/ # Este informe
+|   +-- state_of_art/  # Estado del arte
++-- Tools/             # Herramientas principales
+|   +-- src/           # Codigo fuente
+|   |   +-- data_load/ # Carga de datos
+|   |   +-- cleaning/  # Limpieza
+|   |   +-- eda/       # Analisis exploratorio
+|   |   +-- automl/    # AutoML
+|   |   +-- evaluation/# Evaluacion
+|   |   +-- explain/   # SHAP
+|   +-- dashboard/     # Aplicacion Streamlit
+|   +-- notebooks/     # Jupyter notebooks
+|   +-- models/        # Modelos entrenados
+|   +-- tests/         # Tests unitarios
+|   +-- docs/          # Documentacion tecnica
++-- requirements.txt   # Dependencias Python
++-- environment.yml    # Entorno Conda
++-- README.md          # Documentacion principal
+\end{verbatim}
+}
+
+\subsection{Acceso al Código}
+
+\begin{table}[H]
+\centering
+\caption{Enlaces a recursos del proyecto}
+\label{tab:enlaces_recursos}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Recurso} & \textbf{Enlace} \\
+\midrule
+Repositorio GitHub & \url{https://github.com/Pol4720/mortality-ami-predictor} \\
+Documentación & \url{https://pol4720.github.io/mortality-ami-predictor} \\
+Dashboard (demo) & Local (Streamlit) \\
+MLflow experiments & Local \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Dependencias Principales}
+
+\begin{table}[H]
+\centering
+\caption{Principales librerías Python utilizadas}
+\label{tab:dependencias}
+\begin{tabular}{@{}llp{6cm}@{}}
+\toprule
+\textbf{Librería} & \textbf{Versión} & \textbf{Uso} \\
+\midrule
+\multicolumn{3}{l}{\textbf{Manipulación de datos}} \\
+pandas & \placeholder{2.x} & DataFrames y manipulación tabular \\
+numpy & \placeholder{1.2x} & Arrays y operaciones numéricas \\
+\midrule
+\multicolumn{3}{l}{\textbf{Visualización}} \\
+matplotlib & \placeholder{3.x} & Gráficos base \\
+seaborn & \placeholder{0.1x} & Visualización estadística \\
+plotly & \placeholder{5.x} & Gráficos interactivos \\
+\midrule
+\multicolumn{3}{l}{\textbf{Machine Learning}} \\
+scikit-learn & \placeholder{1.x} & ML clásico, preprocesamiento, evaluación \\
+xgboost & \placeholder{2.x} & Gradient boosting \\
+lightgbm & \placeholder{4.x} & Gradient boosting eficiente \\
+imbalanced-learn & \placeholder{0.1x} & SMOTE y técnicas de balanceo \\
+\midrule
+\multicolumn{3}{l}{\textbf{Deep Learning (si aplica)}} \\
+tensorflow/keras & \placeholder{2.x} & Redes neuronales \\
+autokeras & \placeholder{1.x} & AutoML para deep learning \\
+\midrule
+\multicolumn{3}{l}{\textbf{Explicabilidad}} \\
+shap & \placeholder{0.4x} & Valores SHAP \\
+eli5 & \placeholder{0.1x} & Explicación de modelos \\
+\midrule
+\multicolumn{3}{l}{\textbf{Aplicación}} \\
+streamlit & \placeholder{1.x} & Dashboard interactivo \\
+mlflow & \placeholder{2.x} & Tracking de experimentos \\
+joblib & \placeholder{1.x} & Serialización de modelos \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Instalación}
+
+\begin{lstlisting}[language=bash, caption=Instalacion del entorno]
+# Clonar repositorio
+git clone https://github.com/usuario/mortality-ami-predictor.git
+cd mortality-ami-predictor
+
+# Opcion 1: Usando pip
+pip install -r requirements.txt
+
+# Opcion 2: Usando conda
+conda env create -f environment.yml
+conda activate mortality-ami
+
+# Opcion 3: Usando Docker
+docker-compose up -d
+\end{lstlisting}
+
+\subsection{Uso Básico}
+
+\subsubsection{Entrenamiento de Modelos}
+
+\begin{lstlisting}[language=Python, caption=Ejemplo de entrenamiento]
+from src.data_load import load_data
+from src.cleaning import preprocess_pipeline
+from src.automl import train_models, evaluate_models
+
+# Cargar datos
+df = load_data("DATA/recuima-020425.csv")
+
+# Preprocesamiento
+X, y = preprocess_pipeline(df, target="MORTALIDAD_HOSP")
+
+# Entrenar modelos
+results = train_models(X, y, models=["lr", "rf", "xgb"])
+
+# Evaluar
+metrics = evaluate_models(results, X_test, y_test)
+\end{lstlisting}
+
+\subsubsection{Predicción con Modelo Entrenado}
+
+\begin{lstlisting}[language=Python, caption=Ejemplo de prediccion]
+import joblib
+from src.explainability import explain_prediction
+
+# Cargar modelo
+model = joblib.load("models/best_classifier.joblib")
+preprocessor = joblib.load("models/preprocessor.joblib")
+
+# Preparar datos del paciente
+patient_data = {
+    "EDAD": 72,
+    "SEXO": 1,
+    "KILLIP": 2,
+    "PAS": 110,
+    "CREATININA": 1.5,
+    # ... otras variables
+}
+
+# Preprocesar y predecir
+X_patient = preprocessor.transform(patient_data)
+prob = model.predict_proba(X_patient)[0, 1]
+
+# Explicar prediccion
+shap_values = explain_prediction(model, X_patient)
+\end{lstlisting}
+
+\subsubsection{Ejecutar Dashboard}
+
+\begin{lstlisting}[language=bash, caption=Ejecucion del dashboard]
+cd Tools/dashboard
+streamlit run Dashboard.py
+\end{lstlisting}
+
+\subsection{Notebooks de Referencia}
+
+\begin{table}[H]
+\centering
+\caption{Notebooks disponibles}
+\label{tab:notebooks}
+\begin{tabular}{@{}lp{8cm}@{}}
+\toprule
+\textbf{Notebook} & \textbf{Contenido} \\
+\midrule
+eda.ipynb & Análisis exploratorio completo con visualizaciones \\
+modeling.ipynb & Desarrollo y comparación de modelos \\
+explainability.ipynb & Análisis SHAP y explicabilidad \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Tests}
+
+\begin{lstlisting}[language=bash, caption=Ejecucion de tests]
+# Ejecutar todos los tests
+pytest tests/ -v
+
+# Con cobertura
+pytest tests/ --cov=src --cov-report=html
+\end{lstlisting}
+
+\subsection{Documentacion Tecnica}
+
+La documentacion tecnica completa esta disponible en el directorio \texttt{docs/} y puede ser generada localmente:
+
+\begin{lstlisting}[language=bash, caption=Generacion de documentacion]
+# Instalar dependencias de documentacion
+pip install -r docs-requirements.txt
+
+# Generar documentacion
+mkdocs serve  # Para desarrollo
+mkdocs build  # Para produccion
+\end{lstlisting}
+
+\subsection{Licencia}
+
+\begin{placeholderblock}[ESPECIFICAR LICENCIA]
+Este proyecto esta licenciado bajo \placeholder{MIT / Apache 2.0 / CC}.
+
+Ver archivo LICENSE en el repositorio para detalles.
+\end{placeholderblock}
+
+\subsection{Citacion}
+
+Si utilizas este codigo o metodologia en tu investigacion, por favor cita:
+
+{\small
+\begin{verbatim}
+@software{mortalityami2025,
+  author = {[AUTORES]},
+  title  = {Mortality AMI Predictor: ML para
+            Mortalidad Intrahospitalaria en IAM},
+  year   = {2025},
+  url    = {https://github.com/usuario/
+            mortality-ami-predictor}
+}
+\end{verbatim}
+}
+
+\subsection{Contacto y Soporte}
+
+\begin{placeholderblock}[INFORMACION DE CONTACTO]
+Para preguntas, sugerencias o colaboraciones:
+\begin{itemize}
+    \item Email: \placeholder{equipo@ejemplo.com}
+    \item Issues: \placeholder{GitHub Issues del repositorio}
+    \item Discusiones: \placeholder{GitHub Discussions}
+\end{itemize}
+\end{placeholderblock}

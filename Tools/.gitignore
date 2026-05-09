@@ -1,0 +1,73 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+.Python
+
+# MLflow tracking
+mlruns/
+.mlruns/
+mlartifacts/
+
+# Processed data and outputs - NEW STRUCTURE
+processed/
+processed/cleaned_datasets/*.csv
+processed/models/**/*.joblib
+processed/models/testsets/*.parquet
+processed/plots/**/*.png
+processed/plots/**/*.html
+processed/plots/**/*.jpg
+processed/plots/**/*.svg
+processed/*.pkl
+processed/*.json
+
+# Exploration results
+exploration_results/
+exploration_results_*.json
+
+# Generated model directories
+catboost_*/
+autokeras_dashboard/
+
+# Dashboard generated files
+dashboard/reports/
+dashboard/**/*.pkl
+dashboard/**/*.joblib
+
+# Backup directories (created during migration)
+backup_old_structure_*/
+
+# Notebooks and checkpoints
+*.ipynb_checkpoints/
+.ipynb_checkpoints/
+.jupyter_cache/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# MkDocs build output
+site/

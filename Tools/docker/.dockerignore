@@ -1,0 +1,78 @@
+# Docker ignore file para optimizar el build
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data files (usar volúmenes en su lugar)
+*.csv
+*.xlsx
+*.xls
+*.parquet
+
+# Modelos grandes
+*.h5
+*.pkl
+*.joblib
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+docs/
+site/
+
+# MLflow
+mlruns/
+
+# Processed data
+processed/
+
+# Reports
+Report/
