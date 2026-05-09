@@ -1,5 +1,7 @@
 # Mortality-AMI-Predictor
 
+> **Note:** This repository is a public copy of the original private repository used during the development of the project.
+
 [![CI](https://github.com/Pol4720/mortality-ami-predictor/actions/workflows/ci.yml/badge.svg)](https://github.com/Pol4720/mortality-ami-predictor/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-41%20passed-brightgreen)](https://github.com/Pol4720/mortality-ami-predictor/tree/main/Tools/tests)
 [![Python Version](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org/downloads/)
